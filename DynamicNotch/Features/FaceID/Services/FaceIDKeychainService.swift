@@ -5,10 +5,25 @@
 
 import Foundation
 import Security
+import OpenDirectory
 
 enum FaceIDKeychainService {
     private static let serviceName = "com.Jackson.DynamicNotch.FaceID"
     private static let accountName = NSUserName()
+
+    /// Verifies if the provided password authenticates the current macOS user account.
+    static func verifyPassword(_ password: String) -> Bool {
+        guard !password.isEmpty else { return false }
+        do {
+            let session = ODSession.default()
+            let node = try ODNode(session: session, type: ODNodeType(kODNodeTypeLocalNodes))
+            let record = try node.record(withRecordType: kODRecordTypeUsers, name: NSUserName(), attributes: nil)
+            try record.verifyPassword(password)
+            return true
+        } catch {
+            return false
+        }
+    }
 
     static func savePassword(_ password: String) -> Bool {
         guard !password.isEmpty, let data = password.data(using: .utf8) else {

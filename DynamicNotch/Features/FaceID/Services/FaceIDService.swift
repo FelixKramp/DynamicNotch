@@ -59,7 +59,7 @@ final class FaceIDService: NSObject, ObservableObject {
             .delay(for: .seconds(6.5), scheduler: RunLoop.main)
             .sink { [weak self] _ in
                 guard let self, self.state.isActivelyEvaluating else { return }
-                self.handleScanFailed(reason: "Лицо не распознано")
+                self.handleScanFailed(reason: "Face not recognized")
             }
 
         startCameraCapture()
@@ -89,12 +89,12 @@ final class FaceIDService: NSObject, ObservableObject {
                     if granted {
                         self?.setupAndRunSession()
                     } else {
-                        self?.handleScanFailed(reason: "Камера заблокирована")
+                        self?.handleScanFailed(reason: "Camera access denied")
                     }
                 }
             }
         default:
-            handleScanFailed(reason: "Нет доступа к камере")
+            handleScanFailed(reason: "No camera access")
         }
     }
 
@@ -144,7 +144,7 @@ final class FaceIDService: NSObject, ObservableObject {
                 } catch {
                     captureSession.commitConfiguration()
                     DispatchQueue.main.async {
-                        self.handleScanFailed(reason: "Ошибка камеры")
+                        self.handleScanFailed(reason: "Camera error")
                     }
                     return
                 }
