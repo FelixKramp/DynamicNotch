@@ -4,11 +4,13 @@
 //
 //  Adapted from jonnyoo/glance (Glance Face ID animation).
 //  Plays Apple's official Face ID scan animation video and holds its final frame.
+//  Supports dynamic GPU tinting via CIColorMonochrome so any custom color can be used.
 //
 
 import SwiftUI
 import AVFoundation
 internal import AppKit
+import CoreImage
 
 enum ScanMedia: Equatable {
     case idle
@@ -26,15 +28,16 @@ enum ScanMedia: Equatable {
 
 struct ScanAnimationView: NSViewRepresentable {
     let media: ScanMedia
+    var tintColor: Color? = nil
 
     func makeNSView(context: Context) -> ScanAnimationHostView {
         let view = ScanAnimationHostView()
-        view.apply(media: media)
+        view.apply(media: media, tintColor: tintColor != nil ? NSColor(tintColor!) : nil)
         return view
     }
 
     func updateNSView(_ nsView: ScanAnimationHostView, context: Context) {
-        nsView.apply(media: media)
+        nsView.apply(media: media, tintColor: tintColor != nil ? NSColor(tintColor!) : nil)
     }
 }
 
@@ -43,6 +46,7 @@ final class ScanAnimationHostView: NSView {
     private let playerLayer = AVPlayerLayer()
     private let stillImageLayer = CALayer()
     private var currentMedia: ScanMedia?
+    private var currentTintColor: NSColor?
     private var readyObservation: NSKeyValueObservation?
     private var fallbackRevealWorkItem: DispatchWorkItem?
 
@@ -79,8 +83,16 @@ final class ScanAnimationHostView: NSView {
         CATransaction.commit()
     }
 
-    func apply(media: ScanMedia) {
-        guard media != currentMedia else { return }
+    func apply(media: ScanMedia, tintColor: NSColor?) {
+        let mediaChanged = (media != currentMedia)
+        let tintChanged = (tintColor != currentTintColor)
+
+        if tintChanged {
+            currentTintColor = tintColor
+            applyTint(tintColor)
+        }
+
+        guard mediaChanged else { return }
         currentMedia = media
         readyObservation = nil
         fallbackRevealWorkItem?.cancel()
@@ -131,6 +143,23 @@ final class ScanAnimationHostView: NSView {
 
         newPlayer.seek(to: .zero)
         newPlayer.play()
+    }
+
+    private func applyTint(_ tintColor: NSColor?) {
+        guard let tintColor = tintColor,
+              let srgb = tintColor.usingColorSpace(.sRGB),
+              let filter = CIFilter(name: "CIColorMonochrome") else {
+            stillImageLayer.filters = nil
+            playerLayer.filters = nil
+            return
+        }
+
+        let ciColor = CIColor(red: srgb.redComponent, green: srgb.greenComponent, blue: srgb.blueComponent, alpha: 1.0)
+        filter.setValue(ciColor, forKey: "inputColor")
+        filter.setValue(1.0, forKey: "inputIntensity")
+
+        stillImageLayer.filters = [filter]
+        playerLayer.filters = [filter]
     }
 
     private func teardownPlayer() {

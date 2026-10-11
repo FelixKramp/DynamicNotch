@@ -22,11 +22,22 @@ struct FaceIDNotchView: View {
         }
     }
 
+    private var headlineColor: Color {
+        switch service.state {
+        case .searching, .scanning, .success:
+            return .green
+        case .failed:
+            return .red
+        default:
+            return .green
+        }
+    }
+
     var body: some View {
         VStack {
             Spacer()
 
-            ScanAnimationView(media: currentMedia)
+            ScanAnimationView(media: currentMedia, tintColor: headlineColor)
                 .frame(width: 86, height: 86)
                 .scaleEffect(pulseScale)
                 .opacity(pulseOpacity)
