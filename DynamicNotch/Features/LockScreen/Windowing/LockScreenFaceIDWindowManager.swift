@@ -54,14 +54,21 @@ final class LockScreenFaceIDWindowManager {
     }
 
     private func bindState() {
-        Publishers.CombineLatest4(
-            lockScreenManager.$isLocked.removeDuplicates(),
-            lockScreenManager.$isPreparingLock.removeDuplicates(),
-            lockScreenManager.$isLockIdle.removeDuplicates(),
-            faceIDSettings.$showLockScreenButton.removeDuplicates()
+        Publishers.CombineLatest(
+            Publishers.CombineLatest3(
+                lockScreenManager.$isLocked.removeDuplicates(),
+                lockScreenManager.$isPreparingLock.removeDuplicates(),
+                lockScreenManager.$didUnlockWithFaceID.removeDuplicates()
+            ),
+            Publishers.CombineLatest(
+                lockScreenManager.$isLockIdle.removeDuplicates(),
+                faceIDSettings.$showLockScreenButton.removeDuplicates()
+            )
         )
         .receive(on: RunLoop.main)
-        .sink { [weak self] isLocked, isPreparingLock, isLockIdle, showButton in
+        .sink { [weak self] lockState, settingsState in
+            let (isLocked, isPreparingLock, _) = lockState
+            let (isLockIdle, showButton) = settingsState
             self?.syncPresentation(
                 isLocked: isLocked,
                 isPreparingLock: isPreparingLock,
@@ -154,7 +161,7 @@ final class LockScreenFaceIDWindowManager {
         isLockIdle: Bool,
         showButton: Bool
     ) {
-        let isShowingLock = isLocked || isPreparingLock || !isLockIdle
+        let isShowingLock = isLocked && !lockScreenManager.didUnlockWithFaceID
         let isAvailable = faceIDSettings.isFaceIDEnabled && faceIDSettings.isEnrolled
 
         if isShowingLock && isAvailable && showButton {
