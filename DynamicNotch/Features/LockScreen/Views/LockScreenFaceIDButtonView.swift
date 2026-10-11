@@ -20,11 +20,11 @@ struct LockScreenFaceIDButtonView: View {
             HStack(spacing: 6) {
                 Image(systemName: "faceid")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Color.white.opacity(0.8))
                 
                 Text(verbatim: "Face ID")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Color.white.opacity(0.8))
             }
             .padding(6)
             .background(
