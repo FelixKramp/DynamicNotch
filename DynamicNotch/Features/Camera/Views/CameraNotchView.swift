@@ -43,10 +43,11 @@ struct CameraNotchView: View {
                 }
             } else {
                 cameraStartView
+                    .padding(.horizontal, isNotchlessScreen ? 4 : 0)
             }
         }
         .padding(.bottom, 8)
-        .padding(.horizontal, isNotchlessScreen ? 14 : 42)
+        .padding(.horizontal, isNotchlessScreen ? 8 : 42)
         .onAppear {
             previewID = UUID()
         }
