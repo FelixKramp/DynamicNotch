@@ -61,6 +61,13 @@ final class AppContainer {
         airDropController: airDropController
     )
 
+    lazy var lockScreenFaceIDWindowManager = LockScreenFaceIDWindowManager(
+        lockScreenManager: lockScreenManager,
+        faceIDSettings: settingsViewModel.faceID,
+        settingsViewModel: settingsViewModel,
+        notchViewModel: notchViewModel
+    )
+
     init(isRunningTests: Bool? = nil) {
         let isRunningTests = isRunningTests ?? AppEnvironment.isRunningTests
         self.settingsViewModel = SettingsViewModel()

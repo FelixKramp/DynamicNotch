@@ -21,6 +21,7 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         case screenRecording
         case calendar
         case externalDevices
+        case faceID
         static var notifications: ResetGroup { .externalDevices }
     }
 
@@ -65,6 +66,7 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
     let screenRecording: ScreenRecordingSettingsStore
     let calendar: CalendarSettingsStore
     let externalDevices: ExternalDevicesSettingsStore
+    let faceID: FaceIDSettingsStore
     var notifications: ExternalDevicesSettingsStore { externalDevices }
     private let defaults: UserDefaults
 
@@ -82,6 +84,7 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         self.screenRecording = ScreenRecordingSettingsStore(defaults: defaults)
         self.calendar = CalendarSettingsStore(defaults: defaults)
         self.externalDevices = ExternalDevicesSettingsStore(defaults: defaults)
+        self.faceID = FaceIDSettingsStore(defaults: defaults)
         bindStores()
     }
 
@@ -479,6 +482,8 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
             calendar.resetCalendar()
         case .externalDevices:
             externalDevices.reset()
+        case .faceID:
+            faceID.reset()
         }
     }
 
@@ -493,6 +498,7 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         bind(store: screenRecording)
         bind(store: calendar)
         bind(store: externalDevices)
+        bind(store: faceID)
     }
 
     private func bind<Object: ObservableObject>(store: Object)

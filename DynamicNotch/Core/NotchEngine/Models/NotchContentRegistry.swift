@@ -127,6 +127,13 @@ enum NotchContentRegistry {
         )
     }
 
+    enum FaceID {
+        static let scanning = NotchContentDescriptor(
+            id: "faceID.scanning",
+            priority: NotchContentPriority.faceID
+        )
+    }
+
     enum Notifications {
         static let externalDrive = NotchContentDescriptor(
             id: "externalDrives.drive"

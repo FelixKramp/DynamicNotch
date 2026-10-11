@@ -92,6 +92,7 @@ extension SettingsRootViewModel {
         case externalDevices
         case screenRecording
         case lockScreen
+        case faceID
 
         static var notifications: Section { .externalDevices }
 
@@ -561,6 +562,29 @@ private enum SettingsSectionCatalog {
                 imageName: nil,
                 tint: .black,
                 resetGroup: .lockScreen
+            )
+
+        case .faceID:
+            return .init(
+                sidebarGroup: .system,
+                titleKey: "settings.section.faceID.title",
+                fallbackTitle: "Face ID",
+                subtitleKey: "settings.section.faceID.subtitle",
+                fallbackSubtitle: "Facial recognition unlocking and face profile security.",
+                searchKeywords: [
+                    "face",
+                    "faceid",
+                    "biometrics",
+                    "camera",
+                    "unlock",
+                    "security",
+                    "liveness",
+                    "eyes"
+                ],
+                systemImage: "faceid",
+                imageName: nil,
+                tint: .blue,
+                resetGroup: .faceID
             )
         }
     }

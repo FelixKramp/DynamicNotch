@@ -19,6 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var hardwareHUDMonitor: HardwareHUDMonitor { container.hardwareHUDMonitor }
     var lockScreenPanelManager: LockScreenPanelManager { container.lockScreenPanelManager }
     var lockScreenLiveActivityWindowManager: LockScreenLiveActivityWindowManager { container.lockScreenLiveActivityWindowManager }
+    var lockScreenFaceIDWindowManager: LockScreenFaceIDWindowManager { container.lockScreenFaceIDWindowManager }
     var airDropViewModel: AirDropNotchViewModel { container.airDropViewModel }
     var airDropController: NotchAirDropController { container.airDropController }
     var lockScreenManager: LockScreenManager { container.lockScreenManager }
@@ -73,6 +74,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             observeOutsideClickDismissal()
             _ = lockScreenPanelManager
             _ = lockScreenLiveActivityWindowManager
+            _ = lockScreenFaceIDWindowManager
             hardwareHUDMonitor.startMonitoring()
 
             NotificationCenter.default.addObserver(
@@ -117,6 +119,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if !isRunningUITests {
             container.lockScreenPanelManager.invalidate()
             container.lockScreenLiveActivityWindowManager.invalidate()
+            container.lockScreenFaceIDWindowManager.invalidate()
         }
         stopOutsideClickMonitoring()
         hideWindowWorkItem?.cancel()
