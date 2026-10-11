@@ -89,10 +89,10 @@ extension SettingsRootViewModel {
         
         case hud
         case calendar
-        case externalDevices
-        case screenRecording
-        case lockScreen
         case faceID
+        case screenRecording
+        case externalDevices
+        case lockScreen
 
         static var notifications: Section { .externalDevices }
 
@@ -583,7 +583,7 @@ private enum SettingsSectionCatalog {
                 ],
                 systemImage: "faceid",
                 imageName: nil,
-                tint: .blue,
+                tint: .green,
                 resetGroup: .faceID
             )
         }
