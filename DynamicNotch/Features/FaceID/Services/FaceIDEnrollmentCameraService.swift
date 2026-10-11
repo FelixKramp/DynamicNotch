@@ -23,9 +23,13 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
     @Published var cameraState: FaceCameraState = .uninitialized
     @Published var isFaceInFrame: Bool = false
     @Published var enrollmentProgress: Double = 0.0
-    @Published var instructionText: String = "Поместите лицо в рамку"
+    @Published var instructionText: String = "Position your face within the frame"
     @Published var isCompleted: Bool = false
     @Published var simulatedMode: Bool = false
+
+    private func updateInstruction(_ text: String) {
+        self.instructionText = text
+    }
 
     let previewLayer = AVCaptureVideoPreviewLayer()
 
@@ -55,7 +59,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
     func startEnrollment() {
         isCompleted = false
         enrollmentProgress = 0.0
-        instructionText = "Поместите лицо в рамку"
+        updateInstruction("Position your face within the frame")
         isFaceInFrame = false
 
         checkPermissionsAndStart()
@@ -69,7 +73,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
 
     private func checkPermissionsAndStart() {
         guard !AppEnvironment.isRunningTests else {
-            cameraState = .unavailable("Тестовое окружение")
+            cameraState = .unavailable("Test environment")
             return
         }
 
@@ -78,22 +82,22 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
             setupAndStartCamera()
         case .notDetermined:
             cameraState = .starting
-            instructionText = "Запрос доступа к камере..."
+            updateInstruction("Requesting camera access...")
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
                 DispatchQueue.main.async {
                     if granted {
                         self?.setupAndStartCamera()
                     } else {
                         self?.cameraState = .permissionDenied
-                        self?.instructionText = "Доступ к камере запрещен"
+                        self?.updateInstruction("Camera access denied")
                     }
                 }
             }
         case .denied, .restricted:
             cameraState = .permissionDenied
-            instructionText = "Разрешите доступ к камере в Системных настройках"
+            updateInstruction("Allow camera access in System Settings")
         @unknown default:
-            cameraState = .unavailable("Неизвестный статус камеры")
+            cameraState = .unavailable("Unknown camera status")
         }
     }
 
@@ -116,8 +120,8 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
                 guard let device = AVCaptureDevice.default(for: .video) else {
                     captureSession.commitConfiguration()
                     DispatchQueue.main.async {
-                        self.cameraState = .unavailable("Камера не найдена")
-                        self.instructionText = "Камера не найдена. Доступен демо-режим."
+                        self.cameraState = .unavailable("Camera not found")
+                        self.updateInstruction("Camera not found")
                     }
                     return
                 }
@@ -144,7 +148,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
                 } catch {
                     captureSession.commitConfiguration()
                     DispatchQueue.main.async {
-                        self.cameraState = .unavailable("Ошибка подключения: \(error.localizedDescription)")
+                        self.cameraState = .unavailable(error.localizedDescription)
                     }
                     return
                 }
@@ -156,7 +160,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
 
             DispatchQueue.main.async {
                 self.cameraState = .running
-                self.instructionText = "Поместите лицо в рамку и смотрите в камеру"
+                self.updateInstruction("Position your face and look at the camera")
             }
         }
     }
@@ -185,17 +189,17 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
 
                 self.enrollmentProgress += 0.025
                 if self.enrollmentProgress < 0.3 {
-                    self.instructionText = "Поместите лицо в рамку"
+                    self.updateInstruction("Position your face within the frame")
                 } else if self.enrollmentProgress < 0.6 {
-                    self.instructionText = "Медленно поверните голову вправо"
+                    self.updateInstruction("Slowly turn your head to the right")
                 } else if self.enrollmentProgress < 0.9 {
-                    self.instructionText = "Теперь поверните голову влево"
+                    self.updateInstruction("Now turn your head to the left")
                 } else if self.enrollmentProgress < 1.0 {
-                    self.instructionText = "Завершение сканирования..."
+                    self.updateInstruction("Finishing scan...")
                 } else {
                     self.enrollmentProgress = 1.0
                     self.isCompleted = true
-                    self.instructionText = "Face ID успешно настроен!"
+                    self.updateInstruction("Face ID successfully set up!")
                     self.simulatedTimer?.cancel()
                 }
             }
@@ -211,9 +215,9 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         if !isCentered || !isReasonableSize {
             isFaceInFrame = false
             if box.width < 0.14 {
-                instructionText = "Приблизьтесь ближе к экрану"
+                updateInstruction("Move closer to the screen")
             } else {
-                instructionText = "Поместите лицо в центр рамки"
+                updateInstruction("Center your face in the frame")
             }
             return
         }
@@ -224,16 +228,16 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         enrollmentProgress = min(1.0, enrollmentProgress + 0.025)
 
         if enrollmentProgress < 0.30 {
-            instructionText = "Отлично! Держите лицо в рамке"
+            updateInstruction("Great! Hold your face in the frame")
         } else if enrollmentProgress < 0.60 {
-            instructionText = "Слегка поверните голову вправо"
+            updateInstruction("Slightly turn your head to the right")
         } else if enrollmentProgress < 0.85 {
-            instructionText = "Теперь слегка поверните голову влево"
+            updateInstruction("Now slightly turn your head to the left")
         } else if enrollmentProgress < 1.0 {
-            instructionText = "Завершение сканирования..."
+            updateInstruction("Finishing scan...")
         } else {
             isCompleted = true
-            instructionText = "Face ID успешно настроен!"
+            updateInstruction("Face ID successfully set up!")
             stopCameraSession()
         }
     }
@@ -242,7 +246,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         guard !isCompleted else { return }
         if Date().timeIntervalSince(lastSuccessfulObservationTime) > 0.4 {
             isFaceInFrame = false
-            instructionText = "Поместите лицо в рамку"
+            updateInstruction("Position your face within the frame")
         }
     }
 }
