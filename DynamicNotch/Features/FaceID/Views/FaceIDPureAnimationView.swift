@@ -3,10 +3,10 @@
 //  DynamicNotch
 //
 //  A 100% native SwiftUI recreation of Apple's Face ID scanning animation:
-//  - Starts with the authentic Apple SF Symbol `faceid`
-//  - Morphs into a 3D rotating spherical wireframe (gyroscope) during scanning
+//  - Starts with ONLY the authentic Apple SF Symbol `faceid` (pulsing gently while searching)
+//  - ONLY when a face is detected and scanning begins, morphs into a 3D rotating spherical wireframe (gyroscope)
 //  - Smoothly aligns and transitions into a bounded circle with a dynamically drawn checkmark upon success
-//  - Shakes in red upon failure
+//  - Returns to the original `faceid` glyph in red with a horizontal shake upon failure
 //  - Fully customizable color
 //
 
@@ -34,26 +34,41 @@ struct FaceIDPureAnimationView: View {
 
     var body: some View {
         ZStack {
-            // MARK: - Phase 1 & 4: Apple Native Face ID Glyph (Idle & Failed)
+            // MARK: - Phase 1 & 4: Apple Native Face ID Glyph (Idle, Searching & Failed)
             if phase == .idle || phase == .failed {
                 Image(systemName: "faceid")
-                    .font(.system(size: size * 0.92, weight: .regular))
+                    .font(.system(size: size * 0.90, weight: .regular))
                     .foregroundStyle(phase == .failed ? Color.red : color)
                     .scaleEffect(phase == .idle ? pulseScale : 1.0)
                     .opacity(phase == .idle ? pulseOpacity : 1.0)
-                    .transition(.opacity.combined(with: .scale(scale: 0.88)))
+                    .transition(
+                        .asymmetric(
+                            insertion: .opacity.combined(with: .scale(scale: 0.92)),
+                            removal: .opacity.combined(with: .scale(scale: 1.08))
+                        )
+                    )
             }
 
-            // MARK: - Phase 2: 3D Wireframe Gyroscope (Scanning)
+            // MARK: - Phase 2: 3D Wireframe Gyroscope (Scanning ONLY)
             if phase == .scanning {
                 gyroscopeScanningView
-                    .transition(.opacity.combined(with: .scale(scale: 1.1)))
+                    .transition(
+                        .asymmetric(
+                            insertion: .opacity.combined(with: .scale(scale: 0.90)),
+                            removal: .opacity.combined(with: .scale(scale: 1.06))
+                        )
+                    )
             }
 
             // MARK: - Phase 3: Circle & Checkmark (Success)
             if phase == .success {
                 successCheckmarkView
-                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                    .transition(
+                        .asymmetric(
+                            insertion: .opacity.combined(with: .scale(scale: 0.92)),
+                            removal: .opacity.combined(with: .scale(scale: 0.90))
+                        )
+                    )
             }
         }
         .frame(width: size, height: size)
@@ -86,11 +101,11 @@ struct FaceIDPureAnimationView: View {
             Circle()
                 .stroke(color.opacity(0.32), lineWidth: 2.2)
                 .frame(width: size * 0.94, height: size * 0.94)
-                .blur(radius: 0.6)
+                .blur(radius: 0.5)
 
             // Primary orbital ring 1 (tilted longitude)
             Circle()
-                .stroke(color, lineWidth: 4.8)
+                .stroke(color, lineWidth: 4.6)
                 .frame(width: size * 0.94, height: size * 0.94)
                 .rotation3DEffect(
                     .degrees(rotationAngle),
@@ -100,7 +115,7 @@ struct FaceIDPureAnimationView: View {
 
             // Primary orbital ring 2 (orthogonal transverse orbit)
             Circle()
-                .stroke(color.opacity(0.85), lineWidth: 4.2)
+                .stroke(color.opacity(0.85), lineWidth: 4.0)
                 .frame(width: size * 0.94, height: size * 0.94)
                 .rotation3DEffect(
                     .degrees(rotationAngle + 65),
@@ -110,11 +125,21 @@ struct FaceIDPureAnimationView: View {
 
             // Inner orbital ring 3 (equatorial diagonal orbit)
             Circle()
-                .stroke(color.opacity(0.55), lineWidth: 3.0)
+                .stroke(color.opacity(0.60), lineWidth: 3.2)
                 .frame(width: size * 0.88, height: size * 0.88)
                 .rotation3DEffect(
                     .degrees(rotationAngle * 1.35),
                     axis: (x: 1.0, y: 0.25, z: 0.4),
+                    perspective: 0.55
+                )
+
+            // Additional dynamic orbital ring 4 (spherical depth volume)
+            Circle()
+                .stroke(color.opacity(0.40), lineWidth: 2.4)
+                .frame(width: size * 0.82, height: size * 0.82)
+                .rotation3DEffect(
+                    .degrees(-rotationAngle * 0.85),
+                    axis: (x: 0.6, y: -0.4, z: 0.8),
                     perspective: 0.55
                 )
         }
@@ -144,19 +169,37 @@ struct FaceIDPureAnimationView: View {
     // MARK: - State Handling & Animation Orchestration
 
     private func handleStateTransition(to newState: FaceIDState, animated: Bool) {
-        if newState.isSuccess {
-            triggerSuccessAnimation()
-        } else if newState.isFailed {
-            triggerFailureAnimation()
-        } else if newState.isScanning {
-            triggerScanningAnimation()
-        } else {
-            triggerIdleAnimation()
+        switch newState {
+        case .idle, .searching:
+            if phase != .idle {
+                triggerIdleAnimation(animated: animated)
+            } else {
+                startBreathingPulse()
+            }
+        case .scanning:
+            if phase != .scanning {
+                triggerScanningAnimation(animated: animated)
+            }
+        case .success:
+            if phase != .success {
+                triggerSuccessAnimation(animated: animated)
+            }
+        case .failed:
+            if phase != .failed {
+                triggerFailureAnimation(animated: animated)
+            }
         }
     }
 
-    private func triggerIdleAnimation() {
-        withAnimation(.easeOut(duration: 0.2)) {
+    private func triggerIdleAnimation(animated: Bool) {
+        if animated {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                phase = .idle
+                rotationAngle = 0
+                checkmarkProgress = 0
+                successBounce = 1.0
+            }
+        } else {
             phase = .idle
             rotationAngle = 0
             checkmarkProgress = 0
@@ -165,21 +208,19 @@ struct FaceIDPureAnimationView: View {
         startBreathingPulse()
     }
 
-    private func triggerScanningAnimation() {
-        // First show the system faceid icon briefly if coming from idle
-        if phase == .idle {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
-                withAnimation(.easeInOut(duration: 0.28)) {
-                    phase = .scanning
-                }
-                startContinuousRotation()
-            }
-        } else {
-            withAnimation(.easeInOut(duration: 0.28)) {
+    private func triggerScanningAnimation(animated: Bool) {
+        // Face detected: stop breathing pulse and immediately transition to 3D gyroscope rings
+        pulseScale = 1.0
+        pulseOpacity = 1.0
+
+        if animated {
+            withAnimation(.spring(response: 0.36, dampingFraction: 0.78)) {
                 phase = .scanning
             }
-            startContinuousRotation()
+        } else {
+            phase = .scanning
         }
+        startContinuousRotation()
     }
 
     private func startContinuousRotation() {
@@ -189,48 +230,64 @@ struct FaceIDPureAnimationView: View {
         }
     }
 
-    private func triggerSuccessAnimation() {
-        // Morph from 3D scanning sphere to circle + checkmark
-        withAnimation(.easeInOut(duration: 0.24)) {
+    private func triggerSuccessAnimation(animated: Bool) {
+        if animated {
+            // Morph from 3D scanning sphere to circle + checkmark
+            withAnimation(.easeInOut(duration: 0.24)) {
+                phase = .success
+                rotationAngle = 0
+            }
+
+            // Draw checkmark path with spring bounce
+            withAnimation(.spring(response: 0.38, dampingFraction: 0.68).delay(0.06)) {
+                checkmarkProgress = 1.0
+                successBounce = 1.08
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) {
+                withAnimation(.easeOut(duration: 0.18)) {
+                    successBounce = 1.0
+                }
+            }
+        } else {
             phase = .success
             rotationAngle = 0
-        }
-
-        // Draw checkmark path with spring bounce
-        withAnimation(.spring(response: 0.38, dampingFraction: 0.68).delay(0.06)) {
             checkmarkProgress = 1.0
-            successBounce = 1.08
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) {
-            withAnimation(.easeOut(duration: 0.18)) {
-                successBounce = 1.0
-            }
+            successBounce = 1.0
         }
     }
 
-    private func triggerFailureAnimation() {
-        withAnimation(.easeInOut(duration: 0.2)) {
+    private func triggerFailureAnimation(animated: Bool) {
+        pulseScale = 1.0
+        pulseOpacity = 1.0
+
+        if animated {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                phase = .failed
+                rotationAngle = 0
+                checkmarkProgress = 0
+            }
+
+            // Horizontal shake matching Apple's Face ID failed pattern
+            let offsets: [CGFloat] = [-8, 8, -6, 6, -3, 3, 0]
+            for (index, offset) in offsets.enumerated() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.055) {
+                    withAnimation(.easeInOut(duration: 0.055)) {
+                        self.shakeOffset = offset
+                    }
+                }
+            }
+        } else {
             phase = .failed
             rotationAngle = 0
             checkmarkProgress = 0
         }
-
-        // Horizontal shake
-        let offsets: [CGFloat] = [-8, 8, -6, 6, -3, 3, 0]
-        for (index, offset) in offsets.enumerated() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.055) {
-                withAnimation(.easeInOut(duration: 0.055)) {
-                    self.shakeOffset = offset
-                }
-            }
-        }
     }
 
     private func startBreathingPulse() {
-        pulseScale = 0.95
+        pulseScale = 0.94
         pulseOpacity = 0.85
-        withAnimation(.easeInOut(duration: 0.85).repeatForever(autoreverses: true)) {
+        withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) {
             pulseScale = 1.04
             pulseOpacity = 1.0
         }

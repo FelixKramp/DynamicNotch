@@ -12,7 +12,17 @@ enum FaceIDState: Equatable {
     case success
     case failed(reason: String)
 
+    var isSearching: Bool {
+        if case .searching = self { return true }
+        return false
+    }
+
     var isScanning: Bool {
+        if case .scanning = self { return true }
+        return false
+    }
+
+    var isActivelyEvaluating: Bool {
         switch self {
         case .searching, .scanning:
             return true

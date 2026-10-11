@@ -58,7 +58,7 @@ final class FaceIDService: NSObject, ObservableObject {
         scanTimeoutTimer = Just(())
             .delay(for: .seconds(6.5), scheduler: RunLoop.main)
             .sink { [weak self] _ in
-                guard let self, self.state.isScanning || self.state == .searching else { return }
+                guard let self, self.state.isActivelyEvaluating else { return }
                 self.handleScanFailed(reason: "Лицо не распознано")
             }
 
@@ -268,7 +268,7 @@ extension FaceIDService: AVCaptureVideoDataOutputSampleBufferDelegate {
             let face = request.results?.first
 
             DispatchQueue.main.async { [weak self] in
-                guard let self, self.state.isScanning || self.state == .searching else { return }
+                guard let self, self.state.isActivelyEvaluating else { return }
 
                 if let face {
                     let box = face.boundingBox

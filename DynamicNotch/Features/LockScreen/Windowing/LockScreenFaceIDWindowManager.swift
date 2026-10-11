@@ -86,7 +86,7 @@ final class LockScreenFaceIDWindowManager {
             .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 guard let self else { return }
-                if state.isScanning || state.isSuccess || state.isFailed {
+                if state.isActivelyEvaluating || state.isSuccess || state.isFailed {
                     self.notchViewModel.send(.showLiveActivity(FaceIDNotchContent(service: self.faceIDService)))
                 } else if state == .idle {
                     self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.FaceID.scanning.id))
