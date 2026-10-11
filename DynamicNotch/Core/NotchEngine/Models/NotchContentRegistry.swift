@@ -132,6 +132,10 @@ enum NotchContentRegistry {
             id: "faceID.scanning",
             priority: NotchContentPriority.faceID
         )
+        static let enrollment = NotchContentDescriptor(
+            id: "faceID.enrollment",
+            priority: NotchContentPriority.faceID + 10
+        )
     }
 
     enum Notifications {
