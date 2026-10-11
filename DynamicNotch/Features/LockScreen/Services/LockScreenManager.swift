@@ -7,6 +7,7 @@ final class LockScreenManager: ObservableObject {
     @Published private(set) var isLocked = false
     @Published private(set) var isPreparingLock = false
     @Published private(set) var isLockIdle = true
+    @Published private(set) var didUnlockWithFaceID = false
     @Published var event: LockScreenEvent?
 
     private let service: any LockScreenMonitoring
@@ -64,13 +65,27 @@ final class LockScreenManager: ObservableObject {
         isLocked || isPreparingLock
     }
 
+    func handleFaceIDUnlock() {
+        didUnlockWithFaceID = true
+        unlockWorkItem?.cancel()
+        unlockWorkItem = nil
+        isPreparingLock = false
+        isLocked = false
+        isLockIdle = true
+        event = .stopped
+    }
+
     #if DEBUG
     func setDebugLockState(_ locked: Bool) {
         unlockWorkItem?.cancel()
         unlockWorkItem = nil
+        if locked {
+            didUnlockWithFaceID = false
+        }
         isPreparingLock = false
         isLocked = locked
         isLockIdle = !locked
+        event = locked ? .started : .stopped
     }
     #endif
 
@@ -108,6 +123,7 @@ final class LockScreenManager: ObservableObject {
     }
 
     private func handleSessionDidResignActive() {
+        didUnlockWithFaceID = false
         guard !isLocked else { return }
 
         unlockWorkItem?.cancel()
@@ -137,6 +153,7 @@ final class LockScreenManager: ObservableObject {
         unlockWorkItem = nil
 
         if locked {
+            didUnlockWithFaceID = false
             if LockScreenSettings.isSoundEnabled(in: defaults) {
                 soundPlayer.playLock()
             }
@@ -144,6 +161,14 @@ final class LockScreenManager: ObservableObject {
             isLocked = true
             isLockIdle = false
             event = .started
+            return
+        }
+
+        if didUnlockWithFaceID {
+            isLocked = false
+            isPreparingLock = false
+            isLockIdle = true
+            event = .stopped
             return
         }
 
