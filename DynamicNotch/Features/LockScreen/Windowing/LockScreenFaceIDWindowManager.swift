@@ -94,9 +94,13 @@ final class LockScreenFaceIDWindowManager {
             .sink { [weak self] state in
                 guard let self else { return }
                 if state.isActivelyEvaluating || state.isSuccess || state.isFailed {
-                    self.notchViewModel.send(.showLiveActivity(FaceIDNotchContent(service: self.faceIDService)))
+                    let duration: TimeInterval = state.isSuccess ? 1.5 : (state.isFailed ? 1.8 : 8.0)
+                    self.notchViewModel.send(.showTemporaryNotification(
+                        FaceIDNotchContent(service: self.faceIDService),
+                        duration: duration
+                    ))
                 } else if state == .idle {
-                    self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.FaceID.scanning.id))
+                    self.notchViewModel.hideTemporaryNotification()
                 }
             }
             .store(in: &cancellables)
@@ -251,9 +255,10 @@ final class LockScreenFaceIDWindowManager {
         let requireEyes = faceIDSettings.requireOpenEyes
         let liveness = faceIDSettings.livenessCheck
 
-        // Show FaceIDNotchContent view when Face ID triggers
-        notchViewModel.send(.showLiveActivity(
-            FaceIDNotchContent(service: faceIDService)
+        // Show FaceIDNotchContent view as temporary notification when Face ID triggers
+        notchViewModel.send(.showTemporaryNotification(
+            FaceIDNotchContent(service: faceIDService),
+            duration: 8.0
         ))
 
         faceIDService.startScan(
@@ -264,16 +269,15 @@ final class LockScreenFaceIDWindowManager {
             if success {
                 self.hideButton()
                 self.lockScreenManager.handleFaceIDUnlock()
-                self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.LockScreen.activity.id))
                 FaceIDService.shared.unlockWithSavedPassword()
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
-                    self?.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.FaceID.scanning.id))
+                    self?.notchViewModel.hideTemporaryNotification()
                     self?.faceIDService.cancelScan()
                 }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) { [weak self] in
-                    self?.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.FaceID.scanning.id))
+                    self?.notchViewModel.hideTemporaryNotification()
                     self?.faceIDService.cancelScan()
                 }
             }

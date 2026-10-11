@@ -315,14 +315,14 @@ struct FaceIDSettingsView: View {
         guard let notchViewModel else { return }
 
         let content = FaceIDNotchContent(service: service)
-        notchViewModel.send(.showLiveActivity(content))
+        notchViewModel.send(.showTemporaryNotification(content, duration: 8.0))
 
         service.startScan(
             requireOpenEyes: settings.requireOpenEyes,
             livenessCheck: settings.livenessCheck
-        ) { [weak service] _ in
+        ) { [weak service, weak notchViewModel] _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.FaceID.scanning.id))
+                notchViewModel?.hideTemporaryNotification()
                 service?.cancelScan()
             }
         }
