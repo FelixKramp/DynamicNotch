@@ -30,19 +30,4 @@ enum FaceIDState: Equatable {
         if case .failed = self { return true }
         return false
     }
-
-    var statusText: String {
-        switch self {
-        case .idle:
-            return "Face ID"
-        case .searching:
-            return "Searching for Face..."
-        case .scanning(let progress):
-            return "Scanning Face (\(Int(progress * 100))%)..."
-        case .success:
-            return "Face ID Verified"
-        case .failed(let reason):
-            return reason
-        }
-    }
 }
