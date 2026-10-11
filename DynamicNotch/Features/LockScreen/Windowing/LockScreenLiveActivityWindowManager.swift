@@ -200,7 +200,11 @@ final class LockScreenLiveActivityWindowManager {
         }
         
         if lockScreenManager.didUnlockWithFaceID {
-            hideOverlay(animated: true)
+            if isLockIdle {
+                hideOverlay(animated: false)
+            } else {
+                showUnlockingOverlay()
+            }
             return
         }
 
@@ -209,7 +213,7 @@ final class LockScreenLiveActivityWindowManager {
         } else if !isLockIdle {
             showUnlockingOverlay()
         } else {
-            hideOverlay(animated: true)
+            hideOverlay(animated: false)
         }
     }
     

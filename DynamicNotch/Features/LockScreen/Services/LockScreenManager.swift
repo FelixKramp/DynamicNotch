@@ -71,8 +71,15 @@ final class LockScreenManager: ObservableObject {
         unlockWorkItem = nil
         isPreparingLock = false
         isLocked = false
-        isLockIdle = true
+        isLockIdle = false
         event = .stopped
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.isLockIdle = true
+        }
+        unlockWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.25, execute: workItem)
     }
 
     #if DEBUG
@@ -167,7 +174,9 @@ final class LockScreenManager: ObservableObject {
         if didUnlockWithFaceID {
             isLocked = false
             isPreparingLock = false
-            isLockIdle = true
+            if unlockWorkItem == nil {
+                isLockIdle = true
+            }
             event = .stopped
             return
         }
