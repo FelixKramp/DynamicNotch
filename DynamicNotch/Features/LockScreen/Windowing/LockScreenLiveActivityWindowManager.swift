@@ -74,20 +74,21 @@ final class LockScreenLiveActivityWindowManager {
                 )
             }
         
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest4(
             lockScreenManager.$isLocked.removeDuplicates(),
             lockScreenManager.$isPreparingLock.removeDuplicates(),
-            lockScreenManager.$isLockIdle.removeDuplicates()
+            lockScreenManager.$isLockIdle.removeDuplicates(),
+            lockScreenManager.$didUnlockWithFaceID.removeDuplicates()
         )
         .receive(on: RunLoop.main)
-        .sink { [weak self] isLocked, isPreparingLock, isLockIdle in
+        .sink { [weak self] isLocked, isPreparingLock, isLockIdle, _ in
             self?.syncPresentation(
                 isLocked: isLocked,
                 isPreparingLock: isPreparingLock,
                 isLockIdle: isLockIdle
             )
-            }
-            .store(in: &cancellables)
+        }
+        .store(in: &cancellables)
         
         notchViewModel.$notchModel
             .map { model in
@@ -198,12 +199,21 @@ final class LockScreenLiveActivityWindowManager {
             return
         }
         
+        if lockScreenManager.didUnlockWithFaceID {
+            if isLockIdle {
+                hideOverlay(animated: false)
+            } else {
+                showUnlockingOverlay()
+            }
+            return
+        }
+
         if isLocked || isPreparingLock {
             showLockedOverlay()
         } else if !isLockIdle {
             showUnlockingOverlay()
         } else {
-            hideOverlay(animated: true)
+            hideOverlay(animated: false)
         }
     }
     

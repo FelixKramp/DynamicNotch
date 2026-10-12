@@ -24,6 +24,7 @@ final class NotchLockScreenEventsHandler {
     func handleLockScreenEvent(_ event: LockScreenEvent) {
         switch event {
         case .started:
+            guard !lockScreenManager.didUnlockWithFaceID else { return }
             notchViewModel.isLocked = true
             guard settingsViewModel.isLiveActivityEnabled(.lockScreen) else {
                 notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.LockScreen.activity.id))

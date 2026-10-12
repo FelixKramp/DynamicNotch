@@ -547,8 +547,14 @@ struct SettingsRootView: View {
                 LockScreenSettingsView(settings: settingsViewModel.lockScreen, applicationSettings: settingsViewModel.application)
             }
 
-
-
+        case .faceID:
+            detailContainer(for: section) {
+                FaceIDSettingsView(
+                    settings: settingsViewModel.faceID,
+                    applicationSettings: settingsViewModel.application,
+                    notchViewModel: notchViewModel
+                )
+            }
         }
     }
 

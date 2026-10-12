@@ -7,6 +7,7 @@ final class LockScreenManager: ObservableObject {
     @Published private(set) var isLocked = false
     @Published private(set) var isPreparingLock = false
     @Published private(set) var isLockIdle = true
+    @Published private(set) var didUnlockWithFaceID = false
     @Published var event: LockScreenEvent?
 
     private let service: any LockScreenMonitoring
@@ -64,13 +65,34 @@ final class LockScreenManager: ObservableObject {
         isLocked || isPreparingLock
     }
 
+    func handleFaceIDUnlock() {
+        didUnlockWithFaceID = true
+        unlockWorkItem?.cancel()
+        unlockWorkItem = nil
+        isPreparingLock = false
+        isLocked = false
+        isLockIdle = false
+        event = .stopped
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.isLockIdle = true
+        }
+        unlockWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.25, execute: workItem)
+    }
+
     #if DEBUG
     func setDebugLockState(_ locked: Bool) {
         unlockWorkItem?.cancel()
         unlockWorkItem = nil
+        if locked {
+            didUnlockWithFaceID = false
+        }
         isPreparingLock = false
         isLocked = locked
         isLockIdle = !locked
+        event = locked ? .started : .stopped
     }
     #endif
 
@@ -108,6 +130,7 @@ final class LockScreenManager: ObservableObject {
     }
 
     private func handleSessionDidResignActive() {
+        didUnlockWithFaceID = false
         guard !isLocked else { return }
 
         unlockWorkItem?.cancel()
@@ -137,6 +160,7 @@ final class LockScreenManager: ObservableObject {
         unlockWorkItem = nil
 
         if locked {
+            didUnlockWithFaceID = false
             if LockScreenSettings.isSoundEnabled(in: defaults) {
                 soundPlayer.playLock()
             }
@@ -144,6 +168,16 @@ final class LockScreenManager: ObservableObject {
             isLocked = true
             isLockIdle = false
             event = .started
+            return
+        }
+
+        if didUnlockWithFaceID {
+            isLocked = false
+            isPreparingLock = false
+            if unlockWorkItem == nil {
+                isLockIdle = true
+            }
+            event = .stopped
             return
         }
 

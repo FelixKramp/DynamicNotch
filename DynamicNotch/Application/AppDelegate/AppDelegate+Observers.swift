@@ -142,9 +142,9 @@ extension AppDelegate {
         .sink { [weak self] isLocked, isPreparingLock, isLockIdle in
             guard let self, !isRunningUITests else { return }
 
-            if isLocked || isPreparingLock {
+            if isLocked {
                 suspendPrimaryWindowForLock()
-            } else if isPrimaryWindowSuspendedForLock, isLockIdle {
+            } else if isPrimaryWindowSuspendedForLock, !isPreparingLock {
                 restorePrimaryWindowForUnlockTransition()
             } else if isLockIdle {
                 updateWindowFrame()

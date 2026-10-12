@@ -147,6 +147,7 @@ enum NotchContentPriority {
     static let softwareUpdate = 10002
     static let lockScreen = 10003
     static let onboarding = 10004
+    static let faceID = 10005
 
     static func resolvedValue(for key: Key, defaults: UserDefaults = .standard) -> Int {
         overrideValues(defaults: defaults)[key.rawValue] ?? key.defaultValue

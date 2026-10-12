@@ -21,7 +21,6 @@ struct OnboardingNotchView: View {
             stepContent
             buttons
         }
-        .animation(.spring(duration: 0.4), value: step)
         .padding(.horizontal, isNotchlessScreen ? 12 : 35)
         .padding(.bottom, 10)
     }
