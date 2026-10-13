@@ -17,6 +17,14 @@ final class FaceIDSettingsStore: SettingsStoreBase {
     @StoredDefault(key: FaceIDSettings.enrolledDateKey, defaultValue: "")
     var enrolledDateString: String
 
+    @StoredDefault(key: FaceIDSettings.requireAttentionKey, defaultValue: true)
+    var requireAttention: Bool {
+        didSet {
+            requireOpenEyes = requireAttention
+            livenessCheck = requireAttention
+        }
+    }
+
     @StoredDefault(key: FaceIDSettings.requireOpenEyesKey, defaultValue: true)
     var requireOpenEyes: Bool
 
@@ -36,6 +44,7 @@ final class FaceIDSettingsStore: SettingsStoreBase {
         isFaceIDEnabled = defaultBool(for: FaceIDSettings.enabledKey)
         isEnrolled = defaultBool(for: FaceIDSettings.isEnrolledKey)
         enrolledDateString = defaultString(for: FaceIDSettings.enrolledDateKey)
+        requireAttention = defaultBool(for: FaceIDSettings.requireAttentionKey)
         requireOpenEyes = defaultBool(for: FaceIDSettings.requireOpenEyesKey)
         livenessCheck = defaultBool(for: FaceIDSettings.livenessCheckKey)
         unlockOnWake = defaultBool(for: FaceIDSettings.unlockOnWakeKey)
