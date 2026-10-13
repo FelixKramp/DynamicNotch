@@ -15,6 +15,9 @@ struct FaceIDEnrollmentNotchView: View {
     @ObservedObject var cameraService: FaceIDEnrollmentCameraService
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     
+    @State private var scanCompleted = false
+    @State private var scanWorkItem: DispatchWorkItem?
+    
     var body: some View {
         VStack {
             Spacer()
@@ -97,12 +100,11 @@ struct FaceIDEnrollmentNotchView: View {
     }
     
     private var cameraStepView: some View {
-        let isScanning = cameraService.isFaceInFrame || cameraService.enrollmentProgress > 0
+        let isScanning = cameraService.isFaceInFrame || scanCompleted
         return ZStack {
-            if isScanning && !cameraService.isCompleted {
+            if isScanning {
                 FaceIDNotchTickMarksView(
-                    progress: cameraService.enrollmentProgress,
-                    isCompleted: cameraService.isCompleted,
+                    isCompleted: scanCompleted || cameraService.isCompleted,
                     radius: 105,
                     tickCount: 36,
                     tickLength: 12,
@@ -140,22 +142,18 @@ struct FaceIDEnrollmentNotchView: View {
                 case .unavailable, .simulated, .uninitialized:
                     EmptyView()
                 }
-                
-                if cameraService.isCompleted {
-                    RoundedRectangle(cornerRadius: isScanning ? 100 : 30)
-                        .stroke(Color.green, lineWidth: 1.5)
-                        .frame(width: isScanning ? 180 : nil, height: isScanning ? 180 : 220)
-                        .transition(.opacity)
-                }
             }
             .animation(.spring(response: 0.5, dampingFraction: 0.8), value: isScanning)
-            .animation(.easeInOut(duration: 0.25), value: cameraService.isCompleted)
         }
         .frame(height: isScanning ? 180 : 220)
         .padding(.bottom, isScanning ? 25 : 0)
-        .onChange(of: cameraService.isCompleted) { _, isCompleted in
-            if isCompleted {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+        .onChange(of: cameraService.isFaceInFrame) { _, inFrame in
+            guard !scanCompleted else { return }
+            if inFrame {
+                scanWorkItem?.cancel()
+                let item = DispatchWorkItem {
+                    scanCompleted = true
+                    cameraService.isCompleted = true
                     notchViewModel.send(
                         .showTemporaryNotification(
                             FaceIDEnrollmentNotchContent(
@@ -168,7 +166,16 @@ struct FaceIDEnrollmentNotchView: View {
                         )
                     )
                 }
+                scanWorkItem = item
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: item)
+            } else {
+                scanWorkItem?.cancel()
+                scanWorkItem = nil
             }
+        }
+        .onDisappear {
+            scanWorkItem?.cancel()
+            scanWorkItem = nil
         }
     }
     
@@ -203,8 +210,8 @@ struct FaceIDEnrollmentNotchView: View {
 }
 
 struct FaceIDNotchTickMarksView: View {
-    let progress: Double
-    let isCompleted: Bool
+    var progress: Double = 0.0
+    var isCompleted: Bool = false
     
     var radius: CGFloat = 56
     var tickCount: Int = 36
@@ -214,16 +221,14 @@ struct FaceIDNotchTickMarksView: View {
     var body: some View {
         ZStack {
             ForEach(0..<tickCount, id: \.self) { index in
-                let fraction = Double(index) / Double(tickCount)
-                let isFilled = fraction <= progress
-                
                 RoundedRectangle(cornerRadius: 30)
-                    .fill(isFilled ? Color.green : Color.white.opacity(0.2))
+                    .fill(isCompleted ? Color.green : Color.white.opacity(0.2))
                     .frame(width: tickWidth, height: tickLength)
                     .offset(y: -radius)
                     .rotationEffect(.degrees(Double(index) / Double(tickCount) * 360.0))
             }
         }
+        .animation(.easeInOut(duration: 0.3), value: isCompleted)
         .frame(width: (radius + tickLength) * 2, height: (radius + tickLength) * 2)
     }
 }

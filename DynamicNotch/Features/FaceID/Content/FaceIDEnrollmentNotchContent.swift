@@ -45,7 +45,7 @@ enum FaceIDEnrollmentStep: Equatable {
 }
 
 struct FaceIDEnrollmentNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
-    let id: String = NotchContentRegistry.FaceID.enrollment.id
+    var id: String { "\(NotchContentRegistry.FaceID.enrollment.id).\(step)" }
     var priority: Int { NotchContentRegistry.FaceID.enrollment.priority }
 
     let step: FaceIDEnrollmentStep
