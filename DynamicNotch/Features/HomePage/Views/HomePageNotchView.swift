@@ -45,7 +45,7 @@ struct HomePageNotchView: View {
         VStack {
             ScrollViewReader { proxy in
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 20) {
+                    VStack(spacing: 0) {
                         ForEach(activePages) { page in
                             pageView(for: page)
                                 .containerRelativeFrame(.vertical)
