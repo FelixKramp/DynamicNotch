@@ -76,62 +76,55 @@ struct FaceIDSettingsView: View {
         }
     }
 
+    private var faceEnrollmentDescription: LocalizedStringKey {
+        if settings.isEnrolled && !settings.enrolledDateString.isEmpty {
+            return LocalizedStringKey(applicationSettings.appLanguage.locale.dnFormat(
+                "settings.faceid.status.enrolled.date",
+                fallback: "Настроено: %@ • Защищено связкой ключей",
+                settings.enrolledDateString
+            ))
+        } else if settings.isEnrolled {
+            return "settings.faceid.status.enrolled.active"
+        } else {
+            return "settings.faceid.status.notEnrolled.desc"
+        }
+    }
+
     private var faceEnrollmentCard: some View {
         SettingsCard(title: "settings.faceid.card.profile") {
-            HStack(spacing: 14) {
-                ZStack {
-                    Circle()
-                        .fill(settings.isEnrolled ? Color.green.opacity(0.15) : Color.blue.opacity(0.15))
-                        .frame(width: 44, height: 44)
-
-                    Image(systemName: settings.isEnrolled ? "checkmark.seal.fill" : "person.crop.circle.badge.plus")
-                        .font(.system(size: 22))
-                        .foregroundStyle(settings.isEnrolled ? .green : .blue)
-                }
-
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(settings.isEnrolled ? "settings.faceid.status.enrolled" : "settings.faceid.status.notEnrolled")
-                        .font(.system(size: 13, weight: .semibold))
-
-                    if settings.isEnrolled && !settings.enrolledDateString.isEmpty {
-                        Text(applicationSettings.appLanguage.locale.dnFormat(
-                            "settings.faceid.status.enrolled.date",
-                            fallback: "Настроено: %@ • Защищено связкой ключей",
-                            settings.enrolledDateString
-                        ))
-                        .font(.system(size: 11))
-                        .foregroundStyle(.secondary)
-                    } else if settings.isEnrolled {
-                        Text("settings.faceid.status.enrolled.active")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.secondary)
-                    } else {
-                        Text("settings.faceid.status.notEnrolled.desc")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                Spacer()
-
-                if settings.isEnrolled {
-                    Menu {
-                        Button("settings.faceid.action.reconfigure") {
-                            requestSecurityVerification()
+            if settings.isEnrolled {
+                SettingsMenuRow(
+                    title: "settings.faceid.status.enrolled",
+                    description: faceEnrollmentDescription,
+                    options: FaceIDProfileAction.allCases,
+                    optionTitle: { $0.title },
+                    accessibilityIdentifier: "settings.faceid.profile",
+                    selection: Binding(
+                        get: { FaceIDProfileAction.configured },
+                        set: { action in
+                            switch action {
+                            case .reconfigure:
+                                requestSecurityVerification()
+                            case .delete:
+                                isShowingResetConfirmation = true
+                            case .configured:
+                                break
+                            }
                         }
-                        Button("settings.faceid.action.delete", role: .destructive) {
-                            isShowingResetConfirmation = true
-                        }
-                    } label: {
-                        Text("settings.faceid.action.enrolledMenu")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .menuStyle(.borderedButton)
-                } else {
-                    Button("settings.faceid.action.addFace") {
-                        requestSecurityVerification()
-                    }
-                    .buttonStyle(.borderedProminent)
+                    )
+                )
+            } else {
+                SettingsButtonRow(
+                    title: "settings.faceid.status.notEnrolled",
+                    description: "settings.faceid.status.notEnrolled.desc",
+                    systemImage: "person.crop.circle.badge.plus",
+                    iconSize: 14,
+                    iconColor: .white,
+                    color: .blue,
+                    buttonTitle: "settings.faceid.action.addFace",
+                    accessibilityIdentifier: "settings.faceid.addFace"
+                ) {
+                    requestSecurityVerification()
                 }
             }
         }
@@ -140,25 +133,12 @@ struct FaceIDSettingsView: View {
     private var securityOptionsCard: some View {
         SettingsCard(title: "settings.faceid.card.security") {
             SettingsToggleRow(
-                title: "settings.faceid.toggle.requireOpenEyes.title",
-                description: "settings.faceid.toggle.requireOpenEyes.desc",
+                title: "settings.faceid.toggle.requireAttention.title",
+                description: "settings.faceid.toggle.requireAttention.desc",
                 systemImage: "eye.fill",
-                color: .indigo,
-                isOn: $settings.requireOpenEyes,
-                accessibilityIdentifier: "settings.faceid.requireOpenEyes"
-            )
-
-            Divider()
-                .opacity(0.6)
-                .padding(.leading, 43)
-
-            SettingsToggleRow(
-                title: "settings.faceid.toggle.liveness.title",
-                description: "settings.faceid.toggle.liveness.desc",
-                systemImage: "person.fill.viewfinder",
-                color: .teal,
-                isOn: $settings.livenessCheck,
-                accessibilityIdentifier: "settings.faceid.livenessCheck"
+                color: .red,
+                isOn: $settings.requireAttention,
+                accessibilityIdentifier: "settings.faceid.requireAttention"
             )
 
             Divider()
@@ -168,39 +148,21 @@ struct FaceIDSettingsView: View {
             SettingsToggleRow(
                 title: "settings.faceid.toggle.unlockOnWake.title",
                 description: "settings.faceid.toggle.unlockOnWake.desc",
-                systemImage: "lock.open.fill",
-                color: .green,
+                systemImage: "lock.open.display",
+                color: .black,
+                stroke: true,
                 isOn: $settings.unlockOnWake,
                 accessibilityIdentifier: "settings.faceid.unlockOnWake"
-            )
-
-            Divider()
-                .opacity(0.6)
-                .padding(.leading, 43)
-
-            SettingsToggleRow(
-                title: "settings.faceid.toggle.lowLight.title",
-                description: "settings.faceid.toggle.lowLight.desc",
-                systemImage: "sun.max.fill",
-                color: .yellow,
-                isOn: $settings.isLowLightAssistEnabled,
-                accessibilityIdentifier: "settings.faceid.lowLightAssist"
             )
         }
     }
 
     private var securityVerificationSheet: some View {
         VStack(spacing: 16) {
-            ZStack {
-                Circle()
-                    .fill(Color.blue.opacity(0.12))
-                    .frame(width: 60, height: 60)
-
-                Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 32))
-                    .foregroundStyle(.blue)
-            }
-            .padding(.top, 4)
+            Image(systemName: "key.viewfinder")
+                .font(.system(size: 40))
+                .foregroundStyle(.green)
+                .padding(.top, 4)
 
             Text("settings.faceid.security.title")
                 .font(.system(size: 16, weight: .bold))
@@ -341,3 +303,21 @@ struct FaceIDSettingsView: View {
         }
     }
 }
+
+private enum FaceIDProfileAction: Hashable, CaseIterable {
+    case configured
+    case reconfigure
+    case delete
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .configured:
+            return "settings.faceid.action.enrolledMenu"
+        case .reconfigure:
+            return "settings.faceid.action.reconfigure"
+        case .delete:
+            return "settings.faceid.action.delete"
+        }
+    }
+}
+

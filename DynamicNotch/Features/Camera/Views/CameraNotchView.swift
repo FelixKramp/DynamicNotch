@@ -18,6 +18,7 @@ struct CameraNotchView: View {
     
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     @StateObject private var cameraViewModel = CameraViewModel()
+    
     @State private var isHovering: Bool = false
     @State private var previewID = UUID()
     
@@ -43,7 +44,6 @@ struct CameraNotchView: View {
                 }
             } else {
                 cameraStartView
-                    .padding(.horizontal, isNotchlessScreen ? 4 : 0)
             }
         }
         .padding(.bottom, 8)

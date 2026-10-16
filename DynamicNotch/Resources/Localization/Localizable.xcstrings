@@ -69785,6 +69785,40 @@
         }
       }
     },
+    "settings.faceid.toggle.requireAttention.desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provides an additional level of security by verifying that you are looking at the screen with your eyes open"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обеспечивает дополнительный уровень безопасности, требуя, чтобы вы смотрели на экран с открытыми глазами"
+          }
+        }
+      }
+    },
+    "settings.faceid.toggle.requireAttention.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Require Attention"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Требование внимания"
+          }
+        }
+      }
+    },
     "settings.faceid.toggle.requireOpenEyes.desc" : {
       "extractionState" : "manual",
       "localizations" : {
