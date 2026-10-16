@@ -10,6 +10,7 @@ final class NowPlayingViewModel: ObservableObject {
     @Published private(set) var artworkImage: NSImage?
     @Published private(set) var artworkPalette = NowPlayingArtworkPalette.fallback
     @Published private(set) var artworkFlipAngle: Double = 0
+    @Published private(set) var isArtworkFlipping = false
     @Published private(set) var audioOutputRoutes: [AudioOutputRoute] = []
     @Published private(set) var currentAudioOutputRoute: AudioOutputRoute?
     @Published private(set) var isCurrentTrackFavorite = false
@@ -613,6 +614,7 @@ private extension NowPlayingViewModel {
         artworkFlipCooldownActive = true
         artworkFlipTrackKey = trackKey
         artworkFlipStartedAt = .now
+        isArtworkFlipping = true
 
         withAnimation(.easeInOut(duration: artworkFlipAnimationDuration)) {
             artworkFlipAngle += 180
@@ -624,6 +626,7 @@ private extension NowPlayingViewModel {
             self.artworkFlipTrackKey = nil
             self.artworkFlipStartedAt = nil
             self.artworkFlipCooldownActive = false
+            self.isArtworkFlipping = false
         }
     }
 

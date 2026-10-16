@@ -18,6 +18,7 @@ struct CameraNotchView: View {
     
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     @StateObject private var cameraViewModel = CameraViewModel()
+    
     @State private var isHovering: Bool = false
     @State private var previewID = UUID()
     

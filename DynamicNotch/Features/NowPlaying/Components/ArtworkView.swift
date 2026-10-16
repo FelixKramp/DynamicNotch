@@ -18,6 +18,8 @@ struct ArtworkView: View {
 
     @State private var cachedResizedImage: NSImage?
     @State private var lastSourceImage: NSImage?
+    @State private var revealBlur: Double = 0
+    @State private var revealTask: Task<Void, Never>? = nil
 
     init(
         nowPlayingViewModel: NowPlayingViewModel,
@@ -61,27 +63,45 @@ struct ArtworkView: View {
         }
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous), style: FillStyle(antialiased: true))
+        .blur(radius: revealBlur)
         .albumArtFlip(angle: nowPlayingViewModel.artworkFlipAngle, isEnabled: usesFlipAnimation)
         .opacity(artworkOpacity)
         .scaleEffect(artworkScale)
-        .animation(.easeInOut(duration: 0.18), value: artworkOpacity)
-        .animation(.spring(response: 0.24, dampingFraction: 0.82), value: artworkScale)
+        .animation(.easeInOut(duration: 0.5), value: artworkOpacity)
+        .animation(.spring(response: 0.5, dampingFraction: 0.7), value: artworkScale)
         .onAppear {
             updateCachedImage()
         }
         .onChange(of: nowPlayingViewModel.artworkImage) {
+            let shouldAnimate = usesFlipAnimation && nowPlayingViewModel.isArtworkFlipping
             updateCachedImage()
+            if shouldAnimate {
+                triggerRevealAnimation()
+            }
         }
     }
-    
+
     private var artworkScale: CGFloat {
         guard nowPlayingViewModel.snapshot != nil else { return 1 }
         return nowPlayingViewModel.snapshot?.isPlaying == true ? 1 : 0.84
     }
-    
+
     private var artworkOpacity: Double {
         guard nowPlayingViewModel.snapshot != nil else { return 1 }
         return nowPlayingViewModel.snapshot?.isPlaying == true ? 1 : 0.3
+    }
+
+    private func triggerRevealAnimation() {
+        revealTask?.cancel()
+        revealTask = Task {
+            try? await Task.sleep(nanoseconds: 30_000_000)
+            revealBlur = 10
+            guard !Task.isCancelled else { return }
+            
+            withAnimation(.easeInOut(duration: 0.5)) {
+                revealBlur = 0
+            }
+        }
     }
 
     private func updateCachedImage() {
@@ -92,10 +112,10 @@ struct ArtworkView: View {
         }
         guard artworkImage !== lastSourceImage else { return }
         lastSourceImage = artworkImage
-        
+
         let scale: CGFloat = NSScreen.main?.backingScaleFactor ?? 2.0
         let targetSize = NSSize(width: width * scale, height: height * scale)
-        
+
         let resized = NSImage(size: targetSize)
         resized.lockFocus()
         if let context = NSGraphicsContext.current {
