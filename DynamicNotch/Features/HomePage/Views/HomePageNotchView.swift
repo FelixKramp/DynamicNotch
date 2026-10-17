@@ -200,8 +200,6 @@ struct HomePageNotchView: View {
             CameraNotchView(notchViewModel: notchViewModel, settings: settings, localTimerViewModel: localTimerViewModel, nowPlayingViewModel: nowPlayingViewModel, mediaAndFilesSettings: mediaAndFilesSettings, applicationSettings: applicationSettings)
         case .localTimer:
             LocalTimerSetupNotchView(localTimerViewModel: localTimerViewModel)
-        case .vpn:
-            VpnPageNotchView(notchViewModel: notchViewModel)
         }
     }
 }

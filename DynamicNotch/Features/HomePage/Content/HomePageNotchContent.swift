@@ -34,8 +34,6 @@ struct HomePageNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
             return CameraActiveNotchContent()
         case .localTimer:
             return LocalTimerHomePageNotchContent()
-        case .vpn:
-            return VpnHomePageNotchContent()
         }
     }
 

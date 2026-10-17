@@ -78,9 +78,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.networkShowVPNTimer, defaultValue: true)
     var isVPNTimerVisible: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.selectedVPNID, defaultValue: "")
-    var selectedVPNID: String
-
     @StoredDefault(key: GeneralSettingsStorage.Keys.focusOffTemporaryActivityEnabled, defaultValue: true)
     var isFocusOffTemporaryActivityEnabled: Bool
 
@@ -116,7 +113,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
         vpnDisconnectedTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.vpnDisconnectedTemporaryActivityDuration)
         isVPNDetailVisible = defaultBool(for: GeneralSettingsStorage.Keys.networkShowVPNDetail)
         isVPNTimerVisible = defaultBool(for: GeneralSettingsStorage.Keys.networkShowVPNTimer)
-        selectedVPNID = defaultString(for: GeneralSettingsStorage.Keys.selectedVPNID)
     }
 
     func resetFocus() {
