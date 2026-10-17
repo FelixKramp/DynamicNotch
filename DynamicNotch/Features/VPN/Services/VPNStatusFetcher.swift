@@ -13,6 +13,7 @@ struct VPNConfiguration: Identifiable, Hashable, Sendable {
     let isConnected: Bool
     let type: String
     let bundleID: String?
+    var serverAddress: String? = nil
 }
 
 enum VPNStatusFetcher {
@@ -58,6 +59,50 @@ enum VPNStatusFetcher {
             }
         } catch {
             print("Failed to run scutil --nc status: \(error)")
+        }
+        return nil
+    }
+    
+    nonisolated static func fetchVPNServerAddress(uuid: String) -> String? {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/sbin/scutil")
+        process.arguments = ["--nc", "status", uuid]
+        
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+        
+        do {
+            try process.run()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
+            
+            if let output = String(data: data, encoding: .utf8) {
+                return parseServerAddress(from: output)
+            }
+        } catch {
+            print("Failed to run scutil --nc status: \(error)")
+        }
+        return nil
+    }
+    
+    nonisolated static func parseServerAddress(from output: String) -> String? {
+        let lines = output.components(separatedBy: .newlines)
+        for line in lines {
+            if line.contains("ServerAddress :") {
+                let parts = line.components(separatedBy: "ServerAddress :")
+                if parts.count > 1 {
+                    let addr = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !addr.isEmpty { return addr }
+                }
+            }
+            if line.contains("RemoteAddress :") {
+                let parts = line.components(separatedBy: "RemoteAddress :")
+                if parts.count > 1 {
+                    let addr = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !addr.isEmpty { return addr }
+                }
+            }
         }
         return nil
     }
