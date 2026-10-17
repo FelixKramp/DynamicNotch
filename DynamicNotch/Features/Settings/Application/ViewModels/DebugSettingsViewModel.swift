@@ -711,9 +711,9 @@ final class DebugSettingsViewModel: ObservableObject {
     private func playVPNPreview() async throws {
         applyVPNPreviewState()
         try await playTemporaryPreview(
-            VpnConnectedNotchContent(
+            VpnActiveNotchContent(
                 vpnViewModel: vpnViewModel,
-                settings: settingsViewModel.connectivity
+                notchViewModel: notchViewModel
             ),
             id: NotchContentRegistry.DebugSequence.vpn,
             duration: 5

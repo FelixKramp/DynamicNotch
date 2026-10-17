@@ -29,7 +29,7 @@ struct NotchAnimations {
         let damping: Double = 0.75
         let expandDamping: Double = 0.75
         
-        let baseResponse: Double = 0.50
+        let baseResponse: Double = 0.47
         let blend: Double = 1.0
         let hideShowDelay: Double = 0.32
         

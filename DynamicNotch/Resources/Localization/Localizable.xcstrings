@@ -478,6 +478,7 @@
       }
     },
     "--:--" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -132672,6 +132673,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "檔案托盤"
+          }
+        }
+      }
+    },
+    "settings.notch.priorities.row.vpn" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VPN"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VPN"
           }
         }
       }
