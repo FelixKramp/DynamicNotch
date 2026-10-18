@@ -10,7 +10,7 @@ import SwiftUI
 extension AnyTransition {
     static var blurAndFade: AnyTransition {
         .modifier(
-            active: BlurFadeModifier(blur: 15, opacity: 0),
+            active: BlurFadeModifier(blur: 10, opacity: 0),
             identity: BlurFadeModifier(blur: 0, opacity: 1)
         )
     }
@@ -34,8 +34,7 @@ extension AnyTransition {
         baseWidth: CGFloat = 0,
         baseHeight: CGFloat,
         isExpandedPresentation: Bool,
-        isNotchlessScreen: Bool = false
-    ) -> AnyTransition {
+        isNotchlessScreen: Bool = false) -> AnyTransition {
         if isExpandedPresentation {
             return notchExpanded(
                 notchHeight: notchHeight,
@@ -57,8 +56,7 @@ extension AnyTransition {
         notchHeight: CGFloat,
         baseWidth: CGFloat = 0,
         baseHeight: CGFloat,
-        isNotchlessScreen: Bool = false
-    ) -> AnyTransition {
+        isNotchlessScreen: Bool = false) -> AnyTransition {
         let verticalOffset = NotchTransitionMetrics.verticalCompensationOffset(
             for: notchHeight,
             baseHeight: baseHeight,
@@ -70,7 +68,7 @@ extension AnyTransition {
         return .asymmetric(
             insertion: .modifier(
                 active: NotchTransitionModifier(
-                    blur: 15,
+                    blur: 10,
                     opacity: 0,
                     offsetY: verticalOffset,
                     scaleX: scaleX,
@@ -81,7 +79,7 @@ extension AnyTransition {
             ),
             removal: .modifier(
                 active: NotchTransitionModifier(
-                    blur: 15,
+                    blur: 10,
                     opacity: 0,
                     offsetY: verticalOffset,
                     scaleX: scaleX,
@@ -96,8 +94,7 @@ extension AnyTransition {
     static func notchExpanded(
         notchHeight: CGFloat,
         baseHeight: CGFloat,
-        isNotchlessScreen: Bool = false
-    ) -> AnyTransition {
+        isNotchlessScreen: Bool = false) -> AnyTransition {
         let verticalOffset = NotchTransitionMetrics.verticalCompensationOffset(
             for: notchHeight,
             baseHeight: baseHeight,
@@ -107,7 +104,7 @@ extension AnyTransition {
         return .asymmetric(
             insertion: .modifier(
                 active: NotchTransitionModifier(
-                    blur: 30,
+                    blur: 15,
                     opacity: 0,
                     offsetY: verticalOffset,
                     scaleX: 0.6,
@@ -118,7 +115,7 @@ extension AnyTransition {
             ),
             removal: .modifier(
                 active: NotchTransitionModifier(
-                    blur: 30,
+                    blur: 15,
                     opacity: 0,
                     offsetY: verticalOffset,
                     scaleX: isNotchlessScreen ? 0.001 : 0.4,

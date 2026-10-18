@@ -22,7 +22,8 @@ struct HudMinimalContentView: View {
                 color: .white
             )
         }
-        .padding(.horizontal, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? 7.scaled(by: scale) : 14.scaled(by: scale))
     }
     
     private var clampedLevel: Int {

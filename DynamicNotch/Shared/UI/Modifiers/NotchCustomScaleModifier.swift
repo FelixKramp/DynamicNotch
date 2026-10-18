@@ -41,8 +41,7 @@ private extension NotchCustomScaleModifier {
             .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
-                        guard (!notchViewModel.isActivityPresentationHidden || notchViewModel.isLocked) || notchViewModel.notchModel.temporaryNotificationContent != nil,
-                              !notchViewModel.notchModel.isPresentingExpandedLiveActivity else {
+                        guard !notchViewModel.notchModel.isPresentingExpandedLiveActivity else {
                             resetInteractionState(cancelScaleAnimation: true)
                             return
                         }
@@ -77,8 +76,7 @@ private extension NotchCustomScaleModifier {
                         }
                     }
                     .onEnded { value in
-                        guard (!notchViewModel.isActivityPresentationHidden || notchViewModel.isLocked) || notchViewModel.notchModel.temporaryNotificationContent != nil,
-                              !notchViewModel.notchModel.isPresentingExpandedLiveActivity else {
+                        guard !notchViewModel.notchModel.isPresentingExpandedLiveActivity else {
                             resetInteractionState(cancelScaleAnimation: true)
                             didCompleteExpandAction = false
                             return

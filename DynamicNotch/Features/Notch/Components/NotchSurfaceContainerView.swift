@@ -134,9 +134,8 @@ struct NotchSurfaceContainerView: View {
     
     private var shouldApplyPressScale: Bool {
         let isExpandedPresentation = notchViewModel.isDisplayingExpandedLiveActivity
-        let isPresentationHidden = (notchViewModel.isActivityPresentationHidden && !notchViewModel.isLocked) && notchViewModel.displayedContent == nil
         let isScreenshotContent = notchViewModel.displayedContent?.id == NotchContentRegistry.Screenshot.active.id
-        return !isExpandedPresentation && !isPresentationHidden && !isScreenshotContent
+        return !isExpandedPresentation && !isScreenshotContent
     }
 
     private var visibleStrokeColor: Color {
