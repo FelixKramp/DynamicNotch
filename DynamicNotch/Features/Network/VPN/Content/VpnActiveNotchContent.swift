@@ -42,16 +42,17 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
 
     @MainActor
     private static func openSystemVpnSettings() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.Network-Settings.extension?VPN"),
-           NSWorkspace.shared.open(url) {
-            return
-        }
-        if let fallbackURL = URL(string: "x-apple.systempreferences:com.apple.preference.network?VPN"),
-           NSWorkspace.shared.open(fallbackURL) {
-            return
-        }
-        if let networkURL = URL(string: "x-apple.systempreferences:com.apple.preference.network") {
-            NSWorkspace.shared.open(networkURL)
+        let vpnURLs = [
+            "x-apple.systempreferences:com.apple.NetworkExtensionSettingsUI.NESettingsUIExtension",
+            "x-apple.systempreferences:com.apple.NetworkExtensionSettingsUI",
+            "x-apple.systempreferences:com.apple.Network-Settings.extension?VPN",
+            "x-apple.systempreferences:com.apple.preference.network?VPN",
+            "x-apple.systempreferences:com.apple.preference.network"
+        ]
+        for urlString in vpnURLs {
+            if let url = URL(string: urlString), NSWorkspace.shared.open(url) {
+                return
+            }
         }
     }
 

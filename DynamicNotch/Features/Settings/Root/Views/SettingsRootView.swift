@@ -32,7 +32,6 @@ struct SettingsRootView: View {
     
     @AppStorage("settings.general.isBlueNightMode") private var isBlueNightMode = false
     @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.controlActiveState) private var controlActiveState
     
     private var nsBackgroundColor: NSColor {
         if isBlueNightMode && colorScheme == .dark {
@@ -229,16 +228,6 @@ struct SettingsRootView: View {
         .onAppear {
             applySelection(viewModel.initialSelection(), origin: .initial)
             updateWindowStyle()
-            updateVpnSettingsTabActiveState()
-        }
-        .onDisappear {
-            settingsViewModel.isVpnSettingsTabActive = false
-        }
-        .onChange(of: controlActiveState) {
-            updateVpnSettingsTabActiveState()
-        }
-        .onChange(of: selectedSection) {
-            updateVpnSettingsTabActiveState()
         }
         .onChange(of: isBlueNightMode) {
             updateWindowStyle()
@@ -281,19 +270,6 @@ struct SettingsRootView: View {
                 navigationPath = [subPage]
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { notification in
-            if isSettingsWindowNotification(notification) {
-                updateVpnSettingsTabActiveState()
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { notification in
-            if isSettingsWindowNotification(notification) {
-                settingsViewModel.isVpnSettingsTabActive = false
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("SettingsWindowDidBecomeKey"))) { _ in
-            updateVpnSettingsTabActiveState()
-        }
     }
 
     private func updateWindowStyle() {
@@ -315,21 +291,6 @@ struct SettingsRootView: View {
         
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .visible
-    }
-
-    private func isSettingsWindowNotification(_ notification: Notification) -> Bool {
-        guard let window = notification.object as? NSWindow else { return false }
-        return window.identifier?.rawValue == "DynamicNotchSettingsWindow"
-    }
-
-    private func updateVpnSettingsTabActiveState() {
-        guard let window = NSApp.windows.first(where: { $0.identifier?.rawValue == "DynamicNotchSettingsWindow" }) else {
-            let isActive = (controlActiveState == .key) && (selectedSection == .network)
-            settingsViewModel.isVpnSettingsTabActive = isActive
-            return
-        }
-        let isWindowActive = window.isVisible && window.isKeyWindow
-        settingsViewModel.isVpnSettingsTabActive = (selectedSection == .network) && isWindowActive
     }
 
     private var selectionBinding: Binding<SettingsRootViewModel.Section> {

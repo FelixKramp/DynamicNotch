@@ -32,6 +32,7 @@ final class VpnViewModel: ObservableObject {
     @Published var currentIP: String? = nil
     @Published var currentCountryCode: String? = nil
     @Published var countryFlag: String? = nil
+    @Published var isSystemSettingsVpnOpen: Bool = false
     
     var connectedAt: Date? {
         vpnConnectedAt
@@ -39,22 +40,35 @@ final class VpnViewModel: ObservableObject {
     
     private let monitor: any WifiMonitoring
     private let settings: ConnectivitySettingsStore
+    private let systemSettingsMonitor: SystemSettingsVpnMonitor
     private var isInitialCheck = true
     private var connectedVPNID: String? = nil
     private var isFetchingLocation: Bool = false
     private var refreshTimer: Timer?
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         monitor: any WifiMonitoring,
-        settings: ConnectivitySettingsStore
+        settings: ConnectivitySettingsStore,
+        systemSettingsMonitor: SystemSettingsVpnMonitor? = nil
     ) {
         self.monitor = monitor
         self.settings = settings
+        self.systemSettingsMonitor = systemSettingsMonitor ?? SystemSettingsVpnMonitor()
         // Seed connection date from system immediately if active
         if let sysDate = VPNStatusFetcher.fetchActiveVPNConnectedAt() {
             self.vpnConnectedAt = sysDate
         }
         setupMonitoring()
+        setupSystemSettingsMonitoring()
+    }
+
+    private func setupSystemSettingsMonitoring() {
+        systemSettingsMonitor.$isVpnTabOpen
+            .sink { [weak self] isOpen in
+                self?.isSystemSettingsVpnOpen = isOpen
+            }
+            .store(in: &cancellables)
     }
 
     convenience init(settings: ConnectivitySettingsStore) {
