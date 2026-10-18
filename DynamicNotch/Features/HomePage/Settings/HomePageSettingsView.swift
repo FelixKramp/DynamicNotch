@@ -67,18 +67,8 @@ struct HomePageSettingsView: View {
                 systemImage: "book.pages.fill",
                 color: .gray,
                 accessibilityIdentifier: "settings.homePage.pages",
-                position: .first,
+                position: .single,
                 value: SettingsSubPage.homePagePages
-            )
-
-            SettingsNavigationRowView(
-                title: "settings.section.timer.title",
-                description: "settings.section.timer.subtitle",
-                systemImage: "timer",
-                color: .orange,
-                accessibilityIdentifier: "settings.homePage.timer",
-                position: .last,
-                value: SettingsSubPage.timer
             )
         }
     }

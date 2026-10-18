@@ -52,7 +52,7 @@ struct NotchAnimations {
     static let balanced: Self = {
         let damping: Double = 0.70
         let expandDamping: Double = 0.70
-        let baseResponse: Double = 0.50
+        let baseResponse: Double = 0.47
         let blend: Double = 1.0
         
         return Self(

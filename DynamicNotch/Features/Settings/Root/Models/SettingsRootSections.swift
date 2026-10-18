@@ -91,6 +91,7 @@ extension SettingsRootViewModel {
         
         case hud
         case calendar
+        case timer
         case faceID
         case screenRecording
         case externalDevices
@@ -174,6 +175,8 @@ extension SettingsRootViewModel {
                 return .network
             case "calendar", "events":
                 return .calendar
+            case "timer", "timers":
+                return .timer
             case "notifications", "externalDrives", "externalDevices":
                 return .externalDevices
             default:
@@ -321,6 +324,29 @@ private enum SettingsSectionCatalog {
                 tint: .blue,
                 stroke: true,
                 resetGroup: .calendar
+            )
+
+        case .timer:
+            return .init(
+                sidebarGroup: .system,
+                titleKey: "settings.section.timer.title",
+                fallbackTitle: "Timer",
+                subtitleKey: "settings.section.timer.subtitle",
+                fallbackSubtitle: "Clock timer live activity and stroke appearance.",
+                searchKeywords: [
+                    "timer",
+                    "clock",
+                    "countdown",
+                    "stopwatch",
+                    "alarm",
+                    "sound",
+                    "stroke",
+                    "live activity"
+                ],
+                systemImage: "timer",
+                imageName: nil,
+                tint: .orange,
+                resetGroup: .timer
             )
             
         case .externalDevices:

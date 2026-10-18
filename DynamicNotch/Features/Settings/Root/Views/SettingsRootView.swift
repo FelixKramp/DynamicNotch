@@ -534,6 +534,14 @@ struct SettingsRootView: View {
                 )
             }
 
+        case .timer:
+            detailContainer(for: section) {
+                TimerSettingsView(
+                    mediaSettings: settingsViewModel.mediaAndFiles,
+                    appearanceSettings: settingsViewModel.application
+                )
+            }
+
         case .lockScreen:
             detailContainer(for: section) {
                 LockScreenSettingsView(settings: settingsViewModel.lockScreen, applicationSettings: settingsViewModel.application)
