@@ -74,27 +74,18 @@ final class NotchConnectivityEventsHandler {
     func handleVpn(_ event: VpnEvent) {
         switch event {
         case .vpnConnected:
-            guard settingsViewModel.isTemporaryActivityEnabled(.vpn) else { return }
+            guard settingsViewModel.isLiveActivityEnabled(.vpn) else { return }
+            guard !settingsViewModel.isVpnSettingsTabActive else { return }
             notchViewModel.send(
-                .showTemporaryNotification(
-                    VpnConnectedNotchContent(
+                .showLiveActivity(
+                    VpnActiveNotchContent(
                         vpnViewModel: vpnViewModel,
-                        settings: settingsViewModel.connectivity
-                    ),
-                    duration: settingsViewModel.temporaryActivityDuration(for: .vpn)
+                        notchViewModel: notchViewModel
+                    )
                 )
             )
         case .vpnDisconnected:
-            guard settingsViewModel.isTemporaryActivityEnabled(.vpnDisconnected) else { return }
-            notchViewModel.send(
-                .showTemporaryNotification(
-                    VpnDisconnectedNotchContent(
-                        vpnViewModel: vpnViewModel,
-                        settings: settingsViewModel.connectivity
-                    ),
-                    duration: settingsViewModel.temporaryActivityDuration(for: .vpnDisconnected)
-                )
-            )
+            notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Vpn.vpn.id))
         }
     }
 }

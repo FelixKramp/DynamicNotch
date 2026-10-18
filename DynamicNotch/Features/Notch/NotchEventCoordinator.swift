@@ -211,6 +211,7 @@ final class NotchEventCoordinator: ObservableObject {
             settingsViewModel: settingsViewModel,
             notchViewModel: notchViewModel,
             wifiViewModel: wifiViewModel,
+            vpnViewModel: vpnViewModel,
             nowPlayingViewModel: nowPlayingViewModel,
             downloadViewModel: downloadViewModel,
             timerViewModel: timerViewModel,
@@ -390,6 +391,13 @@ final class NotchEventCoordinator: ObservableObject {
         vpnViewModel.$vpnEvent.compactMap { $0 }
             .sink { [weak self] event in
                 self?.handleVpnEvent(event)
+            }
+            .store(in: &cancellables)
+
+        vpnViewModel.$isSystemSettingsVpnOpen
+            .removeDuplicates()
+            .sink { [weak self] isOpen in
+                self?.settingsViewModel.isVpnSettingsTabActive = isOpen
             }
             .store(in: &cancellables)
 

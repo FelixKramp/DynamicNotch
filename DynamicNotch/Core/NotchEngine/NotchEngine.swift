@@ -63,7 +63,7 @@ final class NotchEngine: ObservableObject {
     }
 
     private var hideDelay: TimeInterval {
-        max(0, configuredHideDelay ?? animations.hideShowDelay)
+        max(0, configuredHideDelay ?? animations.transitionDelay)
     }
 
     private var queueDelay: TimeInterval {
@@ -132,7 +132,7 @@ final class NotchEngine: ObservableObject {
             if notchModel.temporaryNotificationContent?.id == content.id {
                 currentTemporaryNotificationDuration = duration
 
-                withAnimation(animations.contentUpdate) {
+                withAnimation(animations.updateContent) {
                     notchModel.temporaryNotificationContent = content
                     notchModel.updateToken = UUID()
                 }
@@ -162,7 +162,7 @@ final class NotchEngine: ObservableObject {
             updateLiveActivityStack(with: content)
 
             if notchModel.liveActivityContent?.id == content.id {
-                withAnimation(animations.contentUpdate) {
+                withAnimation(animations.updateContent) {
                     notchModel.liveActivityContent = content
                     notchModel.updateToken = UUID()
                 }
@@ -213,13 +213,13 @@ final class NotchEngine: ObservableObject {
 
         transition(
             hide: {
-                withAnimation(self.animations.contentHide) {
+                withAnimation(self.animations.hideContent) {
                     self.notchModel.temporaryNotificationContent = nil
                     self.currentTemporaryNotificationDuration = nil
                 }
             },
             show: {
-                withAnimation(self.animations.contentShow) {
+                withAnimation(self.animations.showContent) {
                     self.notchModel.liveActivityContent = contentToRestore
                     self.suspendedActivity = nil
                 }
@@ -355,13 +355,13 @@ final class NotchEngine: ObservableObject {
             let duration = currentTemporaryNotificationDuration
             transition(
                 hide: {
-                    withAnimation(self.animations.closeLiveActivity) {
+                    withAnimation(self.animations.collapseLiveActivity) {
                         self.notchModel.isLiveActivityExpanded = false
                         self.notchModel.temporaryNotificationContent = nil
                     }
                 },
                 show: {
-                    withAnimation(self.animations.contentShow) {
+                    withAnimation(self.animations.showContent) {
                         self.notchModel.temporaryNotificationContent = temporaryContent
                     }
                     if let duration, !duration.isInfinite {
@@ -376,13 +376,13 @@ final class NotchEngine: ObservableObject {
 
         transition(
             hide: {
-                withAnimation(self.animations.closeLiveActivity) {
+                withAnimation(self.animations.collapseLiveActivity) {
                     self.notchModel.isLiveActivityExpanded = false
                     self.notchModel.liveActivityContent = nil
                 }
             },
             show: {
-                withAnimation(self.animations.contentShow) {
+                withAnimation(self.animations.showContent) {
                     self.notchModel.liveActivityContent = liveActivityContent
                 }
             }
@@ -487,7 +487,7 @@ final class NotchEngine: ObservableObject {
         case .showTemporaryNotification(let content, let duration):
             if notchModel.temporaryNotificationContent?.id == content.id {
                 currentTemporaryNotificationDuration = duration
-                withAnimation(animations.contentUpdate) {
+                withAnimation(animations.updateContent) {
                     notchModel.temporaryNotificationContent = content
                     notchModel.updateToken = UUID()
                 }
@@ -513,33 +513,36 @@ final class NotchEngine: ObservableObject {
             return
         }
 
-        await withCheckedContinuation { continuation in
-            transition(
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            let didStart = transition(
                 customDelay: (notchModel.content == nil) ? 0.0 : nil,
                 hide: {
-                    withAnimation(self.animations.closeLiveActivity) {
+                    withAnimation(self.animations.collapseLiveActivity) {
                         self.notchModel.isLiveActivityExpanded = false
                         self.notchModel.liveActivityContent = nil
                     }
                 },
                 show: {
-                    withAnimation(self.animations.contentShow) {
+                    withAnimation(self.animations.showContent) {
                         self.notchModel.liveActivityContent = content
                     }
                     continuation.resume()
                 }
             )
+            if !didStart {
+                continuation.resume()
+            }
         }
     }
 
     private func showTemporaryTransition(_ content: NotchContentProtocol, duration: TimeInterval) async {
-        await withCheckedContinuation { continuation in
-            transition(
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            let didStart = transition(
                 customDelay: (notchModel.content == nil) ? 0.0 : nil,
                 hide: {
                     self.cancelTemporary()
 
-                    withAnimation(self.notchModel.isLiveActivityExpanded ? self.animations.closeLiveActivity : self.animations.contentHide) {
+                    withAnimation(self.notchModel.isLiveActivityExpanded ? self.animations.collapseLiveActivity : self.animations.hideContent) {
                         if self.notchModel.liveActivityContent != nil {
                             self.suspendedActivity = self.notchModel.liveActivityContent
                             self.notchModel.isLiveActivityExpanded = false
@@ -550,7 +553,7 @@ final class NotchEngine: ObservableObject {
                     }
                 },
                 show: {
-                    withAnimation(self.animations.contentShow) {
+                    withAnimation(self.animations.showContent) {
                         self.notchModel.temporaryNotificationContent = content
                     }
                     self.currentTemporaryNotificationDuration = duration
@@ -562,14 +565,17 @@ final class NotchEngine: ObservableObject {
                     continuation.resume()
                 }
             )
+            if !didStart {
+                continuation.resume()
+            }
         }
     }
 
     private func hideAllTransition() async {
-        await withCheckedContinuation { continuation in
-            transition(
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            let didStart = transition(
                 hide: {
-                    withAnimation(self.notchModel.isLiveActivityExpanded ? self.animations.closeLiveActivity : self.animations.contentHide) {
+                    withAnimation(self.notchModel.isLiveActivityExpanded ? self.animations.collapseLiveActivity : self.animations.hideContent) {
                         self.notchModel.isLiveActivityExpanded = false
                         self.notchModel.temporaryNotificationContent = nil
                         self.notchModel.liveActivityContent = nil
@@ -581,6 +587,9 @@ final class NotchEngine: ObservableObject {
                     continuation.resume()
                 }
             )
+            if !didStart {
+                continuation.resume()
+            }
         }
     }
 
@@ -604,8 +613,9 @@ final class NotchEngine: ObservableObject {
         }
     }
 
-    private func transition(customDelay: TimeInterval? = nil, hide: @escaping () -> Void, show: @escaping () -> Void) {
-        guard !isTransitioning else { return }
+    @discardableResult
+    private func transition(customDelay: TimeInterval? = nil, hide: @escaping () -> Void, show: @escaping () -> Void) -> Bool {
+        guard !isTransitioning else { return false }
 
         isTransitioning = true
         let currentDelay = customDelay ?? hideDelay
@@ -618,6 +628,7 @@ final class NotchEngine: ObservableObject {
                 self.isTransitioning = false
             }
         }
+        return true
     }
 
     private func cancelTemporary() {

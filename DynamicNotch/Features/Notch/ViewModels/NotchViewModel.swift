@@ -44,7 +44,7 @@ final class NotchViewModel: ObservableObject {
     }
 
     var surfaceSizeAnimation: Animation? {
-        isSwipeInteractionActive ? nil : animations.contentUpdate
+        isSwipeInteractionActive ? nil : animations.updateContent
     }
 
     var displayedContent: NotchContentProtocol? {
@@ -432,13 +432,13 @@ final class NotchViewModel: ObservableObject {
         let compressWidth = -max(20, currentWidth * 0.2)
         let stretchHeight = max(40, currentHeight * 0.2)
         
-        withAnimation(animations.focusCloseStretch) {
+        withAnimation(animations.focusDismissBounce) {
             self.focusCloseStretchWidth = compressWidth
             self.focusCloseStretchHeight = stretchHeight
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(self.animations.focusCloseStretch) {
+            withAnimation(self.animations.focusDismissBounce) {
                 self.focusCloseStretchWidth = 0
                 self.focusCloseStretchHeight = 0
             }
@@ -587,13 +587,13 @@ final class NotchViewModel: ObservableObject {
 
         if isExpandedPresentation {
             return .asymmetric(
-                insertion: expandedTransition.animation(animations.expandLiveActivityContentTransition),
-                removal: expandedTransition.animation(animations.closeLiveActivityContentTransition)
+                insertion: expandedTransition.animation(animations.expandedLiveActivityContentTransition),
+                removal: expandedTransition.animation(animations.collapsedLiveActivityContentTransition)
             )
         } else {
             return .asymmetric(
-                insertion: compactTransition.animation(animations.openContentTransition),
-                removal: compactTransition.animation(animations.closeLiveActivityContentTransition)
+                insertion: compactTransition.animation(animations.expandLiveActivity),
+                removal: compactTransition.animation(animations.expandedLiveActivityContentTransition)
             )
         }
     }

@@ -11,46 +11,35 @@ final class NotchTransitionMetricsTests: XCTestCase {
         XCTAssertEqual(offset, 0, accuracy: 0.001)
     }
 
-    func testVerticalCompensationOffsetMatchesExtraHeightMinusThirtyPercent() {
-        // baseHeight + 140 -> -98 (140 * 0.7)
+    func testVerticalCompensationOffsetMatchesExtraHeightMinusTwentyFivePercent() {
+        // baseHeight + 140 -> -105 (140 * 0.75)
         let offset = NotchTransitionMetrics.verticalCompensationOffset(
             for: 178,
             baseHeight: 38
         )
 
-        XCTAssertEqual(offset, -98, accuracy: 0.001)
+        XCTAssertEqual(offset, -105, accuracy: 0.001)
     }
 
-    func testCompactScaleXReturnsDefaultWhenExtraWidthIsLessThanOrEqualTo70() {
-        // baseWidth + 70
+    func testCompactScaleXSynchronizedWithNotchWidth() {
+        // baseWidth 200, notchWidth 250 -> scaleX = 200 / 250 = 0.8
         XCTAssertEqual(
-            NotchTransitionMetrics.compactScaleX(for: 270, baseWidth: 200),
+            NotchTransitionMetrics.compactScaleX(for: 250, baseWidth: 200),
             0.8,
             accuracy: 0.001
         )
-        // baseWidth + 30
+        // baseWidth 200, notchWidth 400 -> scaleX = 200 / 400 = 0.5
         XCTAssertEqual(
-            NotchTransitionMetrics.compactScaleX(for: 230, baseWidth: 200),
-            0.8,
+            NotchTransitionMetrics.compactScaleX(for: 400, baseWidth: 200),
+            0.5,
             accuracy: 0.001
         )
-        // baseWidth (extra width 0)
+        // baseWidth equals notchWidth -> scaleX = 1.0 (no scaling needed)
         XCTAssertEqual(
             NotchTransitionMetrics.compactScaleX(for: 200, baseWidth: 200),
-            0.8,
+            1.0,
             accuracy: 0.001
         )
-    }
-
-    func testCompactScaleXForExtraWidth140Is0_5() {
-        // baseWidth + 140 -> 0.5
-        let scale = NotchTransitionMetrics.compactScaleX(for: 340, baseWidth: 200)
-        XCTAssertEqual(scale, 0.5, accuracy: 0.001)
-    }
-
-    func testCompactScaleXClampsToMinimumBound() {
-        let scale = NotchTransitionMetrics.compactScaleX(for: 1000, baseWidth: 200)
-        XCTAssertEqual(scale, 0.2, accuracy: 0.001)
     }
 
     func testCompactScaleYReturns1_0ForBaseHeightOrLess() {

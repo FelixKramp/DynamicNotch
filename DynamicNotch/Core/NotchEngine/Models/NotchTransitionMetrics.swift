@@ -13,14 +13,15 @@ enum NotchTransitionMetrics {
         return -(max(0, notchHeight - baseHeight) * multiplier)
     }
 
-    static func compactScaleX(for notchWidth: CGFloat, baseWidth: CGFloat) -> CGFloat {
-        let extraWidth = notchWidth - baseWidth
-        guard extraWidth > 70 else {
-            return 0.8
+    static func compactScaleX(for notchWidth: CGFloat, baseWidth: CGFloat = 0) -> CGFloat {
+        guard notchWidth > 0 else { return 1.0 }
+        
+        if notchWidth > baseWidth && baseWidth > 0 {
+            let scale = baseWidth / notchWidth
+            return min(1.0, max(0.1, scale))
         }
-        let progress = (extraWidth - 70.0) / 70.0
-        let scale = 0.8 - (progress * 0.3)
-        return min(0.8, max(0.2, scale))
+        
+        return 1.0
     }
 
     static func compactScaleY(for notchHeight: CGFloat, baseHeight: CGFloat) -> CGFloat {

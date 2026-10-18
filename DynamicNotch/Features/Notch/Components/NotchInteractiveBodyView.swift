@@ -39,8 +39,6 @@ struct NotchInteractiveBodyView: View {
         .environment(\.colorScheme, .dark)
         .animation(notchViewModel.animations.strokeVisibility, value: notchViewModel.shouldRenderStroke)
         .animation(notchViewModel.animations.strokeVisibility, value: settingsViewModel.isShowNotchStrokeEnabled)
-        .animation(notchViewModel.animations.notchVisibility, value: notchViewModel.showNotch)
-        .animation(notchViewModel.animations.contentHide, value: isVisiblyHiddenInFullscreen)
     }
     
     private var isVisiblyHiddenInFullscreen: Bool {

@@ -11,6 +11,9 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.hotspotLiveActivityEnabled, defaultValue: false)
     var isHotspotLiveActivityEnabled: Bool
 
+    @StoredDefault(key: GeneralSettingsStorage.Keys.vpnLiveActivityEnabled, defaultValue: true)
+    var isVpnLiveActivityEnabled: Bool
+
     @StoredDefault(key: GeneralSettingsStorage.Keys.focusLiveActivityEnabled, defaultValue: true)
     var isFocusLiveActivityEnabled: Bool
 
@@ -78,9 +81,6 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.networkShowVPNTimer, defaultValue: true)
     var isVPNTimerVisible: Bool
 
-    @StoredDefault(key: GeneralSettingsStorage.Keys.selectedVPNID, defaultValue: "")
-    var selectedVPNID: String
-
     @StoredDefault(key: GeneralSettingsStorage.Keys.focusOffTemporaryActivityEnabled, defaultValue: true)
     var isFocusOffTemporaryActivityEnabled: Bool
 
@@ -109,14 +109,19 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
         hotspotAppearanceStyle = .minimal
     }
 
+    func resetNetwork() {
+        resetWifi()
+        resetVpn()
+    }
+
     func resetVpn() {
+        isVpnLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.vpnLiveActivityEnabled)
         isVpnTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.vpnTemporaryActivityEnabled)
         vpnTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.vpnTemporaryActivityDuration)
         isVpnDisconnectedTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.vpnDisconnectedTemporaryActivityEnabled)
         vpnDisconnectedTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.vpnDisconnectedTemporaryActivityDuration)
         isVPNDetailVisible = defaultBool(for: GeneralSettingsStorage.Keys.networkShowVPNDetail)
         isVPNTimerVisible = defaultBool(for: GeneralSettingsStorage.Keys.networkShowVPNTimer)
-        selectedVPNID = defaultString(for: GeneralSettingsStorage.Keys.selectedVPNID)
     }
 
     func resetFocus() {

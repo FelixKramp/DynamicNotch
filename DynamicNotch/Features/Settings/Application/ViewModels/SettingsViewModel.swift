@@ -13,8 +13,9 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         case timer
         case focus
         case bluetooth
-        case wifi
-        case vpn
+        case network
+        static var wifi: ResetGroup { .network }
+        static var vpn: ResetGroup { .network }
         case battery
         case hud
         case lockScreen
@@ -28,6 +29,7 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
     enum LiveActivityPreference {
         case homePage
         case hotspot
+        case vpn
         case focus
         case nowPlaying
         case lockScreen
@@ -253,6 +255,13 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         set { connectivity.isHotspotLiveActivityEnabled = newValue }
     }
 
+    var isVpnLiveActivityEnabled: Bool {
+        get { connectivity.isVpnLiveActivityEnabled }
+        set { connectivity.isVpnLiveActivityEnabled = newValue }
+    }
+
+    @Published var isVpnSettingsTabActive: Bool = false
+
     var isFocusLiveActivityEnabled: Bool {
         get { connectivity.isFocusLiveActivityEnabled }
         set { connectivity.isFocusLiveActivityEnabled = newValue }
@@ -349,6 +358,8 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
             return homePage.isHomePageLiveActivityEnabled
         case .hotspot:
             return connectivity.isHotspotLiveActivityEnabled
+        case .vpn:
+            return connectivity.isVpnLiveActivityEnabled
         case .focus:
             return connectivity.isFocusLiveActivityEnabled
         case .nowPlaying:
@@ -466,9 +477,8 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
             connectivity.resetFocus()
         case .bluetooth:
             connectivity.resetBluetooth()
-        case .wifi:
+        case .network:
             connectivity.resetWifi()
-        case .vpn:
             connectivity.resetVpn()
         case .battery:
             battery.reset()

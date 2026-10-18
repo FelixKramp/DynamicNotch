@@ -77,9 +77,10 @@ extension SettingsRootViewModel {
         case debug
         #endif
     
-        case wifi
+        case network
+        static var wifi: Section { .network }
+        static var vpn: Section { .network }
         case bluetooth
-        case vpn
         case focus
         case battery
         
@@ -89,6 +90,7 @@ extension SettingsRootViewModel {
         
         case hud
         case calendar
+        case timer
         case faceID
         case screenRecording
         case externalDevices
@@ -168,10 +170,12 @@ extension SettingsRootViewModel {
                 return .drop
             case "temporaryActivity":
                 return .battery
-            case "hotspot", "wifi", "vpn":
-                return .wifi
+            case "hotspot", "wifi", "vpn", "network":
+                return .network
             case "calendar", "events":
                 return .calendar
+            case "timer", "timers":
+                return .timer
             case "notifications", "externalDrives", "externalDevices":
                 return .externalDevices
             default:
@@ -320,6 +324,29 @@ private enum SettingsSectionCatalog {
                 stroke: true,
                 resetGroup: .calendar
             )
+
+        case .timer:
+            return .init(
+                sidebarGroup: .system,
+                titleKey: "settings.section.timer.title",
+                fallbackTitle: "Timer",
+                subtitleKey: "settings.section.timer.subtitle",
+                fallbackSubtitle: "Clock timer live activity and stroke appearance.",
+                searchKeywords: [
+                    "timer",
+                    "clock",
+                    "countdown",
+                    "stopwatch",
+                    "alarm",
+                    "sound",
+                    "stroke",
+                    "live activity"
+                ],
+                systemImage: "timer",
+                imageName: nil,
+                tint: .orange,
+                resetGroup: .timer
+            )
             
         case .externalDevices:
             return .init(
@@ -455,46 +482,32 @@ private enum SettingsSectionCatalog {
                 resetGroup: .bluetooth
             )
 
-        case .wifi:
+        case .network:
             return .init(
                 sidebarGroup: .connectivity,
-                titleKey: "settings.section.wifi.title",
-                fallbackTitle: "Wi-Fi",
-                subtitleKey: "settings.section.wifi.subtitle",
-                fallbackSubtitle: "Wi-Fi and Personal Hotspot activity.",
+                titleKey: "settings.section.network.title",
+                fallbackTitle: "Network",
+                subtitleKey: "settings.section.network.subtitle",
+                fallbackSubtitle: "Wi-Fi, Personal Hotspot, and VPN connection settings.",
                 searchKeywords: [
+                    "network",
                     "wifi",
-                    "vpn",
                     "hotspot",
+                    "vpn",
+                    "connection",
+                    "select",
+                    "preferred",
                     "timer",
                     "details",
                     "change",
                     "stroke",
-                    "duration"
+                    "duration",
+                    "live activity"
                 ],
-                systemImage: "wifi",
+                systemImage: "network",
                 imageName: nil,
                 tint: .blue,
-                resetGroup: .wifi
-            )
-
-        case .vpn:
-            return .init(
-                sidebarGroup: .connectivity,
-                titleKey: "settings.section.vpn.title",
-                fallbackTitle: "VPN",
-                subtitleKey: "settings.section.vpn.subtitle",
-                fallbackSubtitle: "Select the preferred VPN connection and configure behavior.",
-                searchKeywords: [
-                    "vpn",
-                    "connection",
-                    "select",
-                    "preferred"
-                ],
-                systemImage: "network.badge.shield.half.filled",
-                imageName: nil,
-                tint: .blue,
-                resetGroup: .vpn
+                resetGroup: .network
             )
 
         case .battery:

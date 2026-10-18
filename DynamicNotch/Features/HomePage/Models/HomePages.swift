@@ -10,7 +10,6 @@ import SwiftUI
 enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
     case camera
     case localTimer
-    case vpn
     
     var id: String { rawValue }
     
@@ -18,7 +17,6 @@ enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
         switch self {
         case .camera: return "settings.homePage.pages.camera.title"
         case .localTimer: return "settings.homePage.pages.timer.title"
-        case .vpn: return "settings.homePage.pages.vpn.title"
         }
     }
     
@@ -26,7 +24,6 @@ enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
         switch self {
         case .camera: return "settings.homePage.pages.camera.subtitle"
         case .localTimer: return "settings.homePage.pages.timer.subtitle"
-        case .vpn: return "settings.homePage.pages.vpn.subtitle"
         }
     }
     
@@ -34,7 +31,6 @@ enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
         switch self {
         case .camera: return "camera.fill"
         case .localTimer: return "timer"
-        case .vpn: return "network.badge.shield.half.filled"
         }
     }
     
@@ -42,7 +38,6 @@ enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
         switch self {
         case .camera: return .gray
         case .localTimer: return .orange
-        case .vpn: return .blue
         }
     }
     
@@ -50,7 +45,6 @@ enum HomePages: String, CaseIterable, Hashable, Codable, Identifiable {
         switch self {
         case .camera: return .black
         case .localTimer: return .white
-        case .vpn: return .white
         }
     }
 }

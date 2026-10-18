@@ -52,7 +52,10 @@ enum NotchContentRegistry {
     }
     
     enum Vpn {
-        static let vpn = NotchContentDescriptor(id: "vpn.connected")
+        static let vpn = NotchContentDescriptor(
+            id: "vpn.active",
+            priorityKey: .vpn
+        )
         static let disconnected = NotchContentDescriptor(id: "vpn.disconnected")
     }
 

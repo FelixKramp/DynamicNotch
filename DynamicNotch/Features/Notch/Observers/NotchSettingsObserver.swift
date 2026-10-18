@@ -11,6 +11,7 @@ final class NotchSettingsObserver {
     private let settingsViewModel: SettingsViewModel
     private let notchViewModel: NotchViewModel
     private let wifiViewModel: WifiViewModel
+    private let vpnViewModel: VpnViewModel
     private let nowPlayingViewModel: NowPlayingViewModel
     private let downloadViewModel: DownloadViewModel
     private let timerViewModel: TimerViewModel
@@ -33,6 +34,7 @@ final class NotchSettingsObserver {
         settingsViewModel: SettingsViewModel,
         notchViewModel: NotchViewModel,
         wifiViewModel: WifiViewModel,
+        vpnViewModel: VpnViewModel,
         nowPlayingViewModel: NowPlayingViewModel,
         downloadViewModel: DownloadViewModel,
         timerViewModel: TimerViewModel,
@@ -53,6 +55,7 @@ final class NotchSettingsObserver {
         self.settingsViewModel = settingsViewModel
         self.notchViewModel = notchViewModel
         self.wifiViewModel = wifiViewModel
+        self.vpnViewModel = vpnViewModel
         self.nowPlayingViewModel = nowPlayingViewModel
         self.downloadViewModel = downloadViewModel
         self.timerViewModel = timerViewModel
@@ -157,6 +160,36 @@ final class NotchSettingsObserver {
                 guard self.wifiViewModel.hotspotActive else { return }
 
                 self.connectivityHandler.handleWifi(.hotspotActive)
+            }
+            .store(in: &cancellables)
+
+        settingsViewModel.connectivity.$isVpnLiveActivityEnabled
+            .removeDuplicates()
+            .sink { [weak self] isEnabled in
+                guard let self else { return }
+
+                if isEnabled {
+                    if self.vpnViewModel.vpnConnected {
+                        self.connectivityHandler.handleVpn(.vpnConnected)
+                    }
+                } else {
+                    self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Vpn.vpn.id))
+                }
+            }
+            .store(in: &cancellables)
+
+        settingsViewModel.$isVpnSettingsTabActive
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isActive in
+                guard let self else { return }
+                if isActive {
+                    self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Vpn.vpn.id))
+                } else {
+                    if self.settingsViewModel.isLiveActivityEnabled(.vpn) && self.vpnViewModel.vpnConnected {
+                        self.connectivityHandler.handleVpn(.vpnConnected)
+                    }
+                }
             }
             .store(in: &cancellables)
     }

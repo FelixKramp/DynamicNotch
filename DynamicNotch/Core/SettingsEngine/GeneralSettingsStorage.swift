@@ -43,6 +43,7 @@ enum GeneralSettingsStorage {
         static let hudColoredLevelEnabled = "settings.hud.coloredLevel"
         static let hudColoredStrokeEnabled = "settings.hud.coloredStroke"
         static let hotspotLiveActivityEnabled = "settings.live.hotspot"
+        static let vpnLiveActivityEnabled = "settings.live.vpn"
         static let focusLiveActivityEnabled = "settings.live.focus"
         static let focusOnAutoHideEnabled = "settings.live.focus.autoHide"
         static let focusOnTemporaryActivityDuration = "settings.temporary.focusOn.duration"
@@ -126,7 +127,6 @@ enum GeneralSettingsStorage {
         static let homePageDisabled = "settings.homePage.disabled"
         static let homePagePageIndicator = "settings.homePage.pageIndicator"
         static let homePageIndicatorSize = "settings.homePage.indicatorSize"
-        static let selectedVPNID = "settings.vpn.selectedID"
     }
 
     static let defaultValues: [String: Any] = [
@@ -173,6 +173,7 @@ enum GeneralSettingsStorage {
         Keys.hudColoredLevelEnabled: true,
         Keys.hudColoredStrokeEnabled: false,
         Keys.hotspotLiveActivityEnabled: true,
+        Keys.vpnLiveActivityEnabled: true,
         Keys.focusLiveActivityEnabled: true,
         Keys.focusOnAutoHideEnabled: true,
         Keys.focusOnTemporaryActivityDuration: 3,
@@ -252,11 +253,10 @@ enum GeneralSettingsStorage {
         Keys.lowBatterySound: true,
         Keys.fullBatterySound: true,
         Keys.homePageLiveActivity: true,
-        Keys.homePageOrder: ["camera", "mediaPlayer", "localTimer", "vpn"],
+        Keys.homePageOrder: ["camera", "mediaPlayer", "localTimer"],
         Keys.homePageDisabled: [String](),
         Keys.homePagePageIndicator: true,
         Keys.homePageIndicatorSize: "medium",
-        Keys.selectedVPNID: "",
         Keys.calendarLiveActivity: true,
         Keys.calendarHideWhenFocused: true,
         Keys.calendarShowAllDay: true,

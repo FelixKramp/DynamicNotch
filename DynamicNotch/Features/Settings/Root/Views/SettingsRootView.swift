@@ -237,7 +237,8 @@ struct SettingsRootView: View {
         }
         .onChange(of: settingsViewModel.application.appearanceMode) {
             updateWindowStyle()
-        }        .alert(item: $pendingResetSubPage) { subPage in
+        }
+        .alert(item: $pendingResetSubPage) { subPage in
             let title = settingsViewModel.application.appLanguage.locale.dnFormat(
                 "settings.reset.title",
                 fallback: "Reset %@ settings?",
@@ -510,17 +511,9 @@ struct SettingsRootView: View {
                 )
             }
 
-        case .wifi:
+        case .network:
             detailContainer(for: section) {
-                WifiSettingsView(
-                    connectivitySettings: settingsViewModel.connectivity,
-                    appearanceSettings: settingsViewModel.application
-                )
-            }
-
-        case .vpn:
-            detailContainer(for: section) {
-                VpnSettingsView(
+                NetworkSettingsView(
                     connectivitySettings: settingsViewModel.connectivity,
                     appearanceSettings: settingsViewModel.application
                 )
@@ -539,6 +532,14 @@ struct SettingsRootView: View {
                 HUDSettingsView(
                     settings: settingsViewModel.hud,
                     applicationSettings: settingsViewModel.application
+                )
+            }
+
+        case .timer:
+            detailContainer(for: section) {
+                TimerSettingsView(
+                    mediaSettings: settingsViewModel.mediaAndFiles,
+                    appearanceSettings: settingsViewModel.application
                 )
             }
 
