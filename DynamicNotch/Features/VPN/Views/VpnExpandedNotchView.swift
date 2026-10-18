@@ -32,9 +32,9 @@ struct VpnExpandedNotchView: View {
             Spacer()
             featuredVPNView()
         }
-        .padding(.leading, isNotchlessScreen ? 15 : 36)
+        .padding(.leading, isNotchlessScreen ? 15 : 40)
         .padding(.trailing, isNotchlessScreen ? 15 : 34)
-        .padding(.bottom, isNotchlessScreen ? 20 : 12)
+        .padding(.bottom, isNotchlessScreen ? 17 : 12)
         .onReceive(timer) { _ in
             updateTimer()
         }
@@ -45,12 +45,15 @@ struct VpnExpandedNotchView: View {
         .onDisappear {
             viewModel.stopMonitoring()
         }
+        .onChange(of: viewModel.connectedAt) { _, _ in
+            updateTimer()
+        }
     }
     
     @ViewBuilder
     private func featuredVPNView() -> some View {
         if let vpn = viewModel.vpns.first(where: { $0.isConnected }) {
-            HStack(spacing: 16) {
+            HStack(spacing: 14) {
                 logoOrFlag(for: vpn)
                 
                 VStack(alignment: .leading, spacing: 3) {
@@ -62,14 +65,15 @@ struct VpnExpandedNotchView: View {
                         Text(vpnTitle(for: vpn))
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(.white)
+                            .lineLimit(1)
                     }
-                        
+                    
                     HStack(spacing: 6) {
                         Circle()
-                            .fill(vpn.isConnected ? .green : .red)
+                            .fill(.green)
                             .frame(width: 10, height: 10)
                         
-                        Text(verbatim: vpn.isConnected ? "Сonnected (\(timeString))" : "Disconnected")
+                        Text(verbatim: "Сonnected (\(timeString))")
                             .font(.system(size: 14))
                             .foregroundStyle(.white.opacity(0.5))
                             .lineLimit(1)
@@ -81,11 +85,11 @@ struct VpnExpandedNotchView: View {
                     viewModel.toggleVPN(vpn)
                     notchViewModel.dismissActiveContent()
                 }) {
-                    Image(systemName: vpn.isConnected ? "network.slash" : "powercord.fill")
+                    Image(systemName: "network.slash")
                         .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(vpn.isConnected ? .red : .blue)
+                        .foregroundStyle(.red)
                 }
-                .buttonStyle(PrimaryButtonStyle(width: 50, height: 50, backgroundColor: vpn.isConnected ? Color.red.opacity(0.25) : Color.blue.opacity(0.25)))
+                .buttonStyle(PrimaryButtonStyle(width: 50, height: 50, backgroundColor: .red.opacity(0.25)))
             }
         }
     }
@@ -106,7 +110,6 @@ struct VpnExpandedNotchView: View {
         if let flag = viewModel.countryFlag ?? viewModel.inferredFlag(for: vpn) {
             Text(flag)
                 .font(.system(size: 48))
-                .frame(width: 48, height: 48)
         } else {
             Image(systemName: "globe.europe.africa.fill")
                 .font(.system(size: 40, weight: .semibold))

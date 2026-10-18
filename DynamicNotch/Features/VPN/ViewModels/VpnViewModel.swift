@@ -188,9 +188,16 @@ final class VpnViewModel: ObservableObject {
                 self.vpns = finalVPNList
                 self.isLoading = false
                 
-                if let finalConnDate {
-                    self.vpnConnectedAt = finalConnDate
+                if finalActiveUuid != nil {
+                    if let finalConnDate {
+                        self.vpnConnectedAt = finalConnDate
+                    } else if self.vpnConnectedAt == nil {
+                        self.vpnConnectedAt = .now
+                    }
+                } else {
+                    self.vpnConnectedAt = nil
                 }
+                
                 if let finalBundleID {
                     self.vpnBundleID = finalBundleID
                     self.lastVpnBundleID = finalBundleID

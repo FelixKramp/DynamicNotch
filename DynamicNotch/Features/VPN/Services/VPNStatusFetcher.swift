@@ -122,10 +122,23 @@ enum VPNStatusFetcher {
                 let parts = line.components(separatedBy: "LastStatusChangeTime :")
                 if parts.count > 1 {
                     let dateStr = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                    let formats = [
+                        "MM/dd/yyyy HH:mm:ss",
+                        "yyyy-MM-dd HH:mm:ss",
+                        "dd/MM/yyyy HH:mm:ss",
+                        "MM/dd/yy HH:mm:ss",
+                        "dd.MM.yyyy HH:mm:ss"
+                    ]
                     let formatter = DateFormatter()
-                    formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
                     formatter.locale = Locale(identifier: "en_US_POSIX")
-                    return formatter.date(from: dateStr)
+                    formatter.timeZone = TimeZone.current
+                    
+                    for format in formats {
+                        formatter.dateFormat = format
+                        if let date = formatter.date(from: dateStr) {
+                            return date
+                        }
+                    }
                 }
             }
         }

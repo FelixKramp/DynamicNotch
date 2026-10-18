@@ -165,9 +165,6 @@ struct VPNStatusRowView: View {
             return
         }
         let elapsed = Date().timeIntervalSince(connectedAt)
-        let totalSeconds = max(0, Int(elapsed))
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        elapsedString = String(format: "%02d:%02d", minutes, seconds)
+        elapsedString = elapsed.formattedDuration
     }
 }

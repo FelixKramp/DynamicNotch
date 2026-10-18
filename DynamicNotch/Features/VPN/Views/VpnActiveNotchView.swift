@@ -25,9 +25,13 @@ struct VpnActiveNotchView: View {
     
     var body: some View {
         HStack {
-            Image(systemName: "network.badge.shield.half.filled")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(.green)
+            if let bandleVpn = vpnViewModel.vpnBundleID, let nsImage = getAppIcon(for: bandleVpn) {
+                Image(nsImage: nsImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: isNotchlessScreen ? 22 : 26, height: isNotchlessScreen ? 22 : 26)
+                    .cornerRadius(8)
+            }
             
             Spacer()
             
@@ -36,13 +40,39 @@ struct VpnActiveNotchView: View {
                 .foregroundStyle(.orange.gradient)
         }
         .font(.system(size: isNotchlessScreen ? 13 : 14))
-        .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
-        .padding(.trailing, isNotchlessScreen ? 7.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 5.scaled(by: scale) : 12.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? 7.scaled(by: scale) : 15.scaled(by: scale))
         .onReceive(timer) { _ in
             updateTimer()
         }
         .onAppear {
+            vpnViewModel.startMonitoring()
             updateTimer()
         }
+        .onDisappear {
+            vpnViewModel.stopMonitoring()
+        }
+        .onChange(of: vpnViewModel.vpnConnectedAt) { _, _ in
+            updateTimer()
+        }
+    }
+    
+    @ViewBuilder
+    private func logoOrFlag(for vpn: VPNConfiguration) -> some View {
+        if let flag = vpnViewModel.countryFlag ?? vpnViewModel.inferredFlag(for: vpn) {
+            Text(flag)
+                .font(.system(size: isNotchlessScreen ? 24 : 28))
+        } else {
+            Image(systemName: "globe.europe.africa.fill")
+                .font(.system(size: isNotchlessScreen ? 16 : 18, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.6))
+        }
+    }
+    
+    private func getAppIcon(for bundleID: String) -> NSImage? {
+        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) else {
+            return nil
+        }
+        return NSWorkspace.shared.icon(forFile: appURL.path)
     }
 }

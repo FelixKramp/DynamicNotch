@@ -33,6 +33,12 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         baseHeight * 0.45
     }
 
+    var windowLink: (@MainActor () -> Void)? {
+        return {
+            SettingsWindowController.shared.showWindow(selecting: .vpn)
+        }
+    }
+
     @MainActor
     func makeView() -> AnyView {
         AnyView(
