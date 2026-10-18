@@ -83,7 +83,7 @@ struct VpnExpandedNotchView: View {
                 
                 Button(action: {
                     viewModel.toggleVPN(vpn)
-                    notchViewModel.dismissActiveContent()
+                    notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Vpn.vpn.id))
                 }) {
                     Image(systemName: "network.slash")
                         .font(.system(size: 22, weight: .semibold))
