@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SystemConfiguration
 
 struct VPNConfiguration: Identifiable, Hashable, Sendable {
     let id: String
@@ -41,6 +42,15 @@ enum VPNStatusFetcher {
     }
     
     nonisolated static func fetchVPNConnectedAt(uuid: String) -> Date? {
+        // First try native SystemConfiguration API to read the exact Date from ExtendedStatus
+        if let conn = SCNetworkConnectionCreateWithServiceID(nil, uuid as CFString, { _, _, _ in }, nil),
+           let ext = SCNetworkConnectionCopyExtendedStatus(conn) as? [String: Any] {
+            if let date = ext["LastStatusChangeTime"] as? Date {
+                return date
+            }
+        }
+        
+        // Fallback to scutil CLI output
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/sbin/scutil")
         process.arguments = ["--nc", "status", uuid]
@@ -64,6 +74,22 @@ enum VPNStatusFetcher {
     }
     
     nonisolated static func fetchVPNServerAddress(uuid: String) -> String? {
+        // First try native SystemConfiguration API
+        if let conn = SCNetworkConnectionCreateWithServiceID(nil, uuid as CFString, { _, _, _ in }, nil),
+           let ext = SCNetworkConnectionCopyExtendedStatus(conn) as? [String: Any] {
+            if let ipv4 = ext["IPv4"] as? [String: Any],
+               let sAddr = ipv4["ServerAddress"] as? String,
+               !sAddr.isEmpty {
+                return sAddr
+            }
+            if let vpn = ext["VPN"] as? [String: Any],
+               let rAddr = vpn["RemoteAddress"] as? String,
+               !rAddr.isEmpty {
+                return rAddr
+            }
+        }
+        
+        // Fallback to scutil CLI output
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/sbin/scutil")
         process.arguments = ["--nc", "status", uuid]
@@ -107,7 +133,37 @@ enum VPNStatusFetcher {
         return nil
     }
     
+    nonisolated static func fetchActiveVPNTuple() -> (uuid: String, connectedAt: Date?, serverAddress: String?)? {
+        if let store = SCDynamicStoreCreate(nil, "DynamicNotch" as CFString, { _, _, _ in }, nil),
+           let globalIPv4 = SCDynamicStoreCopyValue(store, "State:/Network/Global/IPv4" as CFString) as? [String: Any],
+           let iface = globalIPv4["PrimaryInterface"] as? String,
+           let serviceID = globalIPv4["PrimaryService"] as? String,
+           (iface.hasPrefix("utun") || iface.hasPrefix("ipsec") || iface.hasPrefix("ppp")) {
+            
+            var date: Date? = nil
+            var server: String? = nil
+            
+            if let conn = SCNetworkConnectionCreateWithServiceID(nil, serviceID as CFString, { _, _, _ in }, nil),
+               let ext = SCNetworkConnectionCopyExtendedStatus(conn) as? [String: Any] {
+                date = ext["LastStatusChangeTime"] as? Date
+                if let ipv4 = ext["IPv4"] as? [String: Any] {
+                    server = ipv4["ServerAddress"] as? String
+                } else if let vpn = ext["VPN"] as? [String: Any] {
+                    server = vpn["RemoteAddress"] as? String
+                }
+            }
+            return (serviceID, date, server)
+        }
+        return nil
+    }
+    
     nonisolated static func fetchActiveVPNConnectedAt() -> Date? {
+        // 1. Check dynamic store primary service directly
+        if let active = fetchActiveVPNTuple(), let date = active.connectedAt {
+            return date
+        }
+        
+        // 2. Fall back to scanning the VPN list
         let list = fetchVPNs()
         guard let activeVPN = list.first(where: { $0.isConnected }) else {
             return nil

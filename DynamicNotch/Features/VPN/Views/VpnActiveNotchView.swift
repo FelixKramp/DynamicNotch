@@ -57,22 +57,17 @@ struct VpnActiveNotchView: View {
         }
     }
     
-    @ViewBuilder
-    private func logoOrFlag(for vpn: VPNConfiguration) -> some View {
-        if let flag = vpnViewModel.countryFlag ?? vpnViewModel.inferredFlag(for: vpn) {
-            Text(flag)
-                .font(.system(size: isNotchlessScreen ? 24 : 28))
-        } else {
-            Image(systemName: "globe.europe.africa.fill")
-                .font(.system(size: isNotchlessScreen ? 16 : 18, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.6))
-        }
-    }
-    
     private func getAppIcon(for bundleID: String) -> NSImage? {
-        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) else {
-            return nil
+        if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID) {
+            return NSWorkspace.shared.icon(forFile: appURL.path)
         }
-        return NSWorkspace.shared.icon(forFile: appURL.path)
+        let parts = bundleID.components(separatedBy: ".")
+        if parts.count > 2 {
+            let parentID = parts.dropLast().joined(separator: ".")
+            if let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: parentID) {
+                return NSWorkspace.shared.icon(forFile: appURL.path)
+            }
+        }
+        return nil
     }
 }

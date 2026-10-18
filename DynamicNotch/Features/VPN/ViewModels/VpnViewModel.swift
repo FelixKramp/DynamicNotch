@@ -50,6 +50,10 @@ final class VpnViewModel: ObservableObject {
     ) {
         self.monitor = monitor
         self.settings = settings
+        // Seed connection date from system immediately if active
+        if let sysDate = VPNStatusFetcher.fetchActiveVPNConnectedAt() {
+            self.vpnConnectedAt = sysDate
+        }
         setupMonitoring()
     }
 
@@ -77,7 +81,12 @@ final class VpnViewModel: ObservableObject {
                 self.vpnName = nextVPNName
                 self.lastVpnName = nextVPNName
                 if self.vpnConnected == false {
-                    self.vpnConnectedAt = .now
+                    // Try to get real connection date from macOS system configuration immediately
+                    if let sysDate = VPNStatusFetcher.fetchActiveVPNConnectedAt() {
+                        self.vpnConnectedAt = sysDate
+                    } else if self.vpnConnectedAt == nil {
+                        self.vpnConnectedAt = .now
+                    }
                     self.refresh()
                 }
             } else {
@@ -143,6 +152,14 @@ final class VpnViewModel: ObservableObject {
                 bundleID = activeVpn.bundleID
                 connDate = VPNStatusFetcher.fetchVPNConnectedAt(uuid: activeVpn.id)
                 serverAddr = VPNStatusFetcher.fetchVPNServerAddress(uuid: activeVpn.id)
+            } else if let activeTuple = VPNStatusFetcher.fetchActiveVPNTuple() {
+                activeConnectedUuid = activeTuple.uuid
+                connDate = activeTuple.connectedAt
+                serverAddr = activeTuple.serverAddress
+            }
+            
+            if connDate == nil {
+                connDate = VPNStatusFetcher.fetchActiveVPNConnectedAt()
             }
             
             if let activeId = activeConnectedUuid, let serverAddr {
@@ -188,7 +205,7 @@ final class VpnViewModel: ObservableObject {
                 self.vpns = finalVPNList
                 self.isLoading = false
                 
-                if finalActiveUuid != nil {
+                if finalActiveUuid != nil || self.vpnConnected {
                     if let finalConnDate {
                         self.vpnConnectedAt = finalConnDate
                     } else if self.vpnConnectedAt == nil {
