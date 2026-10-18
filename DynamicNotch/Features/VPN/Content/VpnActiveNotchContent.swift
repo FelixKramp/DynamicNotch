@@ -14,7 +14,7 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var isExpandable: Bool { true }
 
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        .init(width: baseWidth + 120, height: baseHeight)
+        .init(width: baseWidth + 105, height: baseHeight)
     }
 
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
@@ -35,7 +35,7 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
 
     var windowLink: (@MainActor () -> Void)? {
         return {
-            SettingsWindowController.shared.showWindow(selecting: .vpn)
+            SettingsWindowController.shared.showWindow(selecting: .network)
         }
     }
 

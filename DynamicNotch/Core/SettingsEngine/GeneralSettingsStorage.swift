@@ -43,6 +43,7 @@ enum GeneralSettingsStorage {
         static let hudColoredLevelEnabled = "settings.hud.coloredLevel"
         static let hudColoredStrokeEnabled = "settings.hud.coloredStroke"
         static let hotspotLiveActivityEnabled = "settings.live.hotspot"
+        static let vpnLiveActivityEnabled = "settings.live.vpn"
         static let focusLiveActivityEnabled = "settings.live.focus"
         static let focusOnAutoHideEnabled = "settings.live.focus.autoHide"
         static let focusOnTemporaryActivityDuration = "settings.temporary.focusOn.duration"
@@ -172,6 +173,7 @@ enum GeneralSettingsStorage {
         Keys.hudColoredLevelEnabled: true,
         Keys.hudColoredStrokeEnabled: false,
         Keys.hotspotLiveActivityEnabled: true,
+        Keys.vpnLiveActivityEnabled: true,
         Keys.focusLiveActivityEnabled: true,
         Keys.focusOnAutoHideEnabled: true,
         Keys.focusOnTemporaryActivityDuration: 3,

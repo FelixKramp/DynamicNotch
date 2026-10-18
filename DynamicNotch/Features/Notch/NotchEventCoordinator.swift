@@ -211,6 +211,7 @@ final class NotchEventCoordinator: ObservableObject {
             settingsViewModel: settingsViewModel,
             notchViewModel: notchViewModel,
             wifiViewModel: wifiViewModel,
+            vpnViewModel: vpnViewModel,
             nowPlayingViewModel: nowPlayingViewModel,
             downloadViewModel: downloadViewModel,
             timerViewModel: timerViewModel,

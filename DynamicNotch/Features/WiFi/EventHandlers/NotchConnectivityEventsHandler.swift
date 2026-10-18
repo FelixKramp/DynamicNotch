@@ -74,6 +74,7 @@ final class NotchConnectivityEventsHandler {
     func handleVpn(_ event: VpnEvent) {
         switch event {
         case .vpnConnected:
+            guard settingsViewModel.isLiveActivityEnabled(.vpn) else { return }
             notchViewModel.send(
                 .showLiveActivity(
                     VpnActiveNotchContent(

@@ -11,6 +11,9 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.hotspotLiveActivityEnabled, defaultValue: false)
     var isHotspotLiveActivityEnabled: Bool
 
+    @StoredDefault(key: GeneralSettingsStorage.Keys.vpnLiveActivityEnabled, defaultValue: true)
+    var isVpnLiveActivityEnabled: Bool
+
     @StoredDefault(key: GeneralSettingsStorage.Keys.focusLiveActivityEnabled, defaultValue: true)
     var isFocusLiveActivityEnabled: Bool
 
@@ -106,7 +109,13 @@ final class ConnectivitySettingsStore: SettingsStoreBase {
         hotspotAppearanceStyle = .minimal
     }
 
+    func resetNetwork() {
+        resetWifi()
+        resetVpn()
+    }
+
     func resetVpn() {
+        isVpnLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.vpnLiveActivityEnabled)
         isVpnTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.vpnTemporaryActivityEnabled)
         vpnTemporaryActivityDuration = defaultInt(for: GeneralSettingsStorage.Keys.vpnTemporaryActivityDuration)
         isVpnDisconnectedTemporaryActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.vpnDisconnectedTemporaryActivityEnabled)

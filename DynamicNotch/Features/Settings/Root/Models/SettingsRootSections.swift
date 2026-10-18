@@ -77,11 +77,13 @@ extension SettingsRootViewModel {
         case debug
         #endif
     
-        case wifi
+        case network
         case bluetooth
-        case vpn
         case focus
         case battery
+
+        static var wifi: Section { .network }
+        static var vpn: Section { .network }
         
         case nowPlaying
         case downloads
@@ -168,8 +170,8 @@ extension SettingsRootViewModel {
                 return .drop
             case "temporaryActivity":
                 return .battery
-            case "hotspot", "wifi", "vpn":
-                return .wifi
+            case "hotspot", "wifi", "vpn", "network":
+                return .network
             case "calendar", "events":
                 return .calendar
             case "notifications", "externalDrives", "externalDevices":
@@ -455,14 +457,15 @@ private enum SettingsSectionCatalog {
                 resetGroup: .bluetooth
             )
 
-        case .wifi:
+        case .network:
             return .init(
                 sidebarGroup: .connectivity,
-                titleKey: "settings.section.wifi.title",
-                fallbackTitle: "Wi-Fi",
-                subtitleKey: "settings.section.wifi.subtitle",
-                fallbackSubtitle: "Wi-Fi and Personal Hotspot activity.",
+                titleKey: "settings.section.network.title",
+                fallbackTitle: "Network",
+                subtitleKey: "settings.section.network.subtitle",
+                fallbackSubtitle: "Wi-Fi and VPN activity.",
                 searchKeywords: [
+                    "network",
                     "wifi",
                     "vpn",
                     "hotspot",
@@ -472,29 +475,10 @@ private enum SettingsSectionCatalog {
                     "stroke",
                     "duration"
                 ],
-                systemImage: "wifi",
+                systemImage: "network",
                 imageName: nil,
                 tint: .blue,
-                resetGroup: .wifi
-            )
-
-        case .vpn:
-            return .init(
-                sidebarGroup: .connectivity,
-                titleKey: "settings.section.vpn.title",
-                fallbackTitle: "VPN",
-                subtitleKey: "settings.section.vpn.subtitle",
-                fallbackSubtitle: "Select the preferred VPN connection and configure behavior.",
-                searchKeywords: [
-                    "vpn",
-                    "connection",
-                    "select",
-                    "preferred"
-                ],
-                systemImage: "network.badge.shield.half.filled",
-                imageName: nil,
-                tint: .blue,
-                resetGroup: .vpn
+                resetGroup: .network
             )
 
         case .battery:

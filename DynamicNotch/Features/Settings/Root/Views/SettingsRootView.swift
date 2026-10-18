@@ -510,17 +510,9 @@ struct SettingsRootView: View {
                 )
             }
 
-        case .wifi:
+        case .network:
             detailContainer(for: section) {
-                WifiSettingsView(
-                    connectivitySettings: settingsViewModel.connectivity,
-                    appearanceSettings: settingsViewModel.application
-                )
-            }
-
-        case .vpn:
-            detailContainer(for: section) {
-                VpnSettingsView(
+                NetworkSettingsView(
                     connectivitySettings: settingsViewModel.connectivity,
                     appearanceSettings: settingsViewModel.application
                 )

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WifiSettingsView: View {
+struct NetworkSettingsView: View {
     @ObservedObject var connectivitySettings: ConnectivitySettingsStore
     @ObservedObject var appearanceSettings: ApplicationSettingsStore
     
@@ -11,6 +11,7 @@ struct WifiSettingsView: View {
     var body: some View {
         SettingsPageScrollView {
             wifiActivity
+            vpnActivity
             hotspotAppearance
         }
     }
@@ -38,6 +39,19 @@ struct WifiSettingsView: View {
                 color: .green,
                 isOn: $connectivitySettings.isHotspotLiveActivityEnabled,
                 accessibilityIdentifier: "settings.activities.live.hotspot"
+            )
+        }
+    }
+
+    private var vpnActivity: some View {
+        SettingsCard(title: "settings.section.vpn.title") {
+            SettingsToggleRow(
+                title: "settings.network.vpnLiveActivity.title",
+                description: "settings.network.vpnLiveActivity.desc",
+                systemImage: "network.badge.shield.half.filled",
+                color: .blue,
+                isOn: $connectivitySettings.isVpnLiveActivityEnabled,
+                accessibilityIdentifier: "settings.activities.live.vpn"
             )
         }
     }
@@ -138,3 +152,5 @@ struct WifiSettingsView: View {
         }
     }
 }
+
+typealias WifiSettingsView = NetworkSettingsView

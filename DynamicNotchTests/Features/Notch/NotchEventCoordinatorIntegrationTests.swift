@@ -124,6 +124,62 @@ final class NotchEventCoordinatorIntegrationTests: XCTestCase {
         }
     }
 
+    func testVpnEventsShowAndHideLiveActivity() async {
+        let context = makeContext()
+
+        context.coordinator.handleVpnEvent(.vpnConnected)
+
+        await assertEventually {
+            await MainActor.run { context.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Vpn.vpn.id }
+        }
+
+        context.coordinator.handleVpnEvent(.vpnDisconnected)
+
+        await assertEventually {
+            await MainActor.run { context.notchViewModel.notchModel.content == nil }
+        }
+    }
+
+    func testDisabledVpnLiveActivitySuppressesVpnLiveActivity() async {
+        let context = makeContext(vpnLiveActivityEnabled: false)
+
+        context.coordinator.handleVpnEvent(.vpnConnected)
+
+        try? await Task.sleep(nanoseconds: 50_000_000)
+
+        let liveContent = await MainActor.run {
+            context.notchViewModel.notchModel.liveActivityContent
+        }
+        XCTAssertNil(liveContent)
+    }
+
+    func testTogglingVpnLiveActivityShowsAndHidesActiveVpnLiveActivity() async {
+        let context = makeContext(vpnLiveActivityEnabled: false)
+        await MainActor.run {
+            context.vpnViewModel.vpnConnected = true
+        }
+
+        await MainActor.run {
+            context.settingsViewModel.isVpnLiveActivityEnabled = true
+        }
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Vpn.vpn.id
+            }
+        }
+
+        await MainActor.run {
+            context.settingsViewModel.isVpnLiveActivityEnabled = false
+        }
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.content == nil
+            }
+        }
+    }
+
     func testNoInternetEventShowsTemporaryNotification() async {
         let context = makeContext()
 
@@ -608,6 +664,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         let downloadMonitor: FakeFileDownloadMonitor
         let airDropViewModel: AirDropNotchViewModel
         let fileTrayViewModel: FileTrayViewModel
+        let vpnViewModel: VpnViewModel
         let settingsViewModel: SettingsViewModel
         let nowPlayingViewModel: NowPlayingViewModel
         let nowPlayingService: FakeNowPlayingService
@@ -628,7 +685,8 @@ private extension NotchEventCoordinatorIntegrationTests {
         trayLiveActivityEnabled: Bool = true,
         noInternetTemporaryActivityEnabled: Bool = true,
         homePageLiveActivityEnabled: Bool = false,
-        focusOnAutoHideEnabled: Bool = true
+        focusOnAutoHideEnabled: Bool = true,
+        vpnLiveActivityEnabled: Bool = true
     ) -> TestContext {
         UserDefaults.standard.set(false, forKey: "isLaunchAtLoginEnabled")
         UserDefaults.standard.set(0, forKey: "notchWidth")
@@ -639,6 +697,7 @@ private extension NotchEventCoordinatorIntegrationTests {
         UserDefaults.standard.set(HudStyle.compact.rawValue, forKey: "settings.hud.style")
         UserDefaults.standard.set(temporaryActivityDurationScale, forKey: "settings.temporary.durationScale")
         UserDefaults.standard.set(true, forKey: "settings.live.hotspot")
+        UserDefaults.standard.set(vpnLiveActivityEnabled, forKey: "settings.live.vpn")
         UserDefaults.standard.set(true, forKey: "settings.live.focus")
         UserDefaults.standard.set(focusOnAutoHideEnabled, forKey: "settings.live.focus.autoHide")
         UserDefaults.standard.set(true, forKey: "settings.live.nowPlaying")
@@ -720,6 +779,7 @@ private extension NotchEventCoordinatorIntegrationTests {
             downloadMonitor: downloadMonitor,
             airDropViewModel: airDropViewModel,
             fileTrayViewModel: fileTrayViewModel,
+            vpnViewModel: vpnViewModel,
             settingsViewModel: settingsViewModel,
             nowPlayingViewModel: nowPlayingViewModel,
             nowPlayingService: nowPlayingService,
