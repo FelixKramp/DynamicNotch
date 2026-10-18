@@ -138,6 +138,8 @@ final class VpnViewModel: ObservableObject {
     
     func refresh() {
         isLoading = true
+        let isCurrentlyConnected = self.vpnConnected
+        let currentConnectedDate = self.vpnConnectedAt
         Task.detached(priority: .userInitiated) { [weak self] in
             guard let self = self else { return }
             var list = VPNStatusFetcher.fetchVPNs()
@@ -174,20 +176,20 @@ final class VpnViewModel: ObservableObject {
             }
             
             #if DEBUG
-            if UserDefaults.standard.bool(forKey: "debug.vpn.mockThreeDigitTimer") {
-                if list.isEmpty {
-                    list = [
-                        VPNConfiguration(
-                            id: "debug.mock.wireguard",
-                            name: "WireGuard Tunnel",
-                            isConnected: true,
-                            type: "WireGuard",
-                            bundleID: nil,
-                            serverAddress: "185.220.101.5"
-                        )
-                    ]
+            if UserDefaults.standard.bool(forKey: "debug.vpn.mockThreeDigitTimer") && list.isEmpty && !isCurrentlyConnected {
+                list = [
+                    VPNConfiguration(
+                        id: "debug.mock.wireguard",
+                        name: "WireGuard Tunnel",
+                        isConnected: true,
+                        type: "WireGuard",
+                        bundleID: nil,
+                        serverAddress: "185.220.101.5"
+                    )
+                ]
+                if connDate == nil {
+                    connDate = currentConnectedDate ?? Date().addingTimeInterval(-6120)
                 }
-                connDate = Date().addingTimeInterval(-6120)
                 if activeConnectedUuid == nil {
                     activeConnectedUuid = "debug.mock.wireguard"
                     serverAddr = "185.220.101.5"
@@ -207,7 +209,14 @@ final class VpnViewModel: ObservableObject {
                 
                 if finalActiveUuid != nil || self.vpnConnected {
                     if let finalConnDate {
-                        self.vpnConnectedAt = finalConnDate
+                        if let current = self.vpnConnectedAt {
+                            // Don't reassign if it's the same session (preventing view redraw/timer reset flicker)
+                            if abs(current.timeIntervalSince(finalConnDate)) > 2.0 {
+                                self.vpnConnectedAt = finalConnDate
+                            }
+                        } else {
+                            self.vpnConnectedAt = finalConnDate
+                        }
                     } else if self.vpnConnectedAt == nil {
                         self.vpnConnectedAt = .now
                     }
