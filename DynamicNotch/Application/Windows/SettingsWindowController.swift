@@ -94,11 +94,13 @@ class SettingsWindowController: NSWindowController {
     }
     
     override func close() {
+        appDelegate?.settingsViewModel.isVpnSettingsTabActive = false
         super.close()
         relinquishFocus()
     }
     
     private func relinquishFocus() {
+        appDelegate?.settingsViewModel.isVpnSettingsTabActive = false
         window?.orderOut(nil)
         
         let shouldShowDock = appDelegate?.settingsViewModel.application.isDockIconVisible ?? false
@@ -110,6 +112,7 @@ class SettingsWindowController: NSWindowController {
 
 extension SettingsWindowController: NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
+        appDelegate?.settingsViewModel.isVpnSettingsTabActive = false
         relinquishFocus()
     }
     
@@ -117,10 +120,23 @@ extension SettingsWindowController: NSWindowDelegate {
         return true
     }
     
+    func windowDidResignKey(_ notification: Notification) {
+        appDelegate?.settingsViewModel.isVpnSettingsTabActive = false
+    }
+
+    func windowDidMiniaturize(_ notification: Notification) {
+        appDelegate?.settingsViewModel.isVpnSettingsTabActive = false
+    }
+
     func windowDidBecomeKey(_ notification: Notification) {
         let shouldShowDock = appDelegate?.settingsViewModel.application.isDockIconVisible ?? false
         if !shouldShowDock {
             NSApp.setActivationPolicy(.regular)
         }
+        NotificationCenter.default.post(name: NSNotification.Name("SettingsWindowDidBecomeKey"), object: window)
+    }
+
+    func windowDidDeminiaturize(_ notification: Notification) {
+        NotificationCenter.default.post(name: NSNotification.Name("SettingsWindowDidBecomeKey"), object: window)
     }
 }

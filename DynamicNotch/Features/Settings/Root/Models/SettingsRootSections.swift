@@ -78,12 +78,11 @@ extension SettingsRootViewModel {
         #endif
     
         case network
+        static var wifi: Section { .network }
+        static var vpn: Section { .network }
         case bluetooth
         case focus
         case battery
-
-        static var wifi: Section { .network }
-        static var vpn: Section { .network }
         
         case nowPlaying
         case downloads
@@ -489,17 +488,21 @@ private enum SettingsSectionCatalog {
                 titleKey: "settings.section.network.title",
                 fallbackTitle: "Network",
                 subtitleKey: "settings.section.network.subtitle",
-                fallbackSubtitle: "Wi-Fi and VPN activity.",
+                fallbackSubtitle: "Wi-Fi, Personal Hotspot, and VPN connection settings.",
                 searchKeywords: [
                     "network",
                     "wifi",
-                    "vpn",
                     "hotspot",
+                    "vpn",
+                    "connection",
+                    "select",
+                    "preferred",
                     "timer",
                     "details",
                     "change",
                     "stroke",
-                    "duration"
+                    "duration",
+                    "live activity"
                 ],
                 systemImage: "network",
                 imageName: nil,

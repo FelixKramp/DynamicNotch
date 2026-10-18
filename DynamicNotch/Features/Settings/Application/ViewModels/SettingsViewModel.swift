@@ -260,6 +260,8 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         set { connectivity.isVpnLiveActivityEnabled = newValue }
     }
 
+    @Published var isVpnSettingsTabActive: Bool = false
+
     var isFocusLiveActivityEnabled: Bool {
         get { connectivity.isFocusLiveActivityEnabled }
         set { connectivity.isFocusLiveActivityEnabled = newValue }
@@ -476,7 +478,8 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         case .bluetooth:
             connectivity.resetBluetooth()
         case .network:
-            connectivity.resetNetwork()
+            connectivity.resetWifi()
+            connectivity.resetVpn()
         case .battery:
             battery.reset()
         case .hud:

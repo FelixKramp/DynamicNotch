@@ -70,8 +70,6 @@ struct NetworkSettingsView: View {
             ) { style, isSelected in
                 hotspotAppearancePickerContent(for: style, isSelected: isSelected)
             }
-
-
         }
     }
     
@@ -154,3 +152,4 @@ struct NetworkSettingsView: View {
 }
 
 typealias WifiSettingsView = NetworkSettingsView
+typealias VpnSettingsView = NetworkSettingsView

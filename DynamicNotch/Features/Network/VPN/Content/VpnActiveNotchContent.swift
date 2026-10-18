@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+internal import AppKit
 
 struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     let id = NotchContentRegistry.Vpn.vpn.id
@@ -35,7 +36,22 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
 
     var windowLink: (@MainActor () -> Void)? {
         return {
-            SettingsWindowController.shared.showWindow(selecting: .network)
+            Self.openSystemVpnSettings()
+        }
+    }
+
+    @MainActor
+    private static func openSystemVpnSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.Network-Settings.extension?VPN"),
+           NSWorkspace.shared.open(url) {
+            return
+        }
+        if let fallbackURL = URL(string: "x-apple.systempreferences:com.apple.preference.network?VPN"),
+           NSWorkspace.shared.open(fallbackURL) {
+            return
+        }
+        if let networkURL = URL(string: "x-apple.systempreferences:com.apple.preference.network") {
+            NSWorkspace.shared.open(networkURL)
         }
     }
 

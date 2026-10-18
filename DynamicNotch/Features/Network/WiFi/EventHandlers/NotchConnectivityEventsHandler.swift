@@ -75,6 +75,7 @@ final class NotchConnectivityEventsHandler {
         switch event {
         case .vpnConnected:
             guard settingsViewModel.isLiveActivityEnabled(.vpn) else { return }
+            guard !settingsViewModel.isVpnSettingsTabActive else { return }
             notchViewModel.send(
                 .showLiveActivity(
                     VpnActiveNotchContent(

@@ -177,6 +177,21 @@ final class NotchSettingsObserver {
                 }
             }
             .store(in: &cancellables)
+
+        settingsViewModel.$isVpnSettingsTabActive
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isActive in
+                guard let self else { return }
+                if isActive {
+                    self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Vpn.vpn.id))
+                } else {
+                    if self.settingsViewModel.isLiveActivityEnabled(.vpn) && self.vpnViewModel.vpnConnected {
+                        self.connectivityHandler.handleVpn(.vpnConnected)
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func observeMediaAndFilesSettings() {

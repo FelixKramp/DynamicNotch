@@ -180,6 +180,71 @@ final class NotchEventCoordinatorIntegrationTests: XCTestCase {
         }
     }
 
+    func testVpnLiveActivityHidesWhenVpnSettingsTabActiveAndRestoresWhenInactive() async {
+        let context = makeContext()
+        await MainActor.run {
+            context.vpnViewModel.vpnConnected = true
+        }
+
+        context.coordinator.handleVpnEvent(.vpnConnected)
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Vpn.vpn.id
+            }
+        }
+
+        // When VPN tab becomes active in Settings, Live Activity should hide
+        await MainActor.run {
+            context.settingsViewModel.isVpnSettingsTabActive = true
+        }
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.content == nil
+            }
+        }
+
+        // When VPN tab becomes inactive in Settings, Live Activity should reappear
+        await MainActor.run {
+            context.settingsViewModel.isVpnSettingsTabActive = false
+        }
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Vpn.vpn.id
+            }
+        }
+    }
+
+    func testVpnConnectedEventIgnoredWhenVpnSettingsTabActive() async {
+        let context = makeContext()
+        await MainActor.run {
+            context.vpnViewModel.vpnConnected = true
+            context.settingsViewModel.isVpnSettingsTabActive = true
+        }
+
+        context.coordinator.handleVpnEvent(.vpnConnected)
+
+        try? await Task.sleep(nanoseconds: 50_000_000)
+
+        let liveContent = await MainActor.run {
+            context.notchViewModel.notchModel.liveActivityContent
+        }
+        XCTAssertNil(liveContent)
+
+        // Once inactive, live activity should be restored
+        await MainActor.run {
+            context.settingsViewModel.isVpnSettingsTabActive = false
+        }
+
+        await assertEventually {
+            await MainActor.run {
+                context.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Vpn.vpn.id
+            }
+        }
+    }
+
     func testNoInternetEventShowsTemporaryNotification() async {
         let context = makeContext()
 
