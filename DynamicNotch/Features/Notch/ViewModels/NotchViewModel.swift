@@ -316,7 +316,7 @@ final class NotchViewModel: ObservableObject {
         let isDynamicIsland = screenMetrics.topInset == 0
         let widthOffset = CGFloat(settings.notchWidth) + 2
         let heightOffset = CGFloat(settings.notchHeight)
-        let baseHeightAdjustment: CGFloat = isDynamicIsland ? 1 : 0
+        let baseHeightAdjustment: CGFloat = isDynamicIsland ? 5 : 0
         
         let finalWidth: CGFloat
         let finalHeight: CGFloat

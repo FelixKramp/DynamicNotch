@@ -41,12 +41,13 @@ struct NotchSurfaceContainerView: View {
         .scaleEffect(
             x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
             y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-            anchor: .top
+            anchor: isDynamicIsland ? .center : .top
         )
     }
     
     @ViewBuilder
     private var contentOverlayWrapped: some View {
+        let isDynamicIsland = notchViewModel.isDynamicIsland
         if notchViewModel.isDynamicIsland {
             contentOverlay
                 .environment(\.isNotchlessScreen, true)
@@ -56,7 +57,7 @@ struct NotchSurfaceContainerView: View {
                     .scaleEffect(
                         x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
                         y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                        anchor: .top
+                        anchor: isDynamicIsland ? .center : .top
                     )
                 }
         } else {
@@ -73,7 +74,7 @@ struct NotchSurfaceContainerView: View {
                     .scaleEffect(
                         x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
                         y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                        anchor: .top
+                        anchor: isDynamicIsland ? .center : .top
                     )
                 }
         }
@@ -95,7 +96,7 @@ struct NotchSurfaceContainerView: View {
                 .scaleEffect(
                     x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
                     y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                    anchor: .top
+                    anchor: notchViewModel.isDynamicIsland ? .center : .top
                 )
                 .resizeAwareBlur(
                     size: notchViewModel.interactiveNotchSize,
