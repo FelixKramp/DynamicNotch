@@ -142,6 +142,16 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         set { application.displayLocation = newValue }
     }
 
+    var isNotchlessWindowMarginEnabled: Bool {
+        get { application.isNotchlessWindowMarginEnabled }
+        set { application.isNotchlessWindowMarginEnabled = newValue }
+    }
+
+    var notchlessWindowMarginOffset: Int {
+        get { application.notchlessWindowMarginOffset }
+        set { application.notchlessWindowMarginOffset = newValue }
+    }
+
     var screenSelectionPreferences: NotchScreenSelectionPreferences {
         application.screenSelectionPreferences
     }

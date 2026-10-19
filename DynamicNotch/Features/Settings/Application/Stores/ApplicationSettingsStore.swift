@@ -156,6 +156,16 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     @StoredDefault(key: GeneralSettingsStorage.Keys.closeAtFocusLiveActivityEnabled, defaultValue: false)
     var isCloseAtFocusLiveActivityEnabled: Bool
 
+    @StoredDefault(key: GeneralSettingsStorage.Keys.notchlessWindowMarginEnabled, defaultValue: true)
+    var isNotchlessWindowMarginEnabled: Bool
+
+    @StoredDefault(
+        key: GeneralSettingsStorage.Keys.notchlessWindowMarginOffset,
+        defaultValue: 17,
+        transform: ApplicationSettingsStore.clampNotchlessWindowMarginOffset
+    )
+    var notchlessWindowMarginOffset: Int
+
     @Published var notchContentPriorityOverrides: [String: Int] {
         didSet {
             let sanitizedOverrides = NotchContentPriority.sanitizedOverrides(notchContentPriorityOverrides)
@@ -258,6 +268,12 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
         )
         isDynamicIslandHiddenInFullscreenEnabled = defaultBool(
             for: GeneralSettingsStorage.Keys.hideDynamicIslandInFullscreenEnabled
+        )
+        isNotchlessWindowMarginEnabled = defaultBool(
+            for: GeneralSettingsStorage.Keys.notchlessWindowMarginEnabled
+        )
+        notchlessWindowMarginOffset = defaultInt(
+            for: GeneralSettingsStorage.Keys.notchlessWindowMarginOffset
         )
     }
 

@@ -19,6 +19,8 @@ enum GeneralSettingsStorage {
         static let appLanguage = "settings.general.language.app"
         static let hideNotchInFullscreenEnabled = "settings.general.hideNotchInFullscreen"
         static let hideDynamicIslandInFullscreenEnabled = "settings.general.hideDynamicIslandInFullscreen"
+        static let notchlessWindowMarginEnabled = "settings.notchless.windowMargin.enabled"
+        static let notchlessWindowMarginOffset = "settings.notchless.windowMargin.offset"
         static let notchTapToExpandEnabled = "settings.notch.gestures.tapToExpand"
         static let notchExpandInteraction = "settings.notch.gestures.expandInteraction"
         static let notchCollapseInteraction = "settings.notch.gestures.collapseInteraction"
@@ -149,6 +151,8 @@ enum GeneralSettingsStorage {
         Keys.appLanguage: DynamicNotchLanguage.system.rawValue,
         Keys.hideNotchInFullscreenEnabled: true,
         Keys.hideDynamicIslandInFullscreenEnabled: true,
+        Keys.notchlessWindowMarginEnabled: true,
+        Keys.notchlessWindowMarginOffset: 17,
         Keys.notchTapToExpandEnabled: true,
         Keys.notchExpandInteraction: NotchExpandInteraction.pressAndHold.rawValue,
         Keys.notchCollapseInteraction: NotchCollapseInteraction.click.rawValue,

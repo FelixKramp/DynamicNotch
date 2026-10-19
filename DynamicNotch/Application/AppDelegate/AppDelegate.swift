@@ -76,6 +76,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             _ = lockScreenLiveActivityWindowManager
             _ = lockScreenFaceIDWindowManager
             hardwareHUDMonitor.startMonitoring()
+            container.notchlessWindowConstrainer.start()
 
             NotificationCenter.default.addObserver(
                 self,
@@ -116,6 +117,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         container.timerViewModel.stopMonitoring()
         container.screenRecordingViewModel.stopMonitoring()
         container.hardwareHUDMonitor.stopMonitoring()
+        container.notchlessWindowConstrainer.stop()
         if !isRunningUITests {
             container.lockScreenPanelManager.invalidate()
             container.lockScreenLiveActivityWindowManager.invalidate()

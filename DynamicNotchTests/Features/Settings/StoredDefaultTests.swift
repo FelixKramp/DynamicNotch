@@ -160,12 +160,27 @@ final class StoredDefaultTests: XCTestCase {
         XCTAssertEqual(store.appearanceMode, .system)
         XCTAssertEqual(store.notchStrokeWidth, 2.5)
         XCTAssertEqual(store.notchStrokeOpacity, 0.6)
+        XCTAssertTrue(store.isNotchlessWindowMarginEnabled)
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 17)
 
         store.notchStrokeWidth = 5.0 // Range: 1.0...3.0
         XCTAssertEqual(store.notchStrokeWidth, 3.0)
 
         store.notchStrokeOpacity = 2.0 // Range: 0.0...0.6
         XCTAssertEqual(store.notchStrokeOpacity, 0.6)
+
+        store.notchlessWindowMarginOffset = 100 // Should clamp to max 50
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 50)
+
+        store.notchlessWindowMarginOffset = -10 // Should clamp to min 0
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 0)
+
+        store.isNotchlessWindowMarginEnabled = false
+        XCTAssertFalse(testDefaults.bool(forKey: GeneralSettingsStorage.Keys.notchlessWindowMarginEnabled))
+
+        store.resetDisplay()
+        XCTAssertTrue(store.isNotchlessWindowMarginEnabled)
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 17)
 
         store.appearanceMode = .dark
         XCTAssertEqual(testDefaults.string(forKey: GeneralSettingsStorage.Keys.appearanceMode), SettingsAppearanceMode.dark.rawValue)

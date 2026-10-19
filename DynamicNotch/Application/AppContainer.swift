@@ -40,6 +40,7 @@ final class AppContainer {
     }()
 
     lazy var notchViewModel = NotchViewModel(settings: settingsViewModel.application)
+    lazy var notchlessWindowConstrainer = NotchlessWindowConstrainer(settings: settingsViewModel.application)
     lazy var airDropController = NotchAirDropController(
         airDropViewModel: airDropViewModel,
         fileTrayViewModel: fileTrayViewModel
