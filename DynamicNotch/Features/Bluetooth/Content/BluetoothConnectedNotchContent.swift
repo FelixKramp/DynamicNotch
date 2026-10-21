@@ -35,7 +35,7 @@ struct BluetoothConnectedNotchContent: NotchContentProtocol, DynamicIslandCustom
         case .compact:
             width = settings.bluetoothBatteryIndicatorStyle == .circle ? 50 : 90
         case .detailed:
-            width = settings.bluetoothBatteryIndicatorStyle == .circle ? 145 : 145
+            width = 145
         }
         return .init(width: baseWidth + CGFloat(width), height: settings.bluetoothAppearanceStyle == .compact ? baseHeight : 95)
     }
@@ -45,11 +45,11 @@ struct BluetoothConnectedNotchContent: NotchContentProtocol, DynamicIslandCustom
 
         switch settings.bluetoothAppearanceStyle {
         case .compact:
-            width = settings.bluetoothBatteryIndicatorStyle == .circle ? 60 : 100
+            width = settings.bluetoothBatteryIndicatorStyle == .circle ? 65 : 95
         case .detailed:
-            width = settings.bluetoothBatteryIndicatorStyle == .circle ? 180 : 200
+            width = 210
         }
-        return .init(width: baseWidth + CGFloat(width), height: settings.bluetoothAppearanceStyle == .compact ? baseHeight : 75)
+        return .init(width: baseWidth + CGFloat(width), height: settings.bluetoothAppearanceStyle == .compact ? baseHeight : 80)
     }
     
     @MainActor
