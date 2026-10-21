@@ -31,7 +31,7 @@ struct LockScreenNotchView: View {
                         .foregroundColor(.white)
                 }
             }
-            .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 14.scaled(by: scale))
+            .padding(.leading, isNotchlessScreen ? 8.scaled(by: scale) : 14.scaled(by: scale))
             .padding(.trailing, isNotchlessScreen ? 8.scaled(by: scale) : 14.scaled(by: scale))
         }
     }

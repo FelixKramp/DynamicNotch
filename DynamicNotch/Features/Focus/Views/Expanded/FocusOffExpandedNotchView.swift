@@ -53,7 +53,7 @@ struct FocusOffExpandedNotchView: View {
             }
         }
         .padding(.horizontal, isNotchlessScreen ? 15 : 40)
-        .padding(.bottom, isNotchlessScreen ? 15 : 15)
+        .padding(.bottom, isNotchlessScreen ? 18 : 15)
     }
     
     private var activeFocusModeType: FocusModeType {

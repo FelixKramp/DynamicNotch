@@ -60,6 +60,10 @@ struct TimerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + minimalTimerSize, height: baseHeight)
     }
+    
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + minimalTimerSize - 10, height: baseHeight)
+    }
 
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 170, height: baseHeight + 60)

@@ -12,7 +12,7 @@ struct TimerCompactIndicatorView: View {
     
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     
-    private var lineWidth: CGFloat { 2.5 }
+    private var lineWidth: CGFloat { 2.8 }
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1 / 24, paused: source.isPaused)) { context in
@@ -48,7 +48,7 @@ struct TimerCompactIndicatorView: View {
                         .rotationEffect(angle)
                 }
             }
-            .frame(width: isNotchlessScreen ? 16 : 20, height: isNotchlessScreen ? 16: 20)
+            .frame(width: 20, height: 20)
         }
     }
 

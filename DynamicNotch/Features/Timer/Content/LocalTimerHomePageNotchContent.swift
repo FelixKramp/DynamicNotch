@@ -18,6 +18,10 @@ struct LocalTimerHomePageNotchContent: NotchContentProtocol, DynamicIslandCustom
         .init(width: baseWidth + 160, height: baseHeight + 130)
     }
     
+    func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 220, height: baseHeight + 130)
+    }
+    
     func expandedDynamicIslandCornerRadius(baseHeight: CGFloat) -> CGFloat {
         baseHeight * 0.25
     }

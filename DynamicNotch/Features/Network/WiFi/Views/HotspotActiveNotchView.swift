@@ -50,7 +50,7 @@ struct HotspotActiveNotchView: View {
         }
         .font(.system(size: isNotchlessScreen ? 13 : 14))
         .padding(.leading, isNotchlessScreen ? 5.scaled(by: scale) : 14.scaled(by: scale))
-        .padding(.trailing, isNotchlessScreen ? 6.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? 7.scaled(by: scale) : 14.scaled(by: scale))
     }
     
     private var minimal: some View {

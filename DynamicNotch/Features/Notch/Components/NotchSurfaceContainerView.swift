@@ -14,11 +14,8 @@ struct NotchSurfaceContainerView: View {
                    notchViewModel.notchModel.baseWidth > 0,
                    notchViewModel.notchModel.baseHeight > 0 {
                     DynamicIslandShape(cornerRadius: notchViewModel.notchModel.baseHeight * 0.5)
-                        .fill(.black)
-                        .frame(
-                            width: notchViewModel.notchModel.baseWidth,
-                            height: notchViewModel.notchModel.baseHeight
-                        )
+                        .fill(.red)
+                        .frame(width: notchViewModel.notchModel.baseWidth, height: notchViewModel.notchModel.baseHeight)
                         .allowsHitTesting(false)
                 }
             }
