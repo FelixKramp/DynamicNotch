@@ -42,6 +42,10 @@ struct NowPlayingNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         .init(width: baseWidth + 70, height: baseHeight)
     }
     
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 65, height: baseHeight)
+    }
+    
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 200, height: baseHeight + 160)
     }

@@ -51,6 +51,7 @@ struct ArtworkView: View {
                     .interpolation(.high)
                     .antialiased(true)
                     .scaledToFill()
+                    .overlay(.gray.opacity(0.2))
             } else {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(.gray.opacity(0.2))
