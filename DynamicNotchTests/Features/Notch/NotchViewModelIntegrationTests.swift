@@ -1066,7 +1066,7 @@ final class NotchViewModelIntegrationTests: XCTestCase {
 
         let mainScale = max(0.35, CGFloat(1728) / 1440.0)
         XCTAssertEqual(viewModel.notchModel.baseWidth, 110.84, accuracy: 0.01)
-        XCTAssertEqual(viewModel.notchModel.baseHeight, 27.0, accuracy: 0.001)
+        XCTAssertEqual(viewModel.notchModel.baseHeight, 31.0, accuracy: 0.001)
     }
 
     @MainActor
@@ -1096,7 +1096,7 @@ final class NotchViewModelIntegrationTests: XCTestCase {
 
         let scale = max(0.35, CGFloat(1920) / 1440.0)
         XCTAssertEqual(viewModel.notchModel.baseWidth, 115.60, accuracy: 0.01)
-        XCTAssertEqual(viewModel.notchModel.baseHeight, 27.0, accuracy: 0.01)
+        XCTAssertEqual(viewModel.notchModel.baseHeight, 31.0, accuracy: 0.01)
     }
 
     @MainActor
@@ -1326,5 +1326,89 @@ final class NotchViewModelIntegrationTests: XCTestCase {
         let newRadius = viewModel.interactiveCornerRadius
         XCTAssertEqual(newRadius.top, initialRadius.top, accuracy: 0.001)
         XCTAssertEqual(newRadius.bottom, initialRadius.bottom, accuracy: 0.001)
+    }
+
+    @MainActor
+    func testShouldApplyPressScaleForTemporaryNotificationHonorsAllowsPressScaleEffect() async {
+        let viewModel = NotchViewModel(
+            settings: TestNotchSettings(),
+            hideDelay: 0.01,
+            queueDelay: 0
+        )
+        TestLifetime.retain(viewModel)
+
+        // Temporary notification with allowsPressScaleEffect = true
+        viewModel.send(
+            .showTemporaryNotification(
+                TestNotchContent(id: "scaleAllowed", priority: 10, allowsPressScaleEffect: true),
+                duration: 5.0
+            )
+        )
+        await assertEventually {
+            await MainActor.run { viewModel.notchModel.temporaryNotificationContent?.id == "scaleAllowed" }
+        }
+        XCTAssertTrue(viewModel.shouldApplyPressScale)
+
+        // Temporary notification with allowsPressScaleEffect = false
+        viewModel.send(
+            .showTemporaryNotification(
+                TestNotchContent(id: "scaleDisallowed", priority: 20, allowsPressScaleEffect: false),
+                duration: 5.0
+            )
+        )
+        await assertEventually {
+            await MainActor.run { viewModel.notchModel.temporaryNotificationContent?.id == "scaleDisallowed" }
+        }
+        XCTAssertFalse(viewModel.shouldApplyPressScale)
+    }
+
+    @MainActor
+    func testShouldApplyPressScaleForLiveActivityOnlyWhenCompact() async {
+        let viewModel = NotchViewModel(
+            settings: TestNotchSettings(),
+            hideDelay: 0.01,
+            queueDelay: 0
+        )
+        TestLifetime.retain(viewModel)
+
+        // Compact / minimalistic live activity: scaleEffect enabled
+        viewModel.send(
+            .showLiveActivity(
+                TestNotchContent(id: "liveActivity", priority: 10, isExpandable: true)
+            )
+        )
+        await assertEventually {
+            await MainActor.run { viewModel.notchModel.liveActivityContent?.id == "liveActivity" }
+        }
+        XCTAssertTrue(viewModel.shouldApplyPressScale)
+
+        // Expanded live activity: scaleEffect disabled
+        viewModel.expandActiveLiveActivity()
+        await assertEventually {
+            await MainActor.run { viewModel.notchModel.isPresentingExpandedLiveActivity }
+        }
+        XCTAssertFalse(viewModel.shouldApplyPressScale)
+
+        // Compact live activity with allowsPressScaleEffect = false: scaleEffect disabled
+        viewModel.send(
+            .showLiveActivity(
+                TestNotchContent(id: "liveActivityNoScale", priority: 30, allowsPressScaleEffect: false)
+            )
+        )
+        await assertEventually {
+            await MainActor.run { viewModel.notchModel.liveActivityContent?.id == "liveActivityNoScale" }
+        }
+        XCTAssertFalse(viewModel.shouldApplyPressScale)
+
+        // Compact live activity with allowsCompactPressScaleEffect = false: scaleEffect disabled
+        viewModel.send(
+            .showLiveActivity(
+                TestNotchContent(id: "liveActivityNoCompactScale", priority: 40, allowsCompactPressScaleEffect: false)
+            )
+        )
+        await assertEventually {
+            await MainActor.run { viewModel.notchModel.liveActivityContent?.id == "liveActivityNoCompactScale" }
+        }
+        XCTAssertFalse(viewModel.shouldApplyPressScale)
     }
 }

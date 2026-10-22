@@ -16,7 +16,6 @@ final class NotchViewModel: ObservableObject {
     
     @Published var isLocked = false
     @Published var isHoveringScrollableContent = false
-    @Published var isHomePageOnLastPage = false
     @Published var showNotch = false
     @Published var isPressed = false
     @Published var cachedStrokeColor: Color = .clear
@@ -65,6 +64,13 @@ final class NotchViewModel: ObservableObject {
 
     var shouldRenderStroke: Bool {
         displayedContent != nil || isHoldingStrokeAfterContentHide
+    }
+
+    var shouldApplyPressScale: Bool {
+        guard let content = displayedContent else { return false }
+        guard !isDisplayingExpandedLiveActivity else { return false }
+
+        return content.allowsPressScaleEffect && content.allowsCompactPressScaleEffect
     }
 
     var presentedNotchSize: CGSize {
@@ -144,8 +150,7 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchMouseDragGesturesEnabled &&
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
-        displayedContent != nil &&
-        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || (notchModel.isLiveActivityExpanded && isHomePageOnLastPage))
+        displayedContent != nil
     }
     
     var canRestoreWithMouseDrag: Bool {
@@ -160,8 +165,7 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchTrackpadSwipeGesturesEnabled &&
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
-        displayedContent != nil &&
-        (displayedContent?.id != NotchContentRegistry.HomePage.active.id || (notchModel.isLiveActivityExpanded && isHomePageOnLastPage))
+        displayedContent != nil
     }
     
     var canRestoreWithTrackpadSwipe: Bool {
@@ -377,10 +381,6 @@ final class NotchViewModel: ObservableObject {
 
         if notchModel.isLiveActivityExpanded {
             engine.handleOutsideClick()
-            return
-        }
-        
-        if notchModel.liveActivityContent?.id == NotchContentRegistry.HomePage.active.id {
             return
         }
         

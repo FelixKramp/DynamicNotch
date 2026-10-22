@@ -52,6 +52,12 @@ protocol NotchContentProtocol: DynamicIslandCustomizable {
     /// Indicates whether smooth sizing and morphing animation effects should be applied when content resizes.
     var usesContentResizeEffect: Bool { get }
 
+    /// Indicates whether this activity allows the interactive press scale effect on user click / touch down.
+    var allowsPressScaleEffect: Bool { get }
+
+    /// Indicates whether this activity allows the interactive press scale effect in compact (minimalistic) presentation mode.
+    var allowsCompactPressScaleEffect: Bool { get }
+
     /// Deep-link or navigation action invoked when the user interacts with the activity to open the host application window.
     /// Equivalent to Apple's `widgetURL` / `Link` action in Dynamic Island.
     var widgetURL: (@MainActor () -> Void)? { get }
@@ -102,6 +108,8 @@ extension NotchContentProtocol {
     var expandsOnTap: Bool { isExpandable }
     var isRestorable: Bool { true }
     var usesContentResizeEffect: Bool { true }
+    var allowsPressScaleEffect: Bool { true }
+    var allowsCompactPressScaleEffect: Bool { allowsPressScaleEffect }
 
     var widgetURL: (@MainActor () -> Void)? { windowLink }
     var windowLink: (@MainActor () -> Void)? { nil }

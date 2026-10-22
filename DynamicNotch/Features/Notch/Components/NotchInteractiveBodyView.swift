@@ -53,8 +53,7 @@ struct NotchInteractiveBodyView: View {
         
         return !(
             notchViewModel.isDisplayingExpandedLiveActivity &&
-            (notchViewModel.displayedContent?.id == NotchContentRegistry.DragAndDrop.trayActive.id ||
-             (notchViewModel.displayedContent?.id == NotchContentRegistry.HomePage.active.id && !notchViewModel.isHomePageOnLastPage))
+            notchViewModel.displayedContent?.id == NotchContentRegistry.DragAndDrop.trayActive.id
         )
     }
 }
