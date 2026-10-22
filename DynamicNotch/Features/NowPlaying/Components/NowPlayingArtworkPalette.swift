@@ -5,10 +5,12 @@ import SwiftUI
 struct NowPlayingArtworkPalette: Equatable {
     let equalizerBaseColor: NSColor
     let equalizerHighlightColor: NSColor
+    let luminance: Double
 
     static let fallback = Self(
         equalizerBaseColor: NSColor.gray.withAlphaComponent(0.36),
-        equalizerHighlightColor: NSColor.gray.withAlphaComponent(0.6)
+        equalizerHighlightColor: NSColor.gray.withAlphaComponent(0.6),
+        luminance: 0.5
     )
 
     var equalizerGradient: LinearGradient {
@@ -24,7 +26,8 @@ struct NowPlayingArtworkPalette: Equatable {
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.equalizerBaseColor.isApproximatelyEqual(to: rhs.equalizerBaseColor) &&
-        lhs.equalizerHighlightColor.isApproximatelyEqual(to: rhs.equalizerHighlightColor)
+        lhs.equalizerHighlightColor.isApproximatelyEqual(to: rhs.equalizerHighlightColor) &&
+        abs(lhs.luminance - rhs.luminance) < 0.01
     }
 }
 
@@ -92,6 +95,12 @@ enum NowPlayingArtworkPaletteExtractor {
             return .fallback
         }
 
+        let luminance = Double(
+            0.2126 * resolvedColor.redComponent +
+            0.7152 * resolvedColor.greenComponent +
+            0.0722 * resolvedColor.blueComponent
+        )
+
         var hue: CGFloat = 0
         var saturation: CGFloat = 0
         var brightness: CGFloat = 0
@@ -110,7 +119,8 @@ enum NowPlayingArtworkPaletteExtractor {
             )
             return .init(
                 equalizerBaseColor: neutralBase,
-                equalizerHighlightColor: neutralHighlight
+                equalizerHighlightColor: neutralHighlight,
+                luminance: luminance
             )
         }
 
@@ -132,7 +142,8 @@ enum NowPlayingArtworkPaletteExtractor {
 
         return .init(
             equalizerBaseColor: baseColor,
-            equalizerHighlightColor: highlightColor
+            equalizerHighlightColor: highlightColor,
+            luminance: luminance
         )
     }
 }
