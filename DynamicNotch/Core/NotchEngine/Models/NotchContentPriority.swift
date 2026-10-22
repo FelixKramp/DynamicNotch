@@ -3,7 +3,6 @@ import SwiftUI
 
 enum NotchContentPriority {
     enum Key: String, CaseIterable, Identifiable {
-        case homePage
         case focus
         case hotspot
         case download
@@ -19,8 +18,6 @@ enum NotchContentPriority {
 
         var defaultValue: Int {
             switch self {
-            case .homePage:
-                NotchContentPriority.homePage
             case .focus:
                 NotchContentPriority.focus
             case .hotspot:
@@ -46,8 +43,6 @@ enum NotchContentPriority {
         
         var titleKey: LocalizedStringKey {
             switch self {
-            case .homePage:
-                "settings.notch.priorities.row.homePage"
             case .focus:
                 "settings.notch.priorities.row.focus"
             case .hotspot:
@@ -73,8 +68,6 @@ enum NotchContentPriority {
         
         var image: String {
             switch self {
-            case .homePage:
-                return "house.fill"
             case .focus:
                 return "moon.fill"
             case .hotspot:
@@ -100,8 +93,6 @@ enum NotchContentPriority {
         
         var color: Color {
             switch self {
-            case .homePage:
-                    .blue
             case .focus:
                     .indigo
             case .hotspot:
@@ -153,12 +144,12 @@ enum NotchContentPriority {
     static let calendar = 9
     static let screenRecording = 10
 
-    static let homePage = -10000
     static let dragAndDrop = 10001
     static let softwareUpdate = 10002
     static let lockScreen = 10003
     static let onboarding = 10004
     static let faceID = 10005
+    static let localTimerSetup = 10006
 
     static func resolvedValue(for key: Key, defaults: UserDefaults = .standard) -> Int {
         overrideValues(defaults: defaults)[key.rawValue] ?? key.defaultValue

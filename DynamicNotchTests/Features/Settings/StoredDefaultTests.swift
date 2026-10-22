@@ -66,7 +66,6 @@ final class StoredDefaultTests: XCTestCase {
         XCTAssertTrue(store.isLockScreenLiveActivityEnabled)
         XCTAssertTrue(store.isLockScreenSoundEnabled)
         XCTAssertTrue(store.isLockScreenMediaPanelEnabled)
-        XCTAssertEqual(store.lockScreenStyle, .compact)
         XCTAssertEqual(store.widgetAppearanceStyle, .ultraThinMaterial)
         XCTAssertEqual(store.widgetTintStyle, .neutral)
         XCTAssertEqual(store.mediaPanelVerticalOffset, 0.0)
@@ -77,14 +76,9 @@ final class StoredDefaultTests: XCTestCase {
 
         store.isLockScreenLiveActivityEnabled = false
         store.mediaPanelVerticalOffset = 25.5
-        store.lockScreenStyle = .enlarged
 
         XCTAssertFalse(testDefaults.bool(forKey: LockScreenSettings.liveActivityKey))
         XCTAssertEqual(testDefaults.double(forKey: LockScreenSettings.mediaPanelVerticalOffsetKey), 25.5)
-        XCTAssertEqual(
-            testDefaults.string(forKey: LockScreenSettings.styleKey),
-            LockScreenStyle.enlarged.rawValue
-        )
     }
 
     func testObjectWillChangeFiresOnPropertyUpdate() {

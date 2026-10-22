@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 
-extension LockScreenStyle: StoredSettingValue {}
 extension LockScreenWidgetAppearanceStyle: StoredSettingValue {}
 extension LockScreenWidgetTintStyle: StoredSettingValue {}
 extension LockScreenMediaPanelBackgroundStyle: StoredSettingValue {}
@@ -23,17 +22,11 @@ final class LockScreenFeatureSettingsStore: SettingsStoreBase {
     @StoredDefault(key: LockScreenSettings.mediaPanelKey, defaultValue: true)
     var isLockScreenMediaPanelEnabled: Bool
 
-    @StoredDefault(key: LockScreenSettings.styleKey, defaultValue: .compact)
-    var lockScreenStyle: LockScreenStyle
-
     @StoredDefault(key: LockScreenSettings.widgetAppearanceStyleKey, defaultValue: .ultraThinMaterial)
     var widgetAppearanceStyle: LockScreenWidgetAppearanceStyle
 
     @StoredDefault(key: LockScreenSettings.widgetTintStyleKey, defaultValue: .neutral)
     var widgetTintStyle: LockScreenWidgetTintStyle
-
-    @StoredDefault(key: LockScreenSettings.widgetBackgroundBrightnessKey, defaultValue: 1.0)
-    var widgetBackgroundBrightness: Double
 
     @StoredDefault(key: LockScreenSettings.liquidGlassVariantKey, defaultValue: 0)
     var liquidGlassVariant: Int
@@ -70,14 +63,12 @@ final class LockScreenFeatureSettingsStore: SettingsStoreBase {
         customLockSoundPath = defaultString(for: LockScreenSettings.customLockSoundPathKey)
         customUnlockSoundPath = defaultString(for: LockScreenSettings.customUnlockSoundPathKey)
         isLockScreenMediaPanelEnabled = defaultBool(for: LockScreenSettings.mediaPanelKey)
-        lockScreenStyle = LockScreenStyle(rawValue: defaultString(for: LockScreenSettings.styleKey)) ?? .compact
         widgetAppearanceStyle = LockScreenWidgetAppearanceStyle(
             rawValue: defaultString(for: LockScreenSettings.widgetAppearanceStyleKey)
         ) ?? .ultraThinMaterial
         widgetTintStyle = LockScreenWidgetTintStyle(
             rawValue: defaultString(for: LockScreenSettings.widgetTintStyleKey)
         ) ?? .neutral
-        widgetBackgroundBrightness = defaultDouble(for: LockScreenSettings.widgetBackgroundBrightnessKey)
         liquidGlassVariant = defaultInt(for: LockScreenSettings.liquidGlassVariantKey)
         mediaPanelBackgroundStyle = LockScreenMediaPanelBackgroundStyle(
             rawValue: defaultString(for: LockScreenSettings.mediaPanelBackgroundStyleKey)

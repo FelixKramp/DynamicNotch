@@ -19,9 +19,9 @@ final class SettingsSelectionHistoryTests: XCTestCase {
 
         XCTAssertEqual(history.goBack(), .wifi)
 
-        history.record(.homePage)
+        history.record(.nowPlaying)
 
-        XCTAssertEqual(history.currentSelection, .homePage)
+        XCTAssertEqual(history.currentSelection, .nowPlaying)
         XCTAssertNil(history.goForward())
     }
 

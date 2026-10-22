@@ -3,7 +3,6 @@ import SwiftUI
 struct LockScreenWidgetSurface: View {
     let style: LockScreenWidgetAppearanceStyle
     let tintStyle: LockScreenWidgetTintStyle
-    let brightness: Double
     let cornerRadius: CGFloat
     var liquidGlassVariant: Int = 8
 
@@ -16,10 +15,6 @@ struct LockScreenWidgetSurface: View {
                     shape
                         .fill(tintColor.opacity(tintOpacity))
                 }
-            }
-            .overlay {
-                shape
-                    .fill(brightnessOverlayColor)
             }
             .overlay {
                 shape
@@ -57,20 +52,6 @@ struct LockScreenWidgetSurface: View {
         case .liquidGlass:
             return 0.10
         }
-    }
-
-    private var brightnessOverlayColor: Color {
-        let clampedBrightness = min(
-            max(brightness, LockScreenSettings.widgetBackgroundBrightnessRange.lowerBound),
-            LockScreenSettings.widgetBackgroundBrightnessRange.upperBound
-        )
-        let delta = clampedBrightness - 1
-
-        if delta >= 0 {
-            return .white.opacity(delta * 0.42)
-        }
-
-        return .black.opacity(abs(delta) * 0.55)
     }
 
     private var strokeColor: Color {

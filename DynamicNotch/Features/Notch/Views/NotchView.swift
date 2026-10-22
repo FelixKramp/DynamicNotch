@@ -14,44 +14,26 @@ struct NotchView: View {
     @Environment(\.openWindow) private var openWindow
     
     var body: some View {
-        ZStack(alignment: .top) {
-            NotchInteractiveBodyView(
-                notchViewModel: notchViewModel,
+        NotchInteractiveBodyView(
+            notchViewModel: notchViewModel,
+            settingsViewModel: settingsViewModel
+        )
+        .environment(\.notchScale, notchViewModel.notchModel.scale)
+        .overlay {
+            NotchDragAndDropDestinationOverlay(
+                airDropViewModel: airDropViewModel,
+                airDropController: airDropController,
                 settingsViewModel: settingsViewModel
             )
-            .environment(\.notchScale, notchViewModel.notchModel.scale)
-            .overlay {
-                NotchDragAndDropDestinationOverlay(
-                    airDropViewModel: airDropViewModel,
-                    airDropController: airDropController,
-                    settingsViewModel: settingsViewModel
-                )
-            }
-            .onChange(of: notchViewModel.displayedContent?.id) {
-                notchViewModel.handleStrokeVisibility()
-            }
-            .onChange(of: settingsViewModel.application.notchWidth) { _, _ in
-                notchViewModel.updateDimensions()
-            }
-            .onChange(of: settingsViewModel.application.notchHeight) { _, _ in
-                notchViewModel.updateDimensions()
-            }
-            
-            HomePagePageIndicatorView(
-                notchViewModel: notchViewModel,
-                settingsViewModel: settingsViewModel
-            )
-            .environment(\.isNotchlessScreen, notchViewModel.isDynamicIsland)
-            .transition(
-                notchViewModel.contentTransition(
-                    notchWidth: notchViewModel.presentedNotchSize.width,
-                    notchHeight: notchViewModel.presentedNotchSize.height,
-                    baseWidth: notchViewModel.notchModel.baseWidth,
-                    baseHeight: notchViewModel.notchModel.baseHeight,
-                    isExpandedPresentation: notchViewModel.isDisplayingExpandedLiveActivity
-                )
-            )
-            .zIndex(1.0)
+        }
+        .onChange(of: notchViewModel.displayedContent?.id) {
+            notchViewModel.handleStrokeVisibility()
+        }
+        .onChange(of: settingsViewModel.application.notchWidth) { _, _ in
+            notchViewModel.updateDimensions()
+        }
+        .onChange(of: settingsViewModel.application.notchHeight) { _, _ in
+            notchViewModel.updateDimensions()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }

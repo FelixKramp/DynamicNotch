@@ -22,7 +22,6 @@ final class SettingsRootViewModel {
         nowPlayingViewModel: NowPlayingViewModel? = nil,
         timerViewModel: TimerViewModel? = nil,
         lockScreenManager: LockScreenManager? = nil,
-        homePageViewModel: HomePageViewModel? = nil,
         localTimerViewModel: LocalTimerViewModel? = nil,
         calendarViewModel: CalendarViewModel? = nil,
         defaults: UserDefaults = .standard
@@ -43,7 +42,6 @@ final class SettingsRootViewModel {
             nowPlayingViewModel: nowPlayingViewModel,
             timerViewModel: timerViewModel,
             lockScreenManager: lockScreenManager,
-            homePageViewModel: homePageViewModel,
             localTimerViewModel: localTimerViewModel,
             calendarViewModel: calendarViewModel
         )

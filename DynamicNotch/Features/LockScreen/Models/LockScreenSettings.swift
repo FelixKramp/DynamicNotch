@@ -7,15 +7,12 @@ enum LockScreenSettings {
     static let customSoundPathKey = "settings.lockScreen.customSoundPath"
     static let customLockSoundPathKey = "settings.lockScreen.customLockSoundPath"
     static let customUnlockSoundPathKey = "settings.lockScreen.customUnlockSoundPath"
-    static let styleKey = "settings.lockScreen.style"
     static let widgetAppearanceStyleKey = "settings.lockScreen.widgetAppearanceStyle"
     static let widgetTintStyleKey = "settings.lockScreen.widgetTintStyle"
-    static let widgetBackgroundBrightnessKey = "settings.lockScreen.widgetBackgroundBrightness"
     static let liquidGlassVariantKey = "settings.lockScreen.liquidGlassVariant"
     static let mediaPanelBackgroundStyleKey = "settings.lockScreen.mediaPanelBackgroundStyle"
     static let lyricsEnabledKey = "settings.lockScreen.lyricsEnabled"
     static let artworkExpandedKey = "settings.lockScreen.isArtworkExpanded"
-    static let widgetBackgroundBrightnessRange = 0.75...1.25
     static let liquidGlassVariantRange = 0...19
     static let mediaPanelVerticalOffsetKey = "settings.lockScreen.mediaPanelVerticalOffset"
     static let mediaPanelVerticalOffsetRange = -100.0...100.0
@@ -44,17 +41,6 @@ enum LockScreenSettings {
         resolvedPath(forKey: customUnlockSoundPathKey, in: defaults)
     }
 
-    static func style(in defaults: UserDefaults = .standard) -> LockScreenStyle {
-        guard
-            let rawValue = defaults.string(forKey: styleKey),
-            let style = LockScreenStyle(rawValue: rawValue)
-        else {
-            return .compact
-        }
-
-        return style
-    }
-
     static func widgetAppearanceStyle(in defaults: UserDefaults = .standard) -> LockScreenWidgetAppearanceStyle {
         guard
             let rawValue = defaults.string(forKey: widgetAppearanceStyleKey),
@@ -79,14 +65,6 @@ enum LockScreenSettings {
         }
 
         return tintStyle
-    }
-
-    static func widgetBackgroundBrightness(in defaults: UserDefaults = .standard) -> Double {
-        guard let value = defaults.object(forKey: widgetBackgroundBrightnessKey) as? Double else {
-            return 1.0
-        }
-
-        return min(max(value, widgetBackgroundBrightnessRange.lowerBound), widgetBackgroundBrightnessRange.upperBound)
     }
 
     static func liquidGlassVariant(in defaults: UserDefaults = .standard) -> Int {

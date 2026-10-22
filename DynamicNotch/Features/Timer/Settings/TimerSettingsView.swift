@@ -7,7 +7,30 @@ struct TimerSettingsView: View {
     var body: some View {
         SettingsPageScrollView {
             timerActivityCard
+            shortcutCard
             soundCard
+        }
+    }
+
+    private var shortcutCard: some View {
+        SettingsCard(title: "settings.timer.card.shortcut") {
+            SettingsShortcutRow(
+                title: "settings.timer.shortcut.title",
+                description: "settings.timer.shortcut.desc",
+                keyCode: mediaSettings.localTimerShortcutKeyCode,
+                modifiers: mediaSettings.localTimerShortcutModifiers,
+                keyDisplay: mediaSettings.localTimerShortcutKeyDisplay,
+                onSave: { newKey, newMods, newDisplay in
+                    mediaSettings.localTimerShortcutKeyCode = newKey
+                    mediaSettings.localTimerShortcutModifiers = newMods
+                    mediaSettings.localTimerShortcutKeyDisplay = newDisplay
+                },
+                onReset: {
+                    mediaSettings.localTimerShortcutKeyCode = 17
+                    mediaSettings.localTimerShortcutModifiers = 786432
+                    mediaSettings.localTimerShortcutKeyDisplay = "T"
+                }
+            )
         }
     }
 

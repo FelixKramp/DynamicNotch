@@ -23,7 +23,6 @@ final class NotchSettingsObserver {
     private let downloadHandler: NotchDownloadEventsHandler
     private let dragAndDropHandler: NotchDragAndDropEventsHandler
     private let timerHandler: NotchTimerEventsHandler
-    private let homePageHandler: NotchHomePageEventsHandler
     private let localTimerHandler: NotchLocalTimerEventsHandler
     private let lockScreenHandler: NotchLockScreenEventsHandler
     private let focusHandler: NotchFocusEventsHandler
@@ -46,7 +45,6 @@ final class NotchSettingsObserver {
         downloadHandler: NotchDownloadEventsHandler,
         dragAndDropHandler: NotchDragAndDropEventsHandler,
         timerHandler: NotchTimerEventsHandler,
-        homePageHandler: NotchHomePageEventsHandler,
         localTimerHandler: NotchLocalTimerEventsHandler,
         lockScreenHandler: NotchLockScreenEventsHandler,
         focusHandler: NotchFocusEventsHandler,
@@ -67,7 +65,6 @@ final class NotchSettingsObserver {
         self.downloadHandler = downloadHandler
         self.dragAndDropHandler = dragAndDropHandler
         self.timerHandler = timerHandler
-        self.homePageHandler = homePageHandler
         self.localTimerHandler = localTimerHandler
         self.lockScreenHandler = lockScreenHandler
         self.focusHandler = focusHandler
@@ -347,25 +344,6 @@ final class NotchSettingsObserver {
                 }
             }
             .store(in: &cancellables)
-
-        settingsViewModel.lockScreen.$lockScreenStyle
-            .removeDuplicates()
-            .sink { [weak self] style in
-                guard let self else { return }
-                guard self.notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.LockScreen.activity.id else {
-                    return
-                }
-
-                self.notchViewModel.send(
-                    .showLiveActivity(
-                        LockScreenNotchContent(
-                            lockScreenManager: self.lockScreenManager,
-                            style: style
-                        )
-                    )
-                )
-            }
-            .store(in: &cancellables)
     }
 
     private func observeGeneralSettings() {
@@ -374,16 +352,6 @@ final class NotchSettingsObserver {
             .removeDuplicates()
             .sink { [weak self] isExpanded in
                 self?.mediaHandler.handleExpansionChange(isExpanded: isExpanded)
-            }
-            .store(in: &cancellables)
-
-        settingsViewModel.homePage.$isHomePageLiveActivityEnabled
-            .sink { [weak self] isEnabled in
-                if isEnabled {
-                    self?.homePageHandler.handleHomePage(.homePageOn)
-                } else {
-                    self?.homePageHandler.handleHomePage(.homePageOff)
-                }
             }
             .store(in: &cancellables)
 

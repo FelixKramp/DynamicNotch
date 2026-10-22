@@ -749,7 +749,6 @@ private extension NotchEventCoordinatorIntegrationTests {
         dragAndDropActivityMode: DragAndDropActivityMode = .airDrop,
         trayLiveActivityEnabled: Bool = true,
         noInternetTemporaryActivityEnabled: Bool = true,
-        homePageLiveActivityEnabled: Bool = false,
         focusOnAutoHideEnabled: Bool = true,
         vpnLiveActivityEnabled: Bool = true
     ) -> TestContext {
@@ -783,7 +782,6 @@ private extension NotchEventCoordinatorIntegrationTests {
         UserDefaults.standard.set(noInternetTemporaryActivityEnabled, forKey: "settings.temporary.noInternet")
         UserDefaults.standard.set(true, forKey: "settings.temporary.focusOff")
         UserDefaults.standard.set(true, forKey: "settings.temporary.notchSize")
-        UserDefaults.standard.set(homePageLiveActivityEnabled, forKey: "settings.homePage.liveActivity")
 
         let settingsViewModel = SettingsViewModel()
         let notchViewModel = NotchViewModel(
@@ -813,7 +811,6 @@ private extension NotchEventCoordinatorIntegrationTests {
         nowPlayingViewModel.startMonitoring()
         lockScreenManager.startMonitoring()
         let screenRecordingViewModel = ScreenRecordingViewModel(monitor: FakeScreenRecordingMonitor())
-        let homePageViewModel = HomePageViewModel()
         let localTimerViewModel = LocalTimerViewModel()
         let calendarViewModel = CalendarViewModel()
         let coordinator = NotchEventCoordinator(
@@ -830,7 +827,6 @@ private extension NotchEventCoordinatorIntegrationTests {
             timerViewModel: timerViewModel,
             screenRecordingViewModel: screenRecordingViewModel,
             lockScreenManager: lockScreenManager,
-            homePageViewModel: homePageViewModel,
             localTimerViewModel: localTimerViewModel,
             calendarViewModel: calendarViewModel,
             externalDrivesMonitor: ExternalDrivesMonitor()

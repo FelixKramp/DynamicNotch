@@ -18,6 +18,8 @@ struct LocalTimerSetupNotchView: View {
     @State private var isDragging: Bool = false
     @State private var scrollDirection: Int = 1
 
+    var onClose: (() -> Void)? = nil
+
     private let tickSpacing: CGFloat = 9.0
     private static let subMinuteCount: Int = 5
     private static let subMinuteStepSeconds: Int = 10
@@ -25,8 +27,9 @@ struct LocalTimerSetupNotchView: View {
     private static let maxMinutes: Int = 120
     private static let maxIndex: Int = subMinuteCount + maxMinutes
 
-    init(localTimerViewModel: LocalTimerViewModel) {
+    init(localTimerViewModel: LocalTimerViewModel, onClose: (() -> Void)? = nil) {
         self.localTimerViewModel = localTimerViewModel
+        self.onClose = onClose
         let initialSeconds = localTimerViewModel.totalTime > 0
             ? Int(localTimerViewModel.totalTime)
             : 15 * 60
@@ -249,6 +252,7 @@ struct LocalTimerSetupNotchView: View {
         let m = (total % 3600) / 60
         let s = total % 60
         localTimerViewModel.start(hours: h, minutes: m, seconds: s)
+        onClose?()
     }
 
     private func stopTimer() {

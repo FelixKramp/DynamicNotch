@@ -10,7 +10,6 @@ final class AppContainer {
     let settingsViewModel: SettingsViewModel
     let wifiViewModel: WifiViewModel
     let vpnViewModel: VpnViewModel
-    let homePageViewModel = HomePageViewModel()
     let localTimerViewModel = LocalTimerViewModel()
     let calendarViewModel = CalendarViewModel()
     let screenshotViewModel = ScreenshotViewModel()

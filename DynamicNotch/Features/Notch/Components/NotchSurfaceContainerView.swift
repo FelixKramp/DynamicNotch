@@ -14,7 +14,7 @@ struct NotchSurfaceContainerView: View {
                    notchViewModel.notchModel.baseWidth > 0,
                    notchViewModel.notchModel.baseHeight > 0 {
                     DynamicIslandShape(cornerRadius: notchViewModel.notchModel.baseHeight * 0.5)
-                        .fill(.red)
+                        .fill(.black)
                         .frame(width: notchViewModel.notchModel.baseWidth, height: notchViewModel.notchModel.baseHeight)
                         .allowsHitTesting(false)
                 }
@@ -131,9 +131,7 @@ struct NotchSurfaceContainerView: View {
     }
     
     private var shouldApplyPressScale: Bool {
-        let isExpandedPresentation = notchViewModel.isDisplayingExpandedLiveActivity
-        let isScreenshotContent = notchViewModel.displayedContent?.id == NotchContentRegistry.Screenshot.active.id
-        return !isExpandedPresentation && !isScreenshotContent
+        notchViewModel.shouldApplyPressScale
     }
 
     private var visibleStrokeColor: Color {

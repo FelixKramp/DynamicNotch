@@ -72,7 +72,6 @@ extension SettingsRootViewModel {
 
     enum Section: String, CaseIterable, Identifiable {
         case general
-        case homePage
         #if DEBUG
         case debug
         #endif
@@ -163,7 +162,7 @@ extension SettingsRootViewModel {
             case "permissions":
                 return .general
             case "homePage", "homeScreen":
-                return .homePage
+                return .general
             case "activities", "liveActivity":
                 return .nowPlaying
             case "airDrop", "dragAndDrop":
@@ -261,27 +260,6 @@ private enum SettingsSectionCatalog {
                 imageName: nil,
                 tint: .red,
                 resetGroup: .nowPlaying
-            )
-
-        case .homePage:
-            return .init(
-                sidebarGroup: .application,
-                titleKey: "settings.section.homePage.title",
-                fallbackTitle: "Home Page",
-                subtitleKey: "settings.section.homePage.subtitle",
-                fallbackSubtitle: "Configure pages visible on the notch home page.",
-                searchKeywords: [
-                    "home page",
-                    "home",
-                    "page",
-                    "pages",
-                    "reorder",
-                    "live activity"
-                ],
-                systemImage: "house.fill",
-                imageName: nil,
-                tint: .blue,
-                resetGroup: .homePage
             )
 
         #if DEBUG

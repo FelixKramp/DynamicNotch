@@ -111,7 +111,9 @@ enum GeneralSettingsStorage {
         static let notchSizeTemporaryActivityDuration = "settings.temporary.notchSize.duration"
         static let lowBatterySound = "settings.battery.lowBatterySound"
         static let fullBatterySound = "settings.battery.fullBatterySound"
-        static let homePageLiveActivity = "settings.homePage.liveActivity"
+        static let localTimerShortcutKeyCode = "settings.timer.shortcut.keyCode"
+        static let localTimerShortcutModifiers = "settings.timer.shortcut.modifiers"
+        static let localTimerShortcutKeyDisplay = "settings.timer.shortcut.keyDisplay"
         static let calendarLiveActivity = "settings.calendar.liveActivity"
         static let calendarHideWhenFocused = "settings.calendar.hideWhenFocused"
         static let calendarShowAllDay = "settings.calendar.showAllDay"
@@ -125,10 +127,6 @@ enum GeneralSettingsStorage {
         static let externalDrivesNotificationsEnabled = "settings.notifications.externalDrives.enabled"
         static let externalDrivesNotificationDuration = "settings.notifications.externalDrives.duration"
         static let externalDrivesShowEjected = "settings.notifications.externalDrives.showEjected"
-        static let homePageOrder = "settings.homePage.order"
-        static let homePageDisabled = "settings.homePage.disabled"
-        static let homePagePageIndicator = "settings.homePage.pageIndicator"
-        static let homePageIndicatorSize = "settings.homePage.indicatorSize"
     }
 
     static let defaultValues: [String: Any] = [
@@ -217,10 +215,8 @@ enum GeneralSettingsStorage {
         LockScreenSettings.customLockSoundPathKey: "",
         LockScreenSettings.customUnlockSoundPathKey: "",
         LockScreenSettings.mediaPanelKey: true,
-        LockScreenSettings.styleKey: LockScreenStyle.compact.rawValue,
         LockScreenSettings.widgetAppearanceStyleKey: LockScreenWidgetAppearanceStyle.ultraThinMaterial.rawValue,
         LockScreenSettings.widgetTintStyleKey: LockScreenWidgetTintStyle.neutral.rawValue,
-        LockScreenSettings.widgetBackgroundBrightnessKey: 1.0,
         LockScreenSettings.liquidGlassVariantKey: 8,
         LockScreenSettings.mediaPanelBackgroundStyleKey: LockScreenMediaPanelBackgroundStyle.staticArtwork.rawValue,
         LockScreenSettings.lyricsEnabledKey: true,
@@ -256,11 +252,9 @@ enum GeneralSettingsStorage {
         Keys.notchSizeTemporaryActivityDuration: 2,
         Keys.lowBatterySound: true,
         Keys.fullBatterySound: true,
-        Keys.homePageLiveActivity: true,
-        Keys.homePageOrder: ["camera", "mediaPlayer", "localTimer"],
-        Keys.homePageDisabled: [String](),
-        Keys.homePagePageIndicator: true,
-        Keys.homePageIndicatorSize: "medium",
+        Keys.localTimerShortcutKeyCode: 17,
+        Keys.localTimerShortcutModifiers: 786432,
+        Keys.localTimerShortcutKeyDisplay: "T",
         Keys.calendarLiveActivity: true,
         Keys.calendarHideWhenFocused: true,
         Keys.calendarShowAllDay: true,

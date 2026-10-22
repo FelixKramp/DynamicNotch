@@ -11,8 +11,6 @@ struct LockScreenNotchView: View {
     @Environment(\.notchScale) private var scale
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     @ObservedObject var lockScreenManager: LockScreenManager
-    
-    let style: LockScreenStyle
 
     var body: some View {
         if lockScreenManager.didUnlockWithFaceID {
@@ -24,12 +22,6 @@ struct LockScreenNotchView: View {
                     .foregroundStyle(.white)
                 
                 Spacer()
-
-                if style == .enlarged {
-                    Text(verbatim: lockScreenManager.isShowingLockPresentation ? "Locked" : "Unlocked")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white)
-                }
             }
             .padding(.leading, isNotchlessScreen ? 8.scaled(by: scale) : 14.scaled(by: scale))
             .padding(.trailing, isNotchlessScreen ? 8.scaled(by: scale) : 14.scaled(by: scale))

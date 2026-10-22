@@ -316,6 +316,8 @@ struct TestNotchContent: NotchContentProtocol {
     var collapsedHeightOffset: CGFloat = 0
     var isExpandable: Bool = false
     var expandsOnTap: Bool = true
+    var allowsPressScaleEffect: Bool = true
+    var allowsCompactPressScaleEffect: Bool = true
     var expandedWidthOffset: CGFloat = 0
     var expandedHeightOffset: CGFloat = 0
 

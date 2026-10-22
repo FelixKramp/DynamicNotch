@@ -80,14 +80,14 @@ enum NotchContentRegistry {
             id: "clock.timerFinished",
             priorityKey: .timer
         )
+        static let localTimerSetup = NotchContentDescriptor(
+            id: "clock.localTimerSetup",
+            priority: NotchContentPriority.localTimerSetup
+        )
     }
 
-    enum HomePage {
-        static let active = NotchContentDescriptor(
-            id: "home.active",
-            priorityKey: .homePage
-        )
-        static let calendar = NotchContentDescriptor(
+    enum Calendar {
+        static let upcoming = NotchContentDescriptor(
             id: "calendar.upcoming",
             priorityKey: .calendar
         )

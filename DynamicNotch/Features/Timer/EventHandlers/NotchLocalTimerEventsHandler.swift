@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 @MainActor
 final class NotchLocalTimerEventsHandler {
@@ -7,6 +8,7 @@ final class NotchLocalTimerEventsHandler {
     private let timerViewModel: TimerViewModel
     private let settingsViewModel: SettingsViewModel
     private let timerSoundPlayer: any TimerSoundPlaying
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         notchViewModel: NotchViewModel,
@@ -25,6 +27,8 @@ final class NotchLocalTimerEventsHandler {
             guard let self else { return }
             self.handleLocalTimerFinished()
         }
+
+        setupHotkeyObservation()
     }
 
     convenience init(
@@ -40,6 +44,58 @@ final class NotchLocalTimerEventsHandler {
             settingsViewModel: settingsViewModel,
             timerSoundPlayer: TimerSoundPlayer.shared
         )
+    }
+
+    private func setupHotkeyObservation() {
+        Publishers.CombineLatest(
+            settingsViewModel.mediaAndFiles.$localTimerShortcutKeyCode,
+            settingsViewModel.mediaAndFiles.$localTimerShortcutModifiers
+        )
+        .sink { [weak self] keyCode, modifiers in
+            guard let self else { return }
+            self.registerHotkey(keyCode: keyCode, modifiers: modifiers)
+        }
+        .store(in: &cancellables)
+    }
+
+    private func registerHotkey(keyCode: Int, modifiers: Int) {
+        guard keyCode >= 0 else {
+            GlobalHotkeyManager.shared.unregister()
+            return
+        }
+
+        let modifierFlags = NSEvent.ModifierFlags(rawValue: UInt(modifiers))
+        GlobalHotkeyManager.shared.register(keyCode: UInt32(keyCode), modifiers: modifierFlags) { [weak self] in
+            Task { @MainActor [weak self] in
+                self?.toggleTimerSetup()
+            }
+        }
+    }
+
+    func toggleTimerSetup() {
+        if notchViewModel.notchModel.liveActivityContent?.id == NotchContentRegistry.Media.localTimerSetup.id {
+            hideTimerSetup()
+        } else {
+            showTimerSetup()
+        }
+    }
+
+    func showTimerSetup() {
+        notchViewModel.send(
+            .showLiveActivity(
+                LocalTimerSetupNotchContent(
+                    localTimerViewModel: localTimerViewModel,
+                    onClose: { [weak self] in
+                        guard let self else { return }
+                        self.hideTimerSetup()
+                    }
+                )
+            )
+        )
+    }
+
+    func hideTimerSetup() {
+        notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Media.localTimerSetup.id))
     }
 
     func handleLocalTimerStateChanged(_ state: LocalTimerState) {

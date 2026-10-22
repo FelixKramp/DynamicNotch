@@ -23,7 +23,6 @@ final class NotchEventCoordinator: ObservableObject {
     private let downloadHandler: NotchDownloadEventsHandler
     private let dragAndDropHandler: NotchDragAndDropEventsHandler
     private let timerHandler: NotchTimerEventsHandler
-    private let homePageHandler: NotchHomePageEventsHandler
     private let localTimerHandler: NotchLocalTimerEventsHandler
     private let calendarHandler: NotchCalendarEventsHandler
     private let externalDevicesHandler: NotchExternalDevicesEventsHandler
@@ -56,7 +55,6 @@ final class NotchEventCoordinator: ObservableObject {
             timerViewModel: container.timerViewModel,
             screenRecordingViewModel: container.screenRecordingViewModel,
             lockScreenManager: container.lockScreenManager,
-            homePageViewModel: container.homePageViewModel,
             localTimerViewModel: container.localTimerViewModel,
             calendarViewModel: container.calendarViewModel,
             screenshotViewModel: container.screenshotViewModel,
@@ -81,7 +79,6 @@ final class NotchEventCoordinator: ObservableObject {
         timerViewModel: TimerViewModel,
         screenRecordingViewModel: ScreenRecordingViewModel,
         lockScreenManager: LockScreenManager,
-        homePageViewModel: HomePageViewModel,
         localTimerViewModel: LocalTimerViewModel,
         calendarViewModel: CalendarViewModel,
         screenshotViewModel: ScreenshotViewModel? = nil,
@@ -139,12 +136,6 @@ final class NotchEventCoordinator: ObservableObject {
             settingsViewModel: settingsViewModel,
             localTimerViewModel: localTimerViewModel
         )
-        self.homePageHandler = NotchHomePageEventsHandler(
-            notchViewModel: notchViewModel,
-            settingsViewModel: settingsViewModel,
-            localTimerViewModel: localTimerViewModel,
-            nowPlayingViewModel: nowPlayingViewModel
-        )
         self.calendarHandler = NotchCalendarEventsHandler(
             notchViewModel: notchViewModel,
             calendarViewModel: calendarViewModel,
@@ -184,8 +175,7 @@ final class NotchEventCoordinator: ObservableObject {
             notchViewModel: notchViewModel,
             settingsViewModel: settingsViewModel,
             nowPlayingViewModel: nowPlayingViewModel,
-            mediaHandler: mediaHandler,
-            homePageHandler: homePageHandler
+            mediaHandler: mediaHandler
         )
         self.softwareUpdateHandler = NotchSoftwareUpdateEventsHandler(
             notchViewModel: notchViewModel,
@@ -203,8 +193,7 @@ final class NotchEventCoordinator: ObservableObject {
             nowPlayingViewModel: nowPlayingViewModel,
             timerViewModel: timerViewModel,
             screenRecordingViewModel: screenRecordingViewModel,
-            lockScreenManager: lockScreenManager,
-            homePageViewModel: homePageViewModel
+            lockScreenManager: lockScreenManager
         )
 
         self.settingsObserver = NotchSettingsObserver(
@@ -223,7 +212,6 @@ final class NotchEventCoordinator: ObservableObject {
             downloadHandler: downloadHandler,
             dragAndDropHandler: dragAndDropHandler,
             timerHandler: timerHandler,
-            homePageHandler: homePageHandler,
             localTimerHandler: localTimerHandler,
             lockScreenHandler: lockScreenHandler,
             focusHandler: focusHandler,
@@ -338,11 +326,6 @@ final class NotchEventCoordinator: ObservableObject {
         timerHandler.handleTimer(event)
     }
 
-    func handleHomePageEvent(_ event: HomePageEvent) {
-        guard !isOnboardingActive else { return }
-        homePageHandler.handleHomePage(event)
-    }
-
     func handleScreenRecordingEvent(_ event: ScreenRecordingEvent) {
         guard !isOnboardingActive else { return }
         screenRecordingHandler.handleScreenRecordingEvent(event)
@@ -367,8 +350,7 @@ final class NotchEventCoordinator: ObservableObject {
         nowPlayingViewModel: NowPlayingViewModel,
         timerViewModel: TimerViewModel,
         screenRecordingViewModel: ScreenRecordingViewModel,
-        lockScreenManager: LockScreenManager,
-        homePageViewModel: HomePageViewModel
+        lockScreenManager: LockScreenManager
     ) {
         powerViewModel?.$event.compactMap { $0 }
             .sink { [weak self] event in
@@ -446,12 +428,6 @@ final class NotchEventCoordinator: ObservableObject {
         lockScreenManager.$event.compactMap { $0 }
             .sink { [weak self] event in
                 self?.handleLockScreenEvent(event)
-            }
-            .store(in: &cancellables)
-
-        homePageViewModel.$event.compactMap { $0 }
-            .sink { [weak self] event in
-                self?.handleHomePageEvent(event)
             }
             .store(in: &cancellables)
     }
