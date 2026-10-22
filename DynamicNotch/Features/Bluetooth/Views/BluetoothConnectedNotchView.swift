@@ -114,21 +114,21 @@ struct BluetoothConnectedNotchView: View {
                 ZStack {
                     BluetoothBatteryIndicatorView(
                         batteryLevel: bluetoothViewModel.batteryLevel,
-                        circleSize: 40,
-                        circleLineWidth: 4.5,
+                        circleSize: 45,
+                        circleLineWidth: 5.0,
                         usesTintedTrackStroke: isBatteryStrokeActive
                     )
                     if let clampedLevel {
                         Text(String(describing: clampedLevel))
-                            .font(.system(size: 14))
+                            .font(.system(size: 16))
                             .foregroundStyle(tint(for: clampedLevel))
                     }
                 }
-                .padding(.bottom, isNotchlessScreen ? 15 : 10)
+                .padding(.bottom, isNotchlessScreen ? 12 : 10)
             }
         }
         .padding(.leading, isNotchlessScreen ? 15 : 38)
-        .padding(.trailing, isNotchlessScreen ? 20 : 38)
+        .padding(.trailing, isNotchlessScreen ? 15 : 38)
         .padding(.bottom, isNotchlessScreen ? 5 : 10)
     }
     

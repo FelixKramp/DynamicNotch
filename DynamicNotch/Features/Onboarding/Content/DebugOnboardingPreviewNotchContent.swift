@@ -14,6 +14,7 @@ struct DebugOnboardingPreviewNotchContent: NotchContentProtocol, DynamicIslandCu
     let step: OnboardingSteps
     let notchEventCoordinator: NotchEventCoordinator
     
+    var allowsCompactPressScaleEffect: Bool = false
     var priority: Int { NotchContentRegistry.Onboarding.priority }
     
     init(step: OnboardingSteps, notchEventCoordinator: NotchEventCoordinator) {

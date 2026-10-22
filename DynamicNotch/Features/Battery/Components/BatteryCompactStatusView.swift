@@ -11,14 +11,14 @@ struct BatteryCompactStatusView: View {
     var body: some View {
         HStack {
             Text(verbatim: title)
-                .font(.system(size: isNotchlessScreen ? 13 : 14))
+                .font(.system(size: 14))
                 .foregroundColor(.white)
 
             Spacer()
 
             HStack(spacing: 6) {
                 Text("\(batteryLevel)%")
-                    .font(.system(size: isNotchlessScreen ? 13 : 14))
+                    .font(.system(size: 14))
                     .foregroundStyle(tint.gradient)
 
                 HStack(spacing: 1.5) {

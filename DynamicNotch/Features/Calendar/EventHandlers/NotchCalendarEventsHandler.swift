@@ -31,14 +31,14 @@ final class NotchCalendarEventsHandler {
 
     func handleCalendarEvent(_ hasUpcoming: Bool) {
         guard hasUpcoming && settingsViewModel.calendar.isCalendarLiveActivityEnabled else {
-            notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.HomePage.calendar.id))
+            notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Calendar.upcoming.id))
             return
         }
 
         if settingsViewModel.application.isCloseAtFocusLiveActivityEnabled {
             if let app = NSWorkspace.shared.frontmostApplication,
                app.bundleIdentifier == "com.apple.iCal" {
-                notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.HomePage.calendar.id))
+                notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Calendar.upcoming.id))
                 return
             }
         }

@@ -71,6 +71,15 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
     @StoredDefault(key: GeneralSettingsStorage.Keys.timerSound, defaultValue: .apex)
     var timerSound: TimerSound
 
+    @StoredDefault(key: GeneralSettingsStorage.Keys.localTimerShortcutKeyCode, defaultValue: 17)
+    var localTimerShortcutKeyCode: Int
+
+    @StoredDefault(key: GeneralSettingsStorage.Keys.localTimerShortcutModifiers, defaultValue: 786432)
+    var localTimerShortcutModifiers: Int
+
+    @StoredDefault(key: GeneralSettingsStorage.Keys.localTimerShortcutKeyDisplay, defaultValue: "T")
+    var localTimerShortcutKeyDisplay: String
+
     override init(defaults: UserDefaults) {
         if defaults.string(forKey: GeneralSettingsStorage.Keys.nowPlayingProgressTintStyle) == nil {
             let legacyTint = defaults.bool(forKey: GeneralSettingsStorage.Keys.nowPlayingArtworkTintEnabled)
@@ -121,6 +130,9 @@ final class MediaAndFilesSettingsStore: SettingsStoreBase {
         isTimerLiveActivityEnabled = defaultBool(for: GeneralSettingsStorage.Keys.timerLiveActivityEnabled)
         isTimerSoundEnabled = defaultBool(for: GeneralSettingsStorage.Keys.timerSoundEnabled)
         timerSound = .apex
+        localTimerShortcutKeyCode = 17
+        localTimerShortcutModifiers = 786432
+        localTimerShortcutKeyDisplay = "T"
     }
 }
 

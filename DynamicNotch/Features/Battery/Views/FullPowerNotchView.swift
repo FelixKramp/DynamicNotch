@@ -60,8 +60,8 @@ struct FullPowerNotchView: View {
             }
         }
         .padding(.leading, isNotchlessScreen ? 25 : 40)
-        .padding(.trailing, isNotchlessScreen ? 20 : 35)
-        .padding(.bottom, isNotchlessScreen ? 20 : 15)
+        .padding(.trailing, isNotchlessScreen ? 15 : 35)
+        .padding(.bottom, isNotchlessScreen ? 25 : 15)
         .onAppear {
             showBatteryIndicator = true
             changeBatteryIndicator = true

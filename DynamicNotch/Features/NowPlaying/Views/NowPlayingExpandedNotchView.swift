@@ -99,8 +99,8 @@ struct NowPlayingExpandedNotchView: View {
             )
             controlsSection(snapshot: snapshot, appearance: appearance)
         }
-        .padding(.horizontal, isNotchlessScreen ? 25 : 55)
-        .padding(.bottom, 20)
+        .padding(.horizontal, isNotchlessScreen ? 22 : 55)
+        .padding(.bottom, isNotchlessScreen ? 16 : 18)
     }
 
     @ViewBuilder
@@ -130,7 +130,7 @@ struct NowPlayingExpandedNotchView: View {
                             .constant(displayTitle(for: snapshot)),
                             font: .system(size: 16, weight: .medium),
                             nsFont: .headline,
-                            textColor: .white.opacity(0.8),
+                            textColor: .white,
                             backgroundColor: .clear,
                             minDuration: 2.0,
                             frameWidth: 170
@@ -223,7 +223,7 @@ struct NowPlayingExpandedNotchView: View {
                     )
                 }
             }
-            .padding(.horizontal, 5)
+            .padding(.horizontal, 3)
         }
     }
     

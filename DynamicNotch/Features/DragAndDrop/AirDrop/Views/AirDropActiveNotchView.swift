@@ -31,8 +31,8 @@ struct AirDropActiveNotchView: View {
         ZStack {
             RoundedRectangle(cornerRadius: isNotchlessScreen ? 20 : 6)
                 .fill(Color.blue.opacity(0.3))
-                .opacity(isPulsing ? 1.0 : 0.7)
-                .frame(width: isNotchlessScreen ? 20 : 25, height: isNotchlessScreen ? 20 : 25)
+                .opacity(isPulsing ? 1.2 : 0.7)
+                .frame(width: 25, height: 25)
             
             Image("airdrop.white")
                 .resizable()
@@ -49,21 +49,21 @@ struct AirDropActiveNotchView: View {
             case .transferring:
                 AirDropTransferProgressRingView(
                     progress: transfer.progress,
-                    size: isNotchlessScreen ? 16 : 20,
-                    lineWidth: isNotchlessScreen ? 2.0 : 2.5,
+                    size: 20,
+                    lineWidth: 2.5,
                     ringColor: .blue,
-                    stopSquareSize: isNotchlessScreen ? 5 : 7
+                    stopSquareSize: 7
                 )
                 .padding(.trailing, 2)
                 
             case .completed:
                 Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: isNotchlessScreen ? 16 : 20, weight: .semibold))
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(Color.blue)
                 
             case .failed:
                 Image(systemName: "exclamationmark.circle.fill")
-                    .font(.system(size: isNotchlessScreen ? 16 : 20, weight: .semibold))
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(Color.red)
             }
         }

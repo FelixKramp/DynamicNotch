@@ -23,7 +23,7 @@ struct PlayerProgressBar: View {
     var body: some View {
         HStack(spacing: 10) {
             Text(formattedTime(displayedElapsedTime))
-                .font(.system(size: 11, weight: .medium, design: .rounded))
+                .font(.system(size: 10, weight: .medium, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(scaleEffect ? .white.opacity(0.8) : primaryColor)
             
@@ -67,7 +67,7 @@ struct PlayerProgressBar: View {
             .frame(height: 18)
             
             Text(duration > 0 ? formattedTime(duration) : "LIVE")
-                .font(.system(size: 11, weight: .medium, design: .rounded))
+                .font(.system(size: 10, weight: .medium, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(scaleEffect ? .white : secondaryColor)
         }

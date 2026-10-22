@@ -18,7 +18,6 @@ struct AirDropNotchView: View {
     var body: some View {
         VStack {
             Spacer()
-
             AirDropDropZoneContent(isTargeted: isTargeted)
                 .frame(maxWidth: .infinity, maxHeight: AirDropDropZoneMetrics.height)
         }

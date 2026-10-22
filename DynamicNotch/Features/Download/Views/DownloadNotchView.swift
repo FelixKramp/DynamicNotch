@@ -17,10 +17,10 @@ struct DownloadNotchView: View {
     var body: some View {
         HStack {
             if let url = download?.url {
-                DownloadFileThumbnailView(url: url, size: isNotchlessScreen ? 18 : 25)
+                DownloadFileThumbnailView(url: url, size: isNotchlessScreen ? 20 : 25)
             } else {
                 Image(systemName: "document.fill")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(.white)
             }
             
@@ -48,8 +48,7 @@ struct DownloadNotchView: View {
                 )
             }
         }
-        
-        .padding(.leading, isNotchlessScreen ? 6.scaled(by: scale) : 12.scaled(by: scale))
+        .padding(.leading, isNotchlessScreen ? 7.scaled(by: scale) : 12.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? trailingPadding.scaled(by: scale) : 14.scaled(by: scale))
     }
     
@@ -75,7 +74,7 @@ struct DownloadNotchView: View {
         case .percent:
             6
         case .circle:
-            4
+            5
         }
     }
 }
