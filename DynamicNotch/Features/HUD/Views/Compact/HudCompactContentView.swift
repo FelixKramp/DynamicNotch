@@ -25,7 +25,7 @@ struct HudCompactContentView: View {
                 showsGlow: showsIndicatorGlow,
                 barWidth: 50,
                 barHeight: 6,
-                circleSize: isNotchlessScreen ? 16 : 19,
+                circleSize: isNotchlessScreen ? 18 : 19,
                 circleLineWidth: 3
             )
         }
@@ -35,15 +35,15 @@ struct HudCompactContentView: View {
     
     private var trailingPadding: CGFloat {
         let basePadding = indicatorStyle == .circle
-            ? (isNotchlessScreen ? 4 : 14)
+            ? (isNotchlessScreen ? 5 : 14)
             : (isNotchlessScreen ? 8 : 16)
         return CGFloat(basePadding)
     }
     
     private var leadingPadding: CGFloat {
         let basePadding = indicatorStyle == .circle
-            ? (isNotchlessScreen ? 4 : 14)
-            : (isNotchlessScreen ? 4 : 14)
+            ? (isNotchlessScreen ? 5 : 14)
+            : (isNotchlessScreen ? 5 : 14)
         return CGFloat(basePadding)
     }
     

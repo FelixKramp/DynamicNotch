@@ -16,11 +16,9 @@ struct TimerCountdownText: View {
         TimelineView(.animation(minimumInterval: 0.25, paused: source.isPaused)) { context in
             let formatted = source.formattedTime(at: context.date)
             Text(formatted)
-                .font(.system(size: isNotchlessScreen ? 13 : 14, design: .rounded))
-                .foregroundStyle(.orange)
+                .font(.system(size: 14, design: .rounded))
+                .foregroundStyle(.orange.gradient)
                 .monospacedDigit()
-                .contentTransition(.numericText())
-                .animation(.snappy(duration: 0.28, extraBounce: 0.12), value: formatted)
         }
     }
 }

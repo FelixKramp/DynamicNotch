@@ -9,10 +9,6 @@ struct LockScreenSettingsView: View {
     @State private var lockSoundSelectionError: String?
     @State private var unlockSoundSelectionError: String?
 
-    private var lockScreenPreviewStrokeColor: Color {
-        applicationSettings.isShowNotchStrokeEnabled ? .white.opacity(0.2) : .clear
-    }
-
     private func localized(_ key: String, fallback: String? = nil) -> String {
         applicationSettings.appLanguage.locale.dn(key, fallback: fallback)
     }
@@ -56,19 +52,6 @@ struct LockScreenSettingsView: View {
     
     private var notchAppearance: some View {
         SettingsCard(title: "settings.lockScreen.card.notchAppearance") {
-            CustomPicker(
-                selection: $settings.lockScreenStyle,
-                options: Array(LockScreenStyle.allCases),
-                title: { $0.title },
-                lightBackgroundImage: Image("backgroundLight"),
-                darkBackgroundImage: Image("backgroundDark")
-            ) { style, isSelected in
-                lockScreenStylePickerContent(for: style, isSelected: isSelected)
-            }
-            .accessibilityIdentifier("settings.activities.lockScreen.style")
-
-            Divider().opacity(0.6)
-
             SettingsToggleRow(
                 title: "settings.lockScreen.sound.title",
                 description: "settings.lockScreen.sound.desc",
@@ -140,51 +123,7 @@ struct LockScreenSettingsView: View {
                 accessibilityIdentifier: "settings.activities.lockScreen.mediaPanelPosition",
                 value: $settings.mediaPanelVerticalOffset
             )
-
-            Divider().opacity(0.6)
-
-            SettingsSliderRow(
-                title: "settings.lockScreen.widgetBrightness.title",
-                description: "settings.lockScreen.widgetBrightness.desc",
-                range: LockScreenSettings.widgetBackgroundBrightnessRange.lowerBound * 100...LockScreenSettings.widgetBackgroundBrightnessRange.upperBound * 100,
-                step: 5,
-                fractionLength: 0,
-                suffix: "%",
-                accessibilityIdentifier: "settings.activities.lockScreen.widgetBrightness",
-                value: Binding(
-                    get: { settings.widgetBackgroundBrightness * 100 },
-                    set: { settings.widgetBackgroundBrightness = $0 / 100 }
-                )
-            )
         }
-    }
-
-    @ViewBuilder
-    private func lockScreenStylePickerContent(for style: LockScreenStyle, isSelected: Bool) -> some View {
-        ZStack {
-            Capsule()
-                .fill(.black)
-                .overlay {
-                    Capsule()
-                        .stroke(lockScreenPreviewStrokeColor, lineWidth: 1)
-                }
-                .frame(height: 30)
-
-            HStack(spacing: 8) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 14, weight: .semibold))
-
-                Spacer()
-                
-                if style == .enlarged {
-                    Text(verbatim: "Locked")
-                }
-            }
-            .foregroundStyle(.white.opacity(0.8))
-            .padding(.horizontal, 10)
-        }
-        .frame(width: 160)
-        .scaleEffect(isSelected ? 1 : 0.97)
     }
 
     @ViewBuilder
@@ -192,7 +131,6 @@ struct LockScreenSettingsView: View {
         LockScreenWidgetAppearancePickerPreview(
             style: style,
             tintStyle: settings.widgetTintStyle,
-            backgroundBrightness: settings.widgetBackgroundBrightness,
             liquidGlassVariant: settings.liquidGlassVariant
         )
         .scaleEffect(isSelected ? 1 : 0.97)
@@ -343,7 +281,6 @@ private extension LockScreenMediaPanelBackgroundStyle {
 private struct LockScreenWidgetAppearancePickerPreview: View {
     let style: LockScreenWidgetAppearanceStyle
     let tintStyle: LockScreenWidgetTintStyle
-    let backgroundBrightness: Double
     let liquidGlassVariant: Int
 
     private let panelSize = CGSize(width: 380, height: 228)
@@ -356,7 +293,6 @@ private struct LockScreenWidgetAppearancePickerPreview: View {
             LockScreenWidgetSurface(
                 style: style,
                 tintStyle: tintStyle,
-                brightness: backgroundBrightness,
                 cornerRadius: panelCornerRadius,
                 liquidGlassVariant: liquidGlassVariant
             )

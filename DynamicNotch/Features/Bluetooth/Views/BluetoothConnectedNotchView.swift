@@ -47,7 +47,6 @@ struct BluetoothConnectedNotchView: View {
                 detailedView
             }
         }
-        .font(.system(size: isNotchlessScreen ? 13 : 14))
     }
     
     @ViewBuilder
@@ -55,7 +54,6 @@ struct BluetoothConnectedNotchView: View {
         HStack {
             Image(systemName: bluetoothViewModel.deviceType.sfSymbol)
                 .font(.system(size: 18))
-                .foregroundStyle(.white.opacity(0.8))
             
             Spacer()
             
@@ -63,7 +61,7 @@ struct BluetoothConnectedNotchView: View {
             case .circle:
                 BluetoothBatteryIndicatorView(
                     batteryLevel: bluetoothViewModel.batteryLevel,
-                    circleSize: isNotchlessScreen ? 16 : 18,
+                    circleSize: 18,
                     circleLineWidth: 3,
                     usesTintedTrackStroke: isBatteryStrokeActive
                 )
@@ -79,7 +77,7 @@ struct BluetoothConnectedNotchView: View {
             }
         }
         .padding(.leading, isNotchlessScreen ? 4.scaled(by: scale) : 14.scaled(by: scale))
-        .padding(.trailing, isNotchlessScreen ? 5.scaled(by: scale) : 14.scaled(by: scale))
+        .padding(.trailing, isNotchlessScreen ? compactLeadingPadding.scaled(by: scale) : 14.scaled(by: scale))
     }
     
     @ViewBuilder
@@ -91,10 +89,9 @@ struct BluetoothConnectedNotchView: View {
                 HStack(spacing: 16) {
                     Image(systemName: bluetoothViewModel.deviceType.sfSymbol)
                         .font(.system(size: 30))
-                        .foregroundStyle(.white.opacity(0.8))
-                        .padding(.bottom, 10)
+                        .padding(.bottom, isNotchlessScreen ? 15 : 10)
                     
-                    VStack(alignment: .leading, spacing: 3) {
+                    VStack(alignment: .leading, spacing: 1) {
                         Text(verbatim: "Connected")
                             .lineLimit(1)
                             .font(.system(size: 13))
@@ -117,20 +114,30 @@ struct BluetoothConnectedNotchView: View {
                 ZStack {
                     BluetoothBatteryIndicatorView(
                         batteryLevel: bluetoothViewModel.batteryLevel,
-                        circleSize: 40,
-                        circleLineWidth: 4.5,
+                        circleSize: 45,
+                        circleLineWidth: 5.0,
                         usesTintedTrackStroke: isBatteryStrokeActive
                     )
                     if let clampedLevel {
                         Text(String(describing: clampedLevel))
-                            .font(.system(size: 14))
+                            .font(.system(size: 16))
                             .foregroundStyle(tint(for: clampedLevel))
                     }
                 }
-                .padding(.bottom, 10)
+                .padding(.bottom, isNotchlessScreen ? 12 : 10)
             }
         }
-        .padding(.horizontal, isNotchlessScreen ? 15 : 38)
-        .padding(.bottom, isNotchlessScreen ? 7 : 10)
+        .padding(.leading, isNotchlessScreen ? 15 : 38)
+        .padding(.trailing, isNotchlessScreen ? 15 : 38)
+        .padding(.bottom, isNotchlessScreen ? 5 : 10)
+    }
+    
+    private var compactLeadingPadding: CGFloat {
+        switch settings.bluetoothBatteryIndicatorStyle {
+        case .circle:
+            5
+        case .percent:
+            7
+        }
     }
 }

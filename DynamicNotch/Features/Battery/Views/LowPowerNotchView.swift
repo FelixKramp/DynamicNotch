@@ -48,8 +48,8 @@ struct LowPowerNotchView: View {
             }
         }
         .padding(.leading, isNotchlessScreen ? 25 : 45)
-        .padding(.trailing, isNotchlessScreen ? 20 : 40)
-        .padding(.bottom, isNotchlessScreen ? 23 : 20)
+        .padding(.trailing, isNotchlessScreen ? 15 : 40)
+        .padding(.bottom, isNotchlessScreen ? 25 : 20)
     }
 
     @ViewBuilder

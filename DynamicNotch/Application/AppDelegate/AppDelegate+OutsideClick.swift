@@ -93,14 +93,9 @@ extension AppDelegate {
         let notchSize = notchViewModel.notchModel.size
         guard notchSize.width > 0, notchSize.height > 0 else { return nil }
 
-        var height = notchSize.height
-        var width = notchSize.width
+        let height = notchSize.height
+        let width = notchSize.width
         let originX = floor(window.frame.midX - notchSize.width / 2)
-
-        if shouldShowPageIndicator {
-            width = notchSize.width + pageIndicatorSize.width + 48
-            height = max(notchSize.height, notchSize.height / 2 + pageIndicatorSize.height / 2 + 12)
-        }
 
         let origin = CGPoint(
             x: originX,
@@ -108,32 +103,5 @@ extension AppDelegate {
         )
 
         return CGRect(origin: origin, size: CGSize(width: width, height: height)).insetBy(dx: -12, dy: -8)
-    }
-
-    @MainActor
-    var shouldShowPageIndicator: Bool {
-        guard let homePageContent = notchViewModel.displayedContent as? HomePageNotchContent else { return false }
-        guard settingsViewModel.homePage.isHomePagePageIndicatorEnabled else { return false }
-        guard notchViewModel.isDisplayingExpandedLiveActivity else { return false }
-        
-        let active = homePageContent.settings.homePageOrder.filter { 
-            !homePageContent.settings.homePageDisabled.contains($0) 
-        }
-        return active.count > 1
-    }
-
-    @MainActor
-    var pageIndicatorSize: CGSize {
-        guard let homePageContent = notchViewModel.displayedContent as? HomePageNotchContent else { return .zero }
-        let active = homePageContent.settings.homePageOrder.filter { 
-            !homePageContent.settings.homePageDisabled.contains($0) 
-        }
-        let size = settingsViewModel.homePage.homePageIndicatorSize
-        let count = CGFloat(active.count)
-        if count == 0 { return .zero }
-        
-        let width = size.dotSize + 2 * size.padding
-        let height = count * (size.dotSize + size.spacing) + 2 * size.padding
-        return CGSize(width: width, height: height)
     }
 }

@@ -29,17 +29,17 @@ struct VpnActiveNotchView: View {
                 Image(nsImage: nsImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: isNotchlessScreen ? 22 : 26, height: isNotchlessScreen ? 22 : 26)
+                    .frame(width: 26, height: 26)
                     .cornerRadius(8)
             }
             
             Spacer()
             
             Text(timeString)
-                .monospacedDigit()
+                .font(.system(size: 14, design: .rounded))
                 .foregroundStyle(.orange.gradient)
+                .monospacedDigit()
         }
-        .font(.system(size: isNotchlessScreen ? 13 : 14))
         .padding(.leading, isNotchlessScreen ? 5.scaled(by: scale) : 12.scaled(by: scale))
         .padding(.trailing, isNotchlessScreen ? 7.scaled(by: scale) : 14.scaled(by: scale))
         .onReceive(timer) { _ in

@@ -24,7 +24,7 @@ struct NotchInteractiveBodyView: View {
             isPressed: $notchViewModel.isPressed,
             baseSize: notchViewModel.presentedNotchSize
         )
-        .offset(y: notchViewModel.isDynamicIsland ? 3 : 1)
+        .offset(y: notchViewModel.isDynamicIsland ? 9 : 1)
         .customNotchMouseSwipeable(
             notchViewModel: notchViewModel,
             isEnabled: shouldEnableNotchSwipeGestures
@@ -53,8 +53,7 @@ struct NotchInteractiveBodyView: View {
         
         return !(
             notchViewModel.isDisplayingExpandedLiveActivity &&
-            (notchViewModel.displayedContent?.id == NotchContentRegistry.DragAndDrop.trayActive.id ||
-             (notchViewModel.displayedContent?.id == NotchContentRegistry.HomePage.active.id && !notchViewModel.isHomePageOnLastPage))
+            notchViewModel.displayedContent?.id == NotchContentRegistry.DragAndDrop.trayActive.id
         )
     }
 }

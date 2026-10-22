@@ -54,21 +54,22 @@ final class LightweightNowPlayingEqualizerNSView: NSView {
         static let barSpacing: CGFloat = 1.8
         static let defaultHeight: CGFloat = 16
         static let minimumScale: CGFloat = 0.32
-        static let animationDuration: TimeInterval = 0.2
-        static let timerInterval: TimeInterval = 0.12
+        static let baseDuration: TimeInterval = 1.2
+        static let transitionDuration: TimeInterval = 0.2
     }
     
     private let gradientLayer = CAGradientLayer()
     private let maskContainerLayer = CALayer()
     private var barLayers: [CALayer] = []
-    private var barScales: [CGFloat] = []
-    private var animationTimer: Timer?
+    private var isAnimating = false
     private var isPlaying = false
     private var barColors: [NSColor] = [.white]
     private var barHeight = Metrics.defaultHeight
     private var barWidth = Metrics.defaultBarWidth
     private var customCornerRadius: CGFloat?
     private var windowObservers: [NSObjectProtocol] = []
+    private var workspaceObservers: [NSObjectProtocol] = []
+    private var isScreenAsleep = false
     
     override var intrinsicContentSize: NSSize {
         NSSize(width: CGFloat(Metrics.barCount) * barWidth + CGFloat(Metrics.barCount - 1) * Metrics.barSpacing, height: barHeight)
@@ -85,6 +86,7 @@ final class LightweightNowPlayingEqualizerNSView: NSView {
     }
     
     deinit {
+        removeWorkspaceObservers()
         removeWindowObservers()
         stop()
     }
@@ -145,7 +147,9 @@ final class LightweightNowPlayingEqualizerNSView: NSView {
         invalidateIntrinsicContentSize()
         layoutBars()
         
-        if !isPlaying {
+        if isAnimating {
+            restartWaveAnimations()
+        } else if !isPlaying {
             resetBars()
         }
     }
@@ -165,7 +169,9 @@ final class LightweightNowPlayingEqualizerNSView: NSView {
         invalidateIntrinsicContentSize()
         layoutBars()
         
-        if !isPlaying {
+        if isAnimating {
+            restartWaveAnimations()
+        } else if !isPlaying {
             resetBars()
         }
     }
@@ -187,13 +193,62 @@ final class LightweightNowPlayingEqualizerNSView: NSView {
     }
     
     func stop(animated: Bool = false) {
-        animationTimer?.invalidate()
-        animationTimer = nil
+        guard isAnimating || isPlaying else {
+            resetBars(animated: animated)
+            return
+        }
+        isAnimating = false
         resetBars(animated: animated)
     }
 }
 
 private extension LightweightNowPlayingEqualizerNSView {
+    private struct BarWaveProfile {
+        let durationMultiplier: Double
+        let values: [CGFloat]
+        
+        var keyTimes: [NSNumber] {
+            let count = values.count
+            guard count > 1 else { return [0.0, 1.0] }
+            return (0..<count).map {
+                NSNumber(value: Double($0) / Double(count - 1))
+            }
+        }
+    }
+    
+    private static let barProfiles: [BarWaveProfile] = [
+        // Bar 0: duration = 0.32 * 1.15 ≈ 0.368s
+        BarWaveProfile(
+            durationMultiplier: 1.15,
+            values: [0.10, 0.85, 0.25, 0.98, 0.15, 0.70, 0.10]
+        ),
+        // Bar 1: duration = 0.32 * 0.88 ≈ 0.282s
+        BarWaveProfile(
+            durationMultiplier: 0.88,
+            values: [0.30, 0.95, 0.12, 0.65, 0.40, 1.00, 0.30]
+        ),
+        // Bar 2: duration = 0.32 * 1.28 ≈ 0.410s
+        BarWaveProfile(
+            durationMultiplier: 1.28,
+            values: [0.08, 0.75, 0.35, 1.00, 0.20, 0.60, 0.40, 0.90, 0.08]
+        ),
+        // Bar 3: duration = 0.32 * 0.98 ≈ 0.314s
+        BarWaveProfile(
+            durationMultiplier: 0.98,
+            values: [0.22, 0.98, 0.18, 0.70, 0.35, 0.85, 0.22]
+        ),
+        // Bar 4: duration = 0.32 * 0.78 ≈ 0.250s
+        BarWaveProfile(
+            durationMultiplier: 0.78,
+            values: [0.15, 0.80, 0.10, 0.95, 0.30, 0.65, 0.15]
+        ),
+        // Bar 5: duration = 0.32 * 1.08 ≈ 0.346s
+        BarWaveProfile(
+            durationMultiplier: 1.08,
+            values: [0.12, 0.65, 0.38, 0.92, 0.10, 0.80, 0.45, 0.98, 0.12]
+        )
+    ]
+    
     func setup() {
         wantsLayer = true
         layer?.masksToBounds = false
@@ -206,6 +261,7 @@ private extension LightweightNowPlayingEqualizerNSView {
         gradientLayer.mask = maskContainerLayer
         
         createBars()
+        configureWorkspaceObservers()
     }
     
     func createBars() {
@@ -221,7 +277,6 @@ private extension LightweightNowPlayingEqualizerNSView {
             barLayers.append(barLayer)
         }
         
-        barScales = Array(repeating: isPlaying ? 1.0 : pausedScale, count: Metrics.barCount)
         updateBarCornerRadius()
         layoutBars()
     }
@@ -249,8 +304,9 @@ private extension LightweightNowPlayingEqualizerNSView {
                 barLayer.position = CGPoint(x: x + barWidth / 2, y: centerY)
                 barLayer.cornerRadius = resolvedRadius
                 barLayer.cornerCurve = .continuous
-                let scale = (index < barScales.count) ? barScales[index] : 1.0
-                barLayer.transform = CATransform3DMakeScale(1, scale, 1)
+                if !isAnimating {
+                    barLayer.transform = CATransform3DIdentity
+                }
             }
         } else {
             let dotSize = barWidth
@@ -282,47 +338,69 @@ private extension LightweightNowPlayingEqualizerNSView {
     }
     
     func start() {
-        guard animationTimer == nil else { return }
+        guard !isAnimating else { return }
+        isAnimating = true
         
         let resolvedRadius = customCornerRadius ?? (barWidth / 2.0)
+        let minScale = minimumPlayingScale
+        
         CATransaction.begin()
-        CATransaction.setAnimationDuration(Metrics.animationDuration)
-        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeInEaseOut))
+        CATransaction.setAnimationDuration(Metrics.transitionDuration)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeOut))
         
         for (index, barLayer) in barLayers.enumerated() {
-            let initialScale = CGFloat.random(in: minimumPlayingScale...0.85)
-            barScales[index] = initialScale
             barLayer.bounds = CGRect(x: 0, y: 0, width: barWidth, height: barHeight)
             barLayer.cornerRadius = resolvedRadius
             barLayer.cornerCurve = .continuous
-            barLayer.transform = CATransform3DMakeScale(1, initialScale, 1)
+            barLayer.transform = CATransform3DIdentity
+            
+            let animation = makeWaveAnimation(forBarIndex: index, minScale: minScale, layer: barLayer)
+            barLayer.add(animation, forKey: "dynamicNotch.scaleY")
         }
         
         CATransaction.commit()
-        
-        let timer = Timer(timeInterval: Metrics.timerInterval, repeats: true) { [weak self] _ in
-            self?.animateBars()
+    }
+    
+    func restartWaveAnimations() {
+        guard isAnimating else { return }
+        let minScale = minimumPlayingScale
+        for (index, barLayer) in barLayers.enumerated() {
+            let animation = makeWaveAnimation(forBarIndex: index, minScale: minScale, layer: barLayer)
+            barLayer.add(animation, forKey: "dynamicNotch.scaleY")
         }
-        
-        RunLoop.main.add(timer, forMode: .common)
-        animationTimer = timer
     }
     
     func resetBars(animated: Bool = false) {
+        let dotSize = barWidth
+        let dotRadius = dotSize / 2.0
+        
         CATransaction.begin()
         if animated {
-            CATransaction.setAnimationDuration(Metrics.animationDuration)
+            CATransaction.setAnimationDuration(Metrics.transitionDuration)
             CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeInEaseOut))
         } else {
             CATransaction.setDisableActions(true)
         }
         
-        let dotSize = barWidth
-        let dotRadius = dotSize / 2.0
-        
-        for (index, barLayer) in barLayers.enumerated() {
+        for barLayer in barLayers {
+            let currentScale: CGFloat
+            if animated, let presentation = barLayer.presentation() {
+                currentScale = (presentation.value(forKeyPath: "transform.scale.y") as? CGFloat) ?? 1.0
+            } else {
+                currentScale = 1.0
+            }
+            
             barLayer.removeAnimation(forKey: "dynamicNotch.scaleY")
-            barScales[index] = 1.0
+            
+            if animated && abs(currentScale - 1.0) > 0.01 {
+                let shrinkAnim = CABasicAnimation(keyPath: "transform.scale.y")
+                shrinkAnim.fromValue = currentScale
+                shrinkAnim.toValue = 1.0
+                shrinkAnim.duration = Metrics.transitionDuration
+                shrinkAnim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                barLayer.add(shrinkAnim, forKey: "dynamicNotch.scaleY")
+            }
+            
             barLayer.transform = CATransform3DIdentity
             barLayer.bounds = CGRect(x: 0, y: 0, width: dotSize, height: dotSize)
             barLayer.cornerRadius = dotRadius
@@ -332,37 +410,34 @@ private extension LightweightNowPlayingEqualizerNSView {
         CATransaction.commit()
     }
     
-    func animateBars() {
-        guard isPlaying, isInVisibleWindow else {
-            stop(animated: true)
-            return
+    func makeWaveAnimation(forBarIndex index: Int, minScale: CGFloat, layer: CALayer) -> CAKeyframeAnimation {
+        let profile = Self.barProfiles[index % Self.barProfiles.count]
+        let animation = CAKeyframeAnimation(keyPath: "transform.scale.y")
+        let scaleRange = max(1.0 - minScale, 0.05)
+        
+        animation.values = profile.values.map { norm in
+            let scale = minScale + scaleRange * norm
+            return NSNumber(value: Double(scale))
+        }
+        animation.keyTimes = profile.keyTimes
+        animation.calculationMode = .cubic
+        animation.duration = Metrics.baseDuration * profile.durationMultiplier
+        animation.repeatCount = .greatestFiniteMagnitude
+        animation.isRemovedOnCompletion = false
+        
+        let currentTime = layer.convertTime(CACurrentMediaTime(), from: nil)
+        animation.beginTime = currentTime - Double(index) * 0.07
+        
+        if #available(macOS 13.0, *) {
+            let isLowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+            animation.preferredFrameRateRange = CAFrameRateRange(
+                minimum: 30,
+                maximum: isLowPower ? 60 : 120,
+                preferred: isLowPower ? 30 : 60
+            )
         }
         
-        for (index, barLayer) in barLayers.enumerated() {
-            let currentScale = barScales[index]
-            let targetScale = CGFloat.random(in: minimumPlayingScale...1)
-            barScales[index] = targetScale
-            
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            barLayer.transform = CATransform3DMakeScale(1, targetScale, 1)
-            CATransaction.commit()
-            
-            let animation = CABasicAnimation(keyPath: "transform.scale.y")
-            animation.fromValue = currentScale
-            animation.toValue = targetScale
-            animation.duration = Metrics.animationDuration
-            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            if #available(macOS 13.0, *) {
-                animation.preferredFrameRateRange = CAFrameRateRange(
-                    minimum: 24,
-                    maximum: 24,
-                    preferred: 24
-                )
-            }
-            
-            barLayer.add(animation, forKey: "dynamicNotch.scaleY")
-        }
+        return animation
     }
     
     var pausedScale: CGFloat {
@@ -375,6 +450,7 @@ private extension LightweightNowPlayingEqualizerNSView {
     }
     
     var isInVisibleWindow: Bool {
+        guard !isScreenAsleep else { return false }
         guard let window, window.isVisible else { return false }
         return window.occlusionState.contains(.visible)
     }
@@ -403,5 +479,33 @@ private extension LightweightNowPlayingEqualizerNSView {
         let center = NotificationCenter.default
         windowObservers.forEach(center.removeObserver)
         windowObservers.removeAll()
+    }
+    
+    func configureWorkspaceObservers() {
+        removeWorkspaceObservers()
+        
+        let wsCenter = NSWorkspace.shared.notificationCenter
+        let sleepObs = wsCenter.addObserver(forName: NSWorkspace.screensDidSleepNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.isScreenAsleep = true
+            self?.syncAnimationState()
+        }
+        let wakeObs = wsCenter.addObserver(forName: NSWorkspace.screensDidWakeNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.isScreenAsleep = false
+            self?.syncAnimationState()
+        }
+        let powerObs = NotificationCenter.default.addObserver(forName: NSNotification.Name.NSProcessInfoPowerStateDidChange, object: nil, queue: .main) { [weak self] _ in
+            self?.restartWaveAnimations()
+        }
+        
+        workspaceObservers = [sleepObs, wakeObs, powerObs]
+    }
+    
+    func removeWorkspaceObservers() {
+        let wsCenter = NSWorkspace.shared.notificationCenter
+        workspaceObservers.forEach { obs in
+            wsCenter.removeObserver(obs)
+            NotificationCenter.default.removeObserver(obs)
+        }
+        workspaceObservers.removeAll()
     }
 }

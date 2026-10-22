@@ -73,7 +73,7 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        let width = isStyleExpanded ? baseWidth + 100 : baseWidth + widthOffset
+        let width = isStyleExpanded ? baseWidth + 100 : baseWidth + dynamicIslandWidthOffset
         let height = isStyleExpanded ? baseHeight + heightOffset : baseHeight
         
         return .init(width: width, height: height)
@@ -119,6 +119,35 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
             
         case .minimal:
             return 80
+            
+        case .expandedCompact:
+            return 85
+            
+        case .expandedDetailed:
+            return 85
+        }
+    }
+    
+    private var dynamicIslandWidthOffset: CGFloat {
+        switch style {
+        case .standard:
+            switch indicatorStyle {
+            case .bar:
+                return kind == .keyboard ? 140 : 130
+            case .circle:
+                return 125
+            }
+            
+        case .compact:
+            switch indicatorStyle {
+            case .bar:
+                return 130
+            case .circle:
+                return 60
+            }
+            
+        case .minimal:
+            return 75
             
         case .expandedCompact:
             return 85

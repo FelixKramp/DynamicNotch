@@ -11,20 +11,17 @@ final class NotchOnboardingEventsHandler {
     private let settingsViewModel: SettingsViewModel
     private let nowPlayingViewModel: NowPlayingViewModel
     private let mediaHandler: NotchMediaEventsHandler
-    private let homePageHandler: NotchHomePageEventsHandler
 
     init(
         notchViewModel: NotchViewModel,
         settingsViewModel: SettingsViewModel,
         nowPlayingViewModel: NowPlayingViewModel,
-        mediaHandler: NotchMediaEventsHandler,
-        homePageHandler: NotchHomePageEventsHandler
+        mediaHandler: NotchMediaEventsHandler
     ) {
         self.notchViewModel = notchViewModel
         self.settingsViewModel = settingsViewModel
         self.nowPlayingViewModel = nowPlayingViewModel
         self.mediaHandler = mediaHandler
-        self.homePageHandler = homePageHandler
     }
 
     var isOnboardingActive: Bool {
@@ -100,9 +97,6 @@ final class NotchOnboardingEventsHandler {
         if nowPlayingViewModel.hasActiveSession &&
             settingsViewModel.isLiveActivityEnabled(.nowPlaying) {
             mediaHandler.handleNowPlaying(.started)
-        }
-        if settingsViewModel.isLiveActivityEnabled(.homePage) {
-            homePageHandler.handleHomePage(.homePageOn)
         }
     }
 }

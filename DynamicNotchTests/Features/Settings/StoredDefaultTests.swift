@@ -66,7 +66,6 @@ final class StoredDefaultTests: XCTestCase {
         XCTAssertTrue(store.isLockScreenLiveActivityEnabled)
         XCTAssertTrue(store.isLockScreenSoundEnabled)
         XCTAssertTrue(store.isLockScreenMediaPanelEnabled)
-        XCTAssertEqual(store.lockScreenStyle, .compact)
         XCTAssertEqual(store.widgetAppearanceStyle, .ultraThinMaterial)
         XCTAssertEqual(store.widgetTintStyle, .neutral)
         XCTAssertEqual(store.mediaPanelVerticalOffset, 0.0)
@@ -77,14 +76,9 @@ final class StoredDefaultTests: XCTestCase {
 
         store.isLockScreenLiveActivityEnabled = false
         store.mediaPanelVerticalOffset = 25.5
-        store.lockScreenStyle = .enlarged
 
         XCTAssertFalse(testDefaults.bool(forKey: LockScreenSettings.liveActivityKey))
         XCTAssertEqual(testDefaults.double(forKey: LockScreenSettings.mediaPanelVerticalOffsetKey), 25.5)
-        XCTAssertEqual(
-            testDefaults.string(forKey: LockScreenSettings.styleKey),
-            LockScreenStyle.enlarged.rawValue
-        )
     }
 
     func testObjectWillChangeFiresOnPropertyUpdate() {
@@ -160,12 +154,27 @@ final class StoredDefaultTests: XCTestCase {
         XCTAssertEqual(store.appearanceMode, .system)
         XCTAssertEqual(store.notchStrokeWidth, 2.5)
         XCTAssertEqual(store.notchStrokeOpacity, 0.6)
+        XCTAssertTrue(store.isNotchlessWindowMarginEnabled)
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 17)
 
         store.notchStrokeWidth = 5.0 // Range: 1.0...3.0
         XCTAssertEqual(store.notchStrokeWidth, 3.0)
 
         store.notchStrokeOpacity = 2.0 // Range: 0.0...0.6
         XCTAssertEqual(store.notchStrokeOpacity, 0.6)
+
+        store.notchlessWindowMarginOffset = 100 // Should clamp to max 50
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 50)
+
+        store.notchlessWindowMarginOffset = -10 // Should clamp to min 0
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 0)
+
+        store.isNotchlessWindowMarginEnabled = false
+        XCTAssertFalse(testDefaults.bool(forKey: GeneralSettingsStorage.Keys.notchlessWindowMarginEnabled))
+
+        store.resetDisplay()
+        XCTAssertTrue(store.isNotchlessWindowMarginEnabled)
+        XCTAssertEqual(store.notchlessWindowMarginOffset, 17)
 
         store.appearanceMode = .dark
         XCTAssertEqual(testDefaults.string(forKey: GeneralSettingsStorage.Keys.appearanceMode), SettingsAppearanceMode.dark.rawValue)

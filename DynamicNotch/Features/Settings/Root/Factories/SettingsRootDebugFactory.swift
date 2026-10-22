@@ -27,7 +27,6 @@ extension SettingsRootViewModel {
         nowPlayingViewModel: NowPlayingViewModel?,
         timerViewModel: TimerViewModel?,
         lockScreenManager: LockScreenManager?,
-        homePageViewModel: HomePageViewModel?,
         localTimerViewModel: LocalTimerViewModel?,
         calendarViewModel: CalendarViewModel?
     ) -> DebugSettingsViewModel {
@@ -43,7 +42,6 @@ extension SettingsRootViewModel {
             nowPlayingViewModel: nowPlayingViewModel,
             timerViewModel: timerViewModel,
             lockScreenManager: lockScreenManager,
-            homePageViewModel: homePageViewModel,
             localTimerViewModel: localTimerViewModel,
             calendarViewModel: calendarViewModel
         )
@@ -75,7 +73,6 @@ extension SettingsRootViewModel {
         nowPlayingViewModel: NowPlayingViewModel?,
         timerViewModel: TimerViewModel?,
         lockScreenManager: LockScreenManager?,
-        homePageViewModel: HomePageViewModel?,
         localTimerViewModel: LocalTimerViewModel?,
         calendarViewModel: CalendarViewModel?
     ) -> SettingsRootDebugDependencies {
@@ -108,7 +105,6 @@ extension SettingsRootViewModel {
             service: InactiveLockScreenMonitoringService(),
             soundPlayer: InactiveLockScreenSoundPlayer()
         )
-        let resolvedHomePageViewModel = homePageViewModel ?? HomePageViewModel()
         let resolvedLocalTimerViewModel = localTimerViewModel ?? LocalTimerViewModel()
         let resolvedCalendarViewModel = calendarViewModel ?? CalendarViewModel()
         let resolvedExternalDrivesMonitor = ExternalDrivesMonitor()
@@ -126,7 +122,6 @@ extension SettingsRootViewModel {
             timerViewModel: resolvedTimerViewModel,
             screenRecordingViewModel: resolvedScreenRecordingViewModel,
             lockScreenManager: resolvedLockScreenManager,
-            homePageViewModel: resolvedHomePageViewModel,
             localTimerViewModel: resolvedLocalTimerViewModel,
             calendarViewModel: resolvedCalendarViewModel,
             externalDrivesMonitor: resolvedExternalDrivesMonitor

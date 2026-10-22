@@ -14,12 +14,15 @@ struct HotspotActiveContent: NotchContentProtocol, DynamicIslandCustomizable {
     
     var appearanceStyle: HotspotAppearanceStyle { settingsViewModel.connectivity.hotspotAppearanceStyle}
     var priority: Int { NotchContentRegistry.Wifi.hotspot.priority }
-    var strokeColor: Color {
-        .green.opacity(0.3)
-    }
+    var strokeColor: Color {.green.opacity(0.3)}
     
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         let extraWidth: CGFloat = appearanceStyle == .battery ? 100 : 80
+        return .init(width: baseWidth + extraWidth, height: baseHeight)
+    }
+    
+    func dynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        let extraWidth: CGFloat = appearanceStyle == .battery ? 85 : 60
         return .init(width: baseWidth + extraWidth, height: baseHeight)
     }
     

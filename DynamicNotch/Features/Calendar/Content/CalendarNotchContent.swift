@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct CalendarNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
-    let id = NotchContentRegistry.HomePage.calendar.id
+    let id = NotchContentRegistry.Calendar.upcoming.id
     let calendarViewModel: CalendarViewModel
     let notchViewModel: NotchViewModel
     
-    var priority: Int { NotchContentRegistry.HomePage.calendar.priority }
+    var priority: Int { NotchContentRegistry.Calendar.upcoming.priority }
     var isExpandable: Bool { true }
     
     var windowLink: (@MainActor () -> Void)? {

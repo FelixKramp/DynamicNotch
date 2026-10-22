@@ -34,7 +34,7 @@ struct VpnExpandedNotchView: View {
         }
         .padding(.leading, isNotchlessScreen ? 15 : 40)
         .padding(.trailing, isNotchlessScreen ? 15 : 34)
-        .padding(.bottom, isNotchlessScreen ? 17 : 12)
+        .padding(.bottom, isNotchlessScreen ? 18 : 12)
         .onReceive(timer) { _ in
             updateTimer()
         }

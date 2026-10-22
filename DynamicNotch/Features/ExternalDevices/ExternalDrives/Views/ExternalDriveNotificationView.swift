@@ -12,25 +12,25 @@ struct ExternalDriveNotificationView: View {
             Spacer()
             content
         }
-        .padding(.leading, isNotchlessScreen ? 19 : 40)
+        .padding(.leading, isNotchlessScreen ? 20 : 40)
         .padding(.trailing, isNotchlessScreen ? 15 : 35)
-        .padding(.bottom, isNotchlessScreen ? 19 : 15)
+        .padding(.bottom, isNotchlessScreen ? 20 : 15)
     }
 
     private var content: some View {
-        HStack(alignment: .center, spacing: 12) {
+        HStack(spacing: 12) {
             driveIcon
             
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(drive.name)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white)
                     .lineLimit(1)
-
+                
                 subtitleView
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
+            Spacer()
+            
             if drive.eventType == .connected && drive.isEjectable, let onEject {
                 ejectButton(action: onEject)
             }
@@ -65,7 +65,7 @@ struct ExternalDriveNotificationView: View {
                     .lineLimit(1)
             }
         } else {
-            Text("settings.notifications.externalDrives.safeToDisconnect")
+            Text(verbatim: "Safe to disconnect")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -78,6 +78,6 @@ struct ExternalDriveNotificationView: View {
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.9))
         }
-        .buttonStyle(PrimaryButtonStyle(width: 45, height: 45, backgroundColor: .gray.opacity(0.3)))
+        .buttonStyle(PrimaryButtonStyle(width: 50, height: 50, backgroundColor: .gray.opacity(0.3)))
     }
 }

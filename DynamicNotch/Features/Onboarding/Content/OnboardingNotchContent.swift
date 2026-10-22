@@ -16,7 +16,9 @@ struct OnboardingNotchContent : NotchContentProtocol, DynamicIslandCustomizable 
     let stackID = OnboardingSteps.stackID
     let step: OnboardingSteps
     let notchEventCoordinator: NotchEventCoordinator
+    
     var priority: Int { NotchContentRegistry.Onboarding.priority }
+    var allowsCompactPressScaleEffect: Bool = false
     
     init(step: OnboardingSteps, notchEventCoordinator: NotchEventCoordinator) {
         self.id = step.liveActivityID

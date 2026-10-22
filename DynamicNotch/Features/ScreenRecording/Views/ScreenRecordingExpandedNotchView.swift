@@ -17,7 +17,7 @@ struct ScreenRecordingExpandedNotchView: View {
         }
         .padding(.leading, isNotchlessScreen ? 25 : 44)
         .padding(.trailing, isNotchlessScreen ? 15 : 34)
-        .padding(.bottom, isNotchlessScreen ? 15 : 14)
+        .padding(.bottom, isNotchlessScreen ? 17 : 14)
         .onAppear {
             withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) {
                 isBlinking = true

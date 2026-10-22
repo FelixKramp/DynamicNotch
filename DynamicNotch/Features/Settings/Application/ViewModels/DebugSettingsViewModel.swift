@@ -849,8 +849,7 @@ final class DebugSettingsViewModel: ObservableObject {
         lockScreenManager.setDebugLockState(true)
         try await playLivePreview(
             LockScreenNotchContent(
-                lockScreenManager: lockScreenManager,
-                style: settingsViewModel.lockScreen.lockScreenStyle
+                lockScreenManager: lockScreenManager
             ),
             id: Self.sequenceLockScreenID
         )

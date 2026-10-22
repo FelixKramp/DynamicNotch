@@ -103,7 +103,7 @@ struct PlayerControlButton: View {
 
                 Image(systemName: systemImage)
                     .font(.system(size: fontSize, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.9))
+                    .foregroundStyle(.white)
                     .scaleEffect(iconScale)
                     .offset(x: iconOffsetX)
                     .rotationEffect(.degrees(iconRotation))

@@ -14,6 +14,7 @@ struct DisplaySettingsView: View {
         SettingsPageScrollView {
             displayCard
             hideNotchToggleCard
+            windowMarginCard
         }
         .accessibilityIdentifier("settings.notch.display.root")
         .onAppear(perform: refreshAvailableDisplays)
@@ -109,6 +110,40 @@ struct DisplaySettingsView: View {
                 isOn: $applicationSettings.isCloseAtFocusLiveActivityEnabled,
                 accessibilityIdentifier: "settings.notch.closeAtFocus"
             )
+        }
+    }
+
+    private var windowMarginCard: some View {
+        SettingsCard {
+            SettingsToggleRow(
+                title: "settings.notch.display.windowMargin.title",
+                description: "settings.notch.display.windowMargin.desc",
+                systemImage: "rectangle.topthird.inset.filled",
+                color: LinearGradient.blueGradient,
+                isOn: $applicationSettings.isNotchlessWindowMarginEnabled,
+                accessibilityIdentifier: "settings.notch.display.windowMargin"
+            )
+
+            if applicationSettings.isNotchlessWindowMarginEnabled {
+                Divider()
+                    .opacity(0.6)
+                    .padding(.leading, 43)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+
+                SettingsSliderRow(
+                    title: "settings.notch.display.windowMarginOffset.title",
+                    description: "settings.notch.display.windowMarginOffset.desc",
+                    range: 5...40,
+                    step: 1,
+                    fractionLength: 0,
+                    suffix: "pt",
+                    accessibilityIdentifier: "settings.notch.display.windowMarginOffset",
+                    value: Binding(
+                        get: { Double(applicationSettings.notchlessWindowMarginOffset) },
+                        set: { applicationSettings.notchlessWindowMarginOffset = Int($0.rounded()) }
+                    )
+                )
+            }
         }
     }
     

@@ -93,7 +93,7 @@ struct CalendarExpandedNotchView: View {
         HStack {
             Button {
                 calendarViewModel.dismissEvent(event)
-                notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.HomePage.calendar.id))
+                notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Calendar.upcoming.id))
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 20, weight: .semibold))
@@ -104,7 +104,7 @@ struct CalendarExpandedNotchView: View {
             if let url = event.url, isVideoCall(url: url) {
                 Button {
                     NSWorkspace.shared.open(url)
-                    notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.HomePage.calendar.id))
+                    notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.Calendar.upcoming.id))
                 } label: {
                     HStack {
                         Image(systemName: "video.fill")

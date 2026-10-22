@@ -60,7 +60,7 @@ private extension NotchCustomScaleModifier {
                             isPressValidForTap = true
                             didCompleteExpandAction = false
 
-                            if !shouldUseHoverExpansion {
+                            if !shouldUseHoverExpansion && notchViewModel.shouldApplyPressScale {
                                 startPressAnimation()
                             }
                         }

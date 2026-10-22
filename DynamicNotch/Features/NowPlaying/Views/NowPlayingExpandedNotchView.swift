@@ -64,13 +64,10 @@ struct NowPlayingExpandedNotchView: View {
         elapsedTime
         let appearance = settings.nowPlayingAppearanceOptions
 
-        return VStack {
+        return VStack(spacing: 12) {
             Spacer()
-
             headerSection(snapshot: snapshot, appearance: appearance)
             
-            Spacer()
-
             PlayerProgressBar(
                 progress: displayedProgress,
                 displayedElapsedTime: displayedElapsedTime,
@@ -100,14 +97,10 @@ struct NowPlayingExpandedNotchView: View {
                     scrubProgress = nil
                 }
             )
-
-            Spacer()
-
             controlsSection(snapshot: snapshot, appearance: appearance)
         }
-        .padding(.horizontal, isNotchlessScreen ? 25 : 55)
-        .padding(.top, isNotchlessScreen ? 15 : 25)
-        .padding(.bottom, 15)
+        .padding(.horizontal, isNotchlessScreen ? 22 : 55)
+        .padding(.bottom, isNotchlessScreen ? 16 : 18)
     }
 
     @ViewBuilder
@@ -137,7 +130,7 @@ struct NowPlayingExpandedNotchView: View {
                             .constant(displayTitle(for: snapshot)),
                             font: .system(size: 16, weight: .medium),
                             nsFont: .headline,
-                            textColor: .white.opacity(0.8),
+                            textColor: .white,
                             backgroundColor: .clear,
                             minDuration: 2.0,
                             frameWidth: 170
@@ -230,7 +223,7 @@ struct NowPlayingExpandedNotchView: View {
                     )
                 }
             }
-            .padding(.horizontal, 5)
+            .padding(.horizontal, 3)
         }
     }
     

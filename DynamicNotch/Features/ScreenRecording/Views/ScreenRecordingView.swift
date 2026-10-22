@@ -19,7 +19,7 @@ struct ScreenRecordingView: View {
         HStack {
             Circle()
                 .fill(Color.red)
-                .frame(width: isNotchlessScreen ? 12 : 14, height: isNotchlessScreen ? 12 : 14)
+                .frame(width: isNotchlessScreen ? 14 : 14, height: isNotchlessScreen ? 14 : 14)
                 .opacity(isBlinking ? 0.5 : 1)
 
             Spacer()

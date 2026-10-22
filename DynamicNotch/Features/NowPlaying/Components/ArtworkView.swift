@@ -51,6 +51,7 @@ struct ArtworkView: View {
                     .interpolation(.high)
                     .antialiased(true)
                     .scaledToFill()
+                    .overlay(Color.gray.opacity(darknessOverlayOpacity))
             } else {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(.gray.opacity(0.2))
@@ -67,7 +68,8 @@ struct ArtworkView: View {
         .albumArtFlip(angle: nowPlayingViewModel.artworkFlipAngle, isEnabled: usesFlipAnimation)
         .opacity(artworkOpacity)
         .scaleEffect(artworkScale)
-        .animation(.easeInOut(duration: 0.5), value: artworkOpacity)
+        .animation(.easeInOut(duration: 0.25), value: artworkOpacity)
+        .animation(.easeInOut(duration: 0.25), value: darknessOverlayOpacity)
         .animation(.spring(response: 0.5, dampingFraction: 0.7), value: artworkScale)
         .onAppear {
             updateCachedImage()
@@ -89,6 +91,14 @@ struct ArtworkView: View {
     private var artworkOpacity: Double {
         guard nowPlayingViewModel.snapshot != nil else { return 1 }
         return nowPlayingViewModel.snapshot?.isPlaying == true ? 1 : 0.3
+    }
+
+    private var darknessOverlayOpacity: Double {
+        let luminance = nowPlayingViewModel.artworkPalette.luminance
+        let threshold = 0.50
+        guard luminance < threshold else { return 0 }
+        let progress = (threshold - luminance) / threshold
+        return progress * 0.25
     }
 
     private func triggerRevealAnimation() {

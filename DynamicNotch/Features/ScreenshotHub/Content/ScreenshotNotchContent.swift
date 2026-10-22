@@ -5,6 +5,7 @@ struct ScreenshotNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     let viewModel: ScreenshotViewModel
     
     var priority: Int { NotchContentRegistry.Screenshot.active.priority }
+    var allowsPressScaleEffect: Bool { false }
     
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 160, height: baseHeight + 105)

@@ -22,11 +22,11 @@ struct NoInternetConnectionView: View {
                 Spacer()
                 titleAndDescription
             }
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 6)
 
             actionButton
         }
-        .padding(.horizontal, isNotchlessScreen ? 10 : 35)
+        .padding(.horizontal, isNotchlessScreen ? 14 : 35)
         .padding(.bottom, 10)
     }
 

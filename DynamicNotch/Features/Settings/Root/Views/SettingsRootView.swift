@@ -442,14 +442,6 @@ struct SettingsRootView: View {
                 )
             }
 
-        case .homePage:
-            detailContainer(for: section) {
-                 HomePageSettingsView(
-                     homePageSettings: settingsViewModel.homePage,
-                     applicationSettings: settingsViewModel.application
-                 )
-            }
-            
         #if DEBUG
         case .debug:
             detailContainer(for: section) {
@@ -656,10 +648,6 @@ struct SettingsRootView: View {
             DisplaySettingsView(applicationSettings: settingsViewModel.application, availableDisplays: $availableDisplays)
         case .gestures:
             GesturesSettingsView(applicationSettings: settingsViewModel.application)
-        case .homePagePages:
-            HomePagePagesSettingsView(
-                homePageSettings: settingsViewModel.homePage
-            )
         case .timer:
             TimerSettingsView(
                 mediaSettings: settingsViewModel.mediaAndFiles,
@@ -707,8 +695,6 @@ struct SettingsRootView: View {
             settingsViewModel.application.resetDisplay()
         case .gestures:
             settingsViewModel.application.resetGestures()
-        case .homePagePages:
-            settingsViewModel.homePage.resetHomePage()
         case .externalDrives:
             settingsViewModel.externalDevices.reset()
         default:
