@@ -18,7 +18,7 @@ struct TimerFinishedNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
         self.onRestart = onRestart
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 130, height: baseHeight + 60)
     }
     
@@ -26,7 +26,7 @@ struct TimerFinishedNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
         .init(width: baseWidth + 210, height: baseHeight + 50)
     }
 
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         (top: 20, bottom: 38)
     }
 
@@ -35,7 +35,7 @@ struct TimerFinishedNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(TimerFinishedNotchView(onDismiss: onDismiss, onRestart: onRestart))
     }
 }

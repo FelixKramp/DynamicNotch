@@ -26,7 +26,7 @@ struct DownloadNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         settingsViewModel.mediaAndFiles.downloadsProgressIndicatorStyle
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         let width: CGFloat = indicatorStyle == .circle ? 70 : 90
         return .init(width: baseWidth + width, height: baseHeight)
     }
@@ -53,7 +53,7 @@ struct DownloadNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             DownloadNotchView(
                 downloadViewModel: downloadViewModel,
@@ -63,7 +63,7 @@ struct DownloadNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(DownloadExpandedNotchView(downloadViewModel: downloadViewModel))
     }
 }

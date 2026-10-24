@@ -321,7 +321,7 @@ struct TestNotchContent: NotchContentProtocol {
     var expandedWidthOffset: CGFloat = 0
     var expandedHeightOffset: CGFloat = 0
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(
             width: baseWidth + collapsedWidthOffset,
             height: baseHeight + collapsedHeightOffset
@@ -336,12 +336,12 @@ struct TestNotchContent: NotchContentProtocol {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(EmptyView())
     }
 
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(EmptyView())
     }
 }

@@ -11,7 +11,7 @@ struct LockScreenNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
 
     var priority: Int { NotchContentRegistry.LockScreen.activity.priority }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 55, height: baseHeight)
     }
     
@@ -20,7 +20,7 @@ struct LockScreenNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(LockScreenNotchView(lockScreenManager: lockScreenManager))
     }
 }

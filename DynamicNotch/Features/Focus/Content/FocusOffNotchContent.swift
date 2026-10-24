@@ -27,7 +27,7 @@ struct FocusOffNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         }
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 65, height: baseHeight)
     }
     
@@ -52,12 +52,12 @@ struct FocusOffNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(FocusOffNotchView(style: appearanceStyle, focusModeType: focusModeType))
     }
 
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(FocusOffExpandedNotchView(focusModeType: focusModeType))
     }
 

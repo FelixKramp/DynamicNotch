@@ -26,7 +26,7 @@ struct OnboardingNotchContent : NotchContentProtocol, DynamicIslandCustomizable 
         self.notchEventCoordinator = notchEventCoordinator
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         step.notchSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
@@ -34,7 +34,7 @@ struct OnboardingNotchContent : NotchContentProtocol, DynamicIslandCustomizable 
         step.dynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         return (top: 24, bottom: 36)
     }
     
@@ -43,7 +43,7 @@ struct OnboardingNotchContent : NotchContentProtocol, DynamicIslandCustomizable 
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             OnboardingNotchView(
                 step: step,

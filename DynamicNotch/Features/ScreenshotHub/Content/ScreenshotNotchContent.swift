@@ -7,7 +7,7 @@ struct ScreenshotNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var priority: Int { NotchContentRegistry.Screenshot.active.priority }
     var allowsPressScaleEffect: Bool { false }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 160, height: baseHeight + 105)
     }
     
@@ -15,7 +15,7 @@ struct ScreenshotNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         return .init(width: baseWidth + 200, height: baseHeight + 100)
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         return (top: 28, bottom: 40)
     }
     
@@ -24,7 +24,7 @@ struct ScreenshotNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(ScreenshotNotchView(screenshotViewModel: viewModel))
     }
 }

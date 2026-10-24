@@ -14,7 +14,7 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var priority: Int { NotchContentRegistry.Vpn.vpn.priority }
     var isExpandable: Bool { true }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 105, height: baseHeight)
     }
     
@@ -61,14 +61,14 @@ struct VpnActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             VpnActiveNotchView(vpnViewModel: vpnViewModel)
         )
     }
 
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(
             VpnExpandedNotchView(
                 notchViewModel: notchViewModel,

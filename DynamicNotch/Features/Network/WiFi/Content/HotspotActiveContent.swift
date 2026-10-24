@@ -16,7 +16,7 @@ struct HotspotActiveContent: NotchContentProtocol, DynamicIslandCustomizable {
     var priority: Int { NotchContentRegistry.Wifi.hotspot.priority }
     var strokeColor: Color {.green.opacity(0.3)}
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         let extraWidth: CGFloat = appearanceStyle == .battery ? 100 : 80
         return .init(width: baseWidth + extraWidth, height: baseHeight)
     }
@@ -27,7 +27,7 @@ struct HotspotActiveContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             HotspotActiveNotchView(
                 style: appearanceStyle,

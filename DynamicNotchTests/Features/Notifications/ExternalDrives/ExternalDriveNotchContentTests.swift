@@ -42,7 +42,7 @@ final class ExternalDriveNotchContentTests: XCTestCase {
             onEject: nil
         )
 
-        let size = content.size(baseWidth: 200, baseHeight: 40)
+        let size = content.compactSize(baseWidth: 200, baseHeight: 40)
         XCTAssertEqual(size.width, 320)
         XCTAssertEqual(size.height, 100)
     }
@@ -88,7 +88,7 @@ final class ExternalDriveNotchContentTests: XCTestCase {
             onEject: nil
         )
 
-        let radii = content.cornerRadius(baseRadius: 10)
+        let radii = content.compactCornerRadius(baseRadius: 10)
         XCTAssertEqual(radii.top, 20)
         XCTAssertEqual(radii.bottom, 38)
     }

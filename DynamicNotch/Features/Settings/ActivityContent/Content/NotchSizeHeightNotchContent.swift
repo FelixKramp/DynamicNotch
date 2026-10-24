@@ -14,12 +14,12 @@ struct NotchSizeHeightNotchContent: NotchContentProtocol, DynamicIslandCustomiza
     var priority: Int { NotchContentRegistry.NotchSize.height.priority }
     var strokeColor: Color { .red }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 70, height: baseHeight)
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(NotchSizeHeightNotchView(settingsViewModel: settingsViewModel))
     }
 }

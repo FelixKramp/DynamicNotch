@@ -21,14 +21,14 @@ struct BluetoothConnectedNotchContent: NotchContentProtocol, DynamicIslandCustom
         return batteryStrokeColor(for: batteryLevel).opacity(0.3)
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         return (
             top: settings.bluetoothAppearanceStyle == .compact ? baseRadius - 4 : 20,
             bottom: settings.bluetoothAppearanceStyle == .compact ? baseRadius : 38
         )
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         let width: CGFloat
 
         switch settings.bluetoothAppearanceStyle {
@@ -53,7 +53,7 @@ struct BluetoothConnectedNotchContent: NotchContentProtocol, DynamicIslandCustom
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             BluetoothConnectedNotchView(
                 bluetoothViewModel: bluetoothViewModel,

@@ -86,13 +86,6 @@ protocol NotchContentProtocol: DynamicIslandCustomizable {
 
     /// Corner radii for expanded presentation mode.
     func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat)
-
-    // MARK: - Legacy Compatibility Signatures
-
-    @MainActor @ViewBuilder func makeView() -> AnyView
-    @MainActor @ViewBuilder func makeExpandedView() -> AnyView
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat)
 }
 
 // MARK: - Apple LiveActivity Semantic Aliases & Default Implementations
@@ -114,43 +107,16 @@ extension NotchContentProtocol {
     var widgetURL: (@MainActor () -> Void)? { windowLink }
     var windowLink: (@MainActor () -> Void)? { nil }
 
-    // MARK: - View Builders & Bridging
-
-    @MainActor
-    func compactView() -> AnyView {
-        makeView()
-    }
-
-    @MainActor
-    func makeView() -> AnyView {
-        compactView()
-    }
+    // MARK: - View Builders
 
     @MainActor
     func expandedView() -> AnyView {
-        makeExpandedView()
-    }
-
-    @MainActor
-    func makeExpandedView() -> AnyView {
         compactView()
     }
 
-    // MARK: - Geometry & Sizing Bridging
-
-    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        size(baseWidth: baseWidth, baseHeight: baseHeight)
-    }
-
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        compactSize(baseWidth: baseWidth, baseHeight: baseHeight)
-    }
+    // MARK: - Geometry & Sizing
 
     func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
-        cornerRadius(baseRadius: baseRadius)
-    }
-
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         (top: baseRadius - 4, bottom: baseRadius)
     }
 
@@ -187,12 +153,5 @@ extension NotchContentProtocol {
 
     func expandedDynamicIslandCornerRadius(baseHeight: CGFloat) -> CGFloat {
         baseHeight * 0.2
-    }
-
-    // MARK: - Apple-Style Convenience Accessors
-
-    @MainActor
-    func makeCompactView() -> AnyView {
-        compactView()
     }
 }

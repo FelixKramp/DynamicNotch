@@ -17,7 +17,7 @@ struct ChargerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         powerService.isLowPowerMode ? .yellow.opacity(0.3) : .green.opacity(0.3)
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 180, height: baseHeight)
     }
     
@@ -26,7 +26,7 @@ struct ChargerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(ChargerNotchView(powerService: powerService))
     }
 }

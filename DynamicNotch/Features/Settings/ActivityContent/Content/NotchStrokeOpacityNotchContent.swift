@@ -11,12 +11,12 @@ struct NotchStrokeOpacityNotchContent: NotchContentProtocol, DynamicIslandCustom
 
     var priority: Int { NotchContentRegistry.NotchSize.strokeOpacity.priority }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 100, height: baseHeight)
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(NotchStrokeOpacityNotchView(settingsViewModel: settingsViewModel))
     }
 }

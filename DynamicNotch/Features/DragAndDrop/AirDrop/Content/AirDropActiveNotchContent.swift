@@ -17,7 +17,7 @@ struct AirDropActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
         Color.blue.opacity(0.3)
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 70, height: baseHeight)
     }
     
@@ -38,7 +38,7 @@ struct AirDropActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             AirDropActiveNotchView(
                 airDropViewModel: airDropViewModel
@@ -47,7 +47,7 @@ struct AirDropActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     }
 
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(
             AirDropExpandedActiveNotchView(
                 airDropViewModel: airDropViewModel
