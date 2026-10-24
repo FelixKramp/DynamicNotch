@@ -64,7 +64,7 @@ struct NotchAnimations {
             expandLiveActivity: .spring(response: baseResponse, dampingFraction: expandDamping, blendDuration: blend),
             expandedLiveActivityContentTransition: .spring(response: baseResponse, dampingFraction: expandDamping, blendDuration: blend),
             
-            collapseLiveActivity: .spring(response: baseResponse, blendDuration: blend),
+            collapseLiveActivity: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
             collapsedLiveActivityContentTransition: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
             
             stretchReset: .spring(response: baseResponse, blendDuration: blend),
@@ -73,7 +73,7 @@ struct NotchAnimations {
             notchVisibility: .spring(response: baseResponse, blendDuration: blend),
             
             transitionDelay: 0.32,
-            queuePacingDelay: 0.25
+            queuePacingDelay: 0.30
         )
     }()
 
