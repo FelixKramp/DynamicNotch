@@ -3,6 +3,7 @@ import SwiftUI
 struct BluetoothSettingsView: View {
     @ObservedObject var settings: ConnectivitySettingsStore
     @ObservedObject var applicationSettings: ApplicationSettingsStore
+    @Environment(\.locale) private var locale
     
     private var temporaryActivityDurationRange: ClosedRange<Double> {
         Double(SettingsStoreBase.temporaryActivityDurationRange.lowerBound)...Double(SettingsStoreBase.temporaryActivityDurationRange.upperBound)
@@ -156,7 +157,7 @@ struct BluetoothSettingsView: View {
                             .foregroundStyle(.white.opacity(0.8))
                         
                         VStack(alignment: .leading, spacing: 0) {
-                            Text(verbatim: "Connected")
+                            Text(locale.dn("notch.bluetooth.connected", fallback: "Connected"))
                                 .lineLimit(1)
                                 .font(.system(size: 10))
                                 .foregroundStyle(.white.opacity(0.4))

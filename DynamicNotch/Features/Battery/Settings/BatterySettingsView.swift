@@ -8,6 +8,7 @@ struct BatterySettingsView: View {
 
     @ObservedObject var batterySettings: BatterySettingsStore
     @ObservedObject var appearanceSettings: ApplicationSettingsStore
+    @Environment(\.locale) private var locale
 
     private var temporaryActivityDurationRange: ClosedRange<Double> {
         Double(SettingsStoreBase.temporaryActivityDurationRange.lowerBound)...Double(SettingsStoreBase.temporaryActivityDurationRange.upperBound)
@@ -278,11 +279,11 @@ struct BatterySettingsView: View {
 
             HStack {
                 if kind == .low {
-                    Text(verbatim: "Low Battery")
+                    Text(locale.dn("notch.battery.low", fallback: "Low Battery"))
                         .foregroundStyle(.white.opacity(0.8))
                         .lineLimit(1)
                 } else {
-                    Text(verbatim: "Full Battery")
+                    Text(locale.dn("notch.battery.full", fallback: "Full Battery"))
                         .foregroundStyle(.white.opacity(0.8))
                         .lineLimit(1)
                 }
@@ -310,12 +311,12 @@ struct BatterySettingsView: View {
     private func batteryStandardTitle(for kind: BatteryNotificationPreviewKind) -> some View {
         HStack(spacing: 5) {
             if kind == .low {
-                Text(verbatim: "Battery Low")
+                Text(locale.dn("notch.battery.detail.lowTitle", fallback: "Battery Low"))
                     .font(.system(size: 10.5, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.82))
                     .lineLimit(1)
             } else {
-                Text(verbatim: "Full Battery")
+                Text(locale.dn("notch.battery.detail.fullTitle", fallback: "Full Battery"))
                     .font(.system(size: 10.5, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.82))
                     .lineLimit(1)
@@ -330,12 +331,12 @@ struct BatterySettingsView: View {
     @ViewBuilder
     private func batteryStandardDescription(for kind: BatteryNotificationPreviewKind) -> some View {
         if kind == .low {
-            Text(verbatim: "Turn on Low Power Mode or it\nis recommended to charge it.")
+            Text(locale.dn("notch.battery.detail.turnOnLowPower", fallback: "Turn on Low Power Mode or it\nis recommended to charge it."))
                 .font(.system(size: 8.5, weight: .medium))
                 .foregroundStyle(.white.opacity(0.45))
                 .lineLimit(2)
         } else {
-            Text(verbatim: "Your Mac is fully charged.")
+            Text(locale.dn("notch.battery.detail.fullyCharged", fallback: "Your Mac is fully charged."))
                 .font(.system(size: 9, weight: .medium))
                 .foregroundStyle(.white.opacity(0.45))
                 .lineLimit(1)

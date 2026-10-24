@@ -23,12 +23,12 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
     @Published var cameraState: FaceCameraState = .uninitialized
     @Published var isFaceInFrame: Bool = false
     @Published var enrollmentProgress: Double = 0.0
-    @Published var instructionText: String = "Position your face within the frame"
+    @Published var instructionText: String = L10n.app("faceid.camera.instruction.placeFace", fallback: "Position your face within the frame")
     @Published var isCompleted: Bool = false
     @Published var simulatedMode: Bool = false
 
-    private func updateInstruction(_ text: String) {
-        self.instructionText = text
+    private func updateInstruction(_ key: String, fallback: String) {
+        self.instructionText = L10n.app(key, fallback: fallback)
     }
 
     let previewLayer = AVCaptureVideoPreviewLayer()
@@ -59,7 +59,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
     func startEnrollment() {
         isCompleted = false
         enrollmentProgress = 0.0
-        updateInstruction("Position your face within the frame")
+        updateInstruction("faceid.camera.instruction.placeFace", fallback: "Position your face within the frame")
         isFaceInFrame = false
 
         checkPermissionsAndStart()
@@ -82,20 +82,20 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
             setupAndStartCamera()
         case .notDetermined:
             cameraState = .starting
-            updateInstruction("Requesting camera access...")
+            updateInstruction("faceid.camera.error.requesting", fallback: "Requesting camera access...")
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
                 DispatchQueue.main.async {
                     if granted {
                         self?.setupAndStartCamera()
                     } else {
                         self?.cameraState = .permissionDenied
-                        self?.updateInstruction("Camera access denied")
+                        self?.updateInstruction("faceid.camera.error.denied", fallback: "Camera access denied")
                     }
                 }
             }
         case .denied, .restricted:
             cameraState = .permissionDenied
-            updateInstruction("Allow camera access in System Settings")
+            updateInstruction("faceid.camera.error.allowInSettings", fallback: "Allow camera access in System Settings")
         @unknown default:
             cameraState = .unavailable("Unknown camera status")
         }
@@ -121,7 +121,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
                     captureSession.commitConfiguration()
                     DispatchQueue.main.async {
                         self.cameraState = .unavailable("Camera not found")
-                        self.updateInstruction("Camera not found")
+                        self.updateInstruction("faceid.camera.error.notFound", fallback: "Camera not found")
                     }
                     return
                 }
@@ -160,7 +160,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
 
             DispatchQueue.main.async {
                 self.cameraState = .running
-                self.updateInstruction("Position your face and look at the camera")
+                self.updateInstruction("faceid.camera.instruction.lookAtCamera", fallback: "Position your face and look at the camera")
             }
         }
     }
@@ -189,17 +189,17 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
 
                 self.enrollmentProgress += 0.025
                 if self.enrollmentProgress < 0.3 {
-                    self.updateInstruction("Position your face within the frame")
+                    self.updateInstruction("faceid.camera.instruction.placeFace", fallback: "Position your face within the frame")
                 } else if self.enrollmentProgress < 0.6 {
-                    self.updateInstruction("Slowly turn your head to the right")
+                    self.updateInstruction("faceid.camera.instruction.turnRightSlowly", fallback: "Slowly turn your head to the right")
                 } else if self.enrollmentProgress < 0.9 {
-                    self.updateInstruction("Now turn your head to the left")
+                    self.updateInstruction("faceid.camera.instruction.turnLeft", fallback: "Now turn your head to the left")
                 } else if self.enrollmentProgress < 1.0 {
-                    self.updateInstruction("Finishing scan...")
+                    self.updateInstruction("faceid.camera.instruction.finishing", fallback: "Finishing scan...")
                 } else {
                     self.enrollmentProgress = 1.0
                     self.isCompleted = true
-                    self.updateInstruction("Face ID successfully set up!")
+                    self.updateInstruction("faceid.camera.instruction.completed", fallback: "Face ID successfully set up!")
                     self.simulatedTimer?.cancel()
                 }
             }
@@ -215,9 +215,9 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         if !isCentered || !isReasonableSize {
             isFaceInFrame = false
             if box.width < 0.14 {
-                updateInstruction("Move closer to the screen")
+                updateInstruction("faceid.camera.instruction.closer", fallback: "Move closer to the screen")
             } else {
-                updateInstruction("Center your face in the frame")
+                updateInstruction("faceid.camera.instruction.centerFace", fallback: "Center your face in the frame")
             }
             return
         }
@@ -228,16 +228,16 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         enrollmentProgress = min(1.0, enrollmentProgress + 0.025)
 
         if enrollmentProgress < 0.30 {
-            updateInstruction("Great! Hold your face in the frame")
+            updateInstruction("faceid.camera.instruction.holdStill", fallback: "Great! Hold your face in the frame")
         } else if enrollmentProgress < 0.60 {
-            updateInstruction("Slightly turn your head to the right")
+            updateInstruction("faceid.camera.instruction.turnRightSlightly", fallback: "Slightly turn your head to the right")
         } else if enrollmentProgress < 0.85 {
-            updateInstruction("Now slightly turn your head to the left")
+            updateInstruction("faceid.camera.instruction.turnLeftSlightly", fallback: "Now slightly turn your head to the left")
         } else if enrollmentProgress < 1.0 {
-            updateInstruction("Finishing scan...")
+            updateInstruction("faceid.camera.instruction.finishing", fallback: "Finishing scan...")
         } else {
             isCompleted = true
-            updateInstruction("Face ID successfully set up!")
+            updateInstruction("faceid.camera.instruction.completed", fallback: "Face ID successfully set up!")
             stopCameraSession()
         }
     }
@@ -246,7 +246,7 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         guard !isCompleted else { return }
         if Date().timeIntervalSince(lastSuccessfulObservationTime) > 0.4 {
             isFaceInFrame = false
-            updateInstruction("Position your face within the frame")
+            updateInstruction("faceid.camera.instruction.placeFace", fallback: "Position your face within the frame")
         }
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 struct HUDSettingsView: View {
     @ObservedObject var settings: HUDSettingsStore
     @ObservedObject var applicationSettings: ApplicationSettingsStore
+    @Environment(\.locale) private var locale
 
     private var layoutTypeBinding: Binding<HudLayoutType> {
         Binding(
@@ -235,7 +236,7 @@ struct HUDSettingsView: View {
                     .frame(height: 30)
                 
                 HStack(spacing: 8) {
-                    Text(verbatim: "Volume")
+                    Text(locale.dn("notch.hud.volume", fallback: "Volume"))
                         .lineLimit(1)
                     
                     Spacer()
@@ -335,7 +336,7 @@ struct HUDSettingsView: View {
                     Spacer()
                     
                     VStack(alignment: .leading, spacing: 5) {
-                        Text(verbatim: "Volume")
+                        Text(locale.dn("notch.hud.volume", fallback: "Volume"))
                             .font(.system(size: 12))
                             .padding(.horizontal, 10)
                         
