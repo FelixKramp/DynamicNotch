@@ -9,53 +9,102 @@ import SwiftUI
 
 struct LanguageSettingsView: View {
     @ObservedObject var applicationSettings: ApplicationSettingsStore
+    @State private var selectedTarget: LanguageTarget = .settings
+    
+    enum LanguageTarget: String, CaseIterable, Identifiable {
+        case settings
+        case notch
+        
+        var id: String { rawValue }
+        
+        var titleKey: LocalizedStringKey {
+            switch self {
+            case .settings:
+                return "settings.language.target.settings"
+            case .notch:
+                return "settings.language.target.notch"
+            }
+        }
+    }
     
     var body: some View {
         SettingsPageScrollView {
             systemLanguageCard
-            languageListCard
+            
+            switch selectedTarget {
+            case .settings:
+                settingsLanguageListCard
+            case .notch:
+                notchLanguageListCard
+            }
         }
     }
     
     private var systemLanguageCard: some View {
         SettingsCard {
-            SettingsToggleRow(
-                title: "settings.language.option.system",
-                description: "settings.language.header.desc",
-                systemImage: "globe",
-                color: .blue,
-                isOn: Binding(
-                    get: { applicationSettings.appLanguage == .system },
-                    set: { isSystem in
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            if isSystem {
-                                applicationSettings.appLanguage = .system
-                            } else if applicationSettings.appLanguage == .system {
-                                applicationSettings.appLanguage = .english
-                            }
-                        }
-                    }
-                ),
-                accessibilityIdentifier: "settings.language.systemToggle"
-            )
+            Picker("", selection: $selectedTarget) {
+                ForEach(LanguageTarget.allCases) { target in
+                    Text(target.titleKey).tag(target)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
             
             Divider()
                 .opacity(0.6)
             
-            HStack(spacing: 8) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Color.yellow)
-                
-                Text(LocalizedStringKey("settings.language.notice"))
-                    .font(.caption)
-                    .foregroundStyle(Color.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            SettingsToggleRow(
+                title: "settings.language.option.system",
+                description: currentSystemDescription,
+                systemImage: "globe",
+                color: .blue,
+                isOn: systemToggleBinding,
+                accessibilityIdentifier: "settings.language.systemToggle"
+            )
         }
     }
     
-    private var languageListCard: some View {
+    private var currentSystemDescription: LocalizedStringKey {
+        switch selectedTarget {
+        case .settings:
+            return "settings.language.header.desc"
+        case .notch:
+            return "settings.language.notch.desc"
+        }
+    }
+    
+    private var systemToggleBinding: Binding<Bool> {
+        Binding(
+            get: {
+                switch selectedTarget {
+                case .settings:
+                    return applicationSettings.appLanguage == .system
+                case .notch:
+                    return applicationSettings.notchLanguage == .system
+                }
+            },
+            set: { isSystem in
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    switch selectedTarget {
+                    case .settings:
+                        if isSystem {
+                            applicationSettings.appLanguage = .system
+                        } else if applicationSettings.appLanguage == .system {
+                            applicationSettings.appLanguage = .english
+                        }
+                    case .notch:
+                        if isSystem {
+                            applicationSettings.notchLanguage = .system
+                        } else if applicationSettings.notchLanguage == .system {
+                            applicationSettings.notchLanguage = .english
+                        }
+                    }
+                }
+            }
+        )
+    }
+    
+    private var settingsLanguageListCard: some View {
         SettingsCard(spacing: 0, padding: 0) {
             SettingsSearchableListView(
                 items: availableLanguages,
@@ -69,6 +118,26 @@ struct LanguageSettingsView: View {
                     L10n.string(language.titleKeyString, language: applicationSettings.appLanguage).lowercased().contains(query)
                 },
                 accessibilityIdentifier: { "settings.language.option.\($0.rawValue)" }
+            ) { language in
+                flagView(for: language)
+            }
+        }
+    }
+    
+    private var notchLanguageListCard: some View {
+        SettingsCard(spacing: 0, padding: 0) {
+            SettingsSearchableListView(
+                items: DynamicNotchLanguage.notchLanguages,
+                selection: $applicationSettings.notchLanguage,
+                title: { $0.titleKey },
+                subtitle: { $0.fallbackDisplayName },
+                matchesQuery: { language, query in
+                    language.fallbackDisplayName.lowercased().contains(query) ||
+                    language.nativeDisplayName.lowercased().contains(query) ||
+                    language.rawValue.lowercased().contains(query) ||
+                    L10n.string(language.titleKeyString, language: applicationSettings.appLanguage).lowercased().contains(query)
+                },
+                accessibilityIdentifier: { "settings.language.notch.option.\($0.rawValue)" }
             ) { language in
                 flagView(for: language)
             }

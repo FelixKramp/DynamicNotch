@@ -17,6 +17,7 @@ enum GeneralSettingsStorage {
         static let preferredDisplayName = "settings.general.display.preferred.name"
         static let displayAutoSwitchEnabled = "settings.general.display.autoSwitchEnabled"
         static let appLanguage = "settings.general.language.app"
+        static let notchLanguage = "settings.general.language.notch"
         static let hideNotchInFullscreenEnabled = "settings.general.hideNotchInFullscreen"
         static let hideDynamicIslandInFullscreenEnabled = "settings.general.hideDynamicIslandInFullscreen"
         static let notchlessWindowMarginEnabled = "settings.notchless.windowMargin.enabled"
@@ -147,6 +148,7 @@ enum GeneralSettingsStorage {
         Keys.preferredDisplayName: "",
         Keys.displayAutoSwitchEnabled: true,
         Keys.appLanguage: DynamicNotchLanguage.system.rawValue,
+        Keys.notchLanguage: DynamicNotchLanguage.system.rawValue,
         Keys.hideNotchInFullscreenEnabled: true,
         Keys.hideDynamicIslandInFullscreenEnabled: true,
         Keys.notchlessWindowMarginEnabled: true,

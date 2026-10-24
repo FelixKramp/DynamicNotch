@@ -157,6 +157,11 @@ final class SettingsViewModel: ObservableObject, NotchSettingsProviding {
         set { application.appLanguage = newValue }
     }
 
+    var notchLanguage: DynamicNotchLanguage {
+        get { application.notchLanguage }
+        set { application.notchLanguage = newValue }
+    }
+
     var isNotchTapToExpandEnabled: Bool {
         get { application.isNotchTapToExpandEnabled }
         set { application.isNotchTapToExpandEnabled = newValue }
