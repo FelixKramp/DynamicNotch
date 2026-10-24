@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FullPowerNotchView: View {
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @ObservedObject var powerService: PowerService
     
     @State private var pulse = false
@@ -21,7 +22,7 @@ struct FullPowerNotchView: View {
         Group {
             if style == .compact {
                 BatteryCompactStatusView(
-                    title: "Full Battery",
+                    title: locale.dn("notch.battery.full", fallback: "Full Battery"),
                     batteryLevel: powerService.batteryLevel,
                     tint: batteryColor
                 )
@@ -87,7 +88,7 @@ struct FullPowerNotchView: View {
     @ViewBuilder
     private var title: some View {
         HStack {
-            Text(verbatim: "Full Battery")
+            Text(locale.dn("notch.battery.detail.fullTitle", fallback: "Full Battery"))
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.white)
                 .lineLimit(1)
@@ -101,7 +102,7 @@ struct FullPowerNotchView: View {
 
     @ViewBuilder
     private var description: some View {
-        Text(verbatim: "Your Mac is fully charged.")
+        Text(locale.dn("notch.battery.detail.fullyCharged", fallback: "Your Mac is fully charged."))
             .font(.system(size: 11, weight: .medium))
             .foregroundStyle(.gray.opacity(0.55))
             .lineLimit(1)

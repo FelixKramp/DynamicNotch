@@ -10,6 +10,7 @@ import SwiftUI
 struct OnboardingNotchView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     
     let step: OnboardingSteps
     let onStepChange: (OnboardingSteps) -> Void
@@ -47,7 +48,7 @@ struct OnboardingNotchView: View {
                 Button(action: {
                     NSApp.terminate(nil)
                 }) {
-                    Text(verbatim: "Exit")
+                    Text(locale.dn("notch.onboarding.exit", fallback: "Exit"))
                         .fontWeight(.medium)
                         .foregroundStyle(.red)
                 }
@@ -58,7 +59,7 @@ struct OnboardingNotchView: View {
                 Button(action: {
                     onStepChange(.second)
                 }) {
-                    Text(verbatim: "Continue")
+                    Text(locale.dn("notch.onboarding.continue", fallback: "Continue"))
                         .fontWeight(.medium)
                         .foregroundStyle(.blue)
                 }
@@ -74,7 +75,7 @@ struct OnboardingNotchView: View {
                     openURL(url)
                     
                 }) {
-                    Text(verbatim: "Open Settings")
+                    Text(locale.dn("notch.onboarding.openSettings", fallback: "Open Settings"))
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                 }
@@ -85,7 +86,7 @@ struct OnboardingNotchView: View {
                 Button(action: {
                     onStepChange(.third)
                 }) {
-                    Text(verbatim: "Continue")
+                    Text(locale.dn("notch.onboarding.continue", fallback: "Continue"))
                         .fontWeight(.medium)
                         .foregroundStyle(.blue)
                 }
@@ -100,7 +101,7 @@ struct OnboardingNotchView: View {
                     }
                     openURL(url)
                 }) {
-                    Text(verbatim: "Open GitHub")
+                    Text(locale.dn("notch.onboarding.openGitHub", fallback: "Open GitHub"))
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                 }
@@ -111,7 +112,7 @@ struct OnboardingNotchView: View {
                 Button(action: {
                     onStepChange(.fourth)
                 }) {
-                    Text(verbatim: "Continue")
+                    Text(locale.dn("notch.onboarding.continue", fallback: "Continue"))
                         .fontWeight(.medium)
                         .foregroundStyle(.blue)
                 }
@@ -127,7 +128,7 @@ struct OnboardingNotchView: View {
                     openURL(url)
                     onFinish()
                 }) {
-                    Text(verbatim: "Open Telegram")
+                    Text(locale.dn("notch.onboarding.openTelegram", fallback: "Open Telegram"))
                         .fontWeight(.medium)
                         .foregroundStyle(.white)
                 }
@@ -138,7 +139,7 @@ struct OnboardingNotchView: View {
                 Button(action: {
                     onFinish()
                 }) {
-                    Text(verbatim: "Finish")
+                    Text(locale.dn("notch.onboarding.finish", fallback: "Finish"))
                         .fontWeight(.medium)
                         .foregroundStyle(.blue)
                 }

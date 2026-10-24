@@ -15,21 +15,55 @@ enum FocusModeType: String, CaseIterable {
     case custom = "com.apple.focus.custom"
     case unknown = ""
 
-    var displayName: String {
+    func displayName(locale: Locale? = nil) -> String {
+        let key: String
+        let fallback: String
         switch self {
-        case .doNotDisturb: return "Do Not Disturb"
-        case .work: return "Work"
-        case .personal: return "Personal"
-        case .sleep: return "Sleep"
-        case .driving: return "Driving"
-        case .fitness: return "Fitness"
-        case .gaming: return "Gaming"
-        case .mindfulness: return "Mindfulness"
-        case .reading: return "Reading"
-        case .reduceInterruptions: return "Reduce Interr."
-        case .custom: return "Focus"
-        case .unknown: return "Focus Mode"
+        case .doNotDisturb:
+            key = "notch.focus.doNotDisturb"
+            fallback = "Do Not Disturb"
+        case .work:
+            key = "notch.focus.work"
+            fallback = "Work"
+        case .personal:
+            key = "notch.focus.personal"
+            fallback = "Personal"
+        case .sleep:
+            key = "notch.focus.sleep"
+            fallback = "Sleep"
+        case .driving:
+            key = "notch.focus.driving"
+            fallback = "Driving"
+        case .fitness:
+            key = "notch.focus.fitness"
+            fallback = "Fitness"
+        case .gaming:
+            key = "notch.focus.gaming"
+            fallback = "Gaming"
+        case .mindfulness:
+            key = "notch.focus.mindfulness"
+            fallback = "Mindfulness"
+        case .reading:
+            key = "notch.focus.reading"
+            fallback = "Reading"
+        case .reduceInterruptions:
+            key = "notch.focus.reduceInterr"
+            fallback = "Reduce Interr."
+        case .custom:
+            key = "notch.focus.custom"
+            fallback = "Focus"
+        case .unknown:
+            key = "notch.focus.unknown"
+            fallback = "Focus Mode"
         }
+        if let locale = locale {
+            return locale.dn(key, fallback: fallback)
+        }
+        return L10n.notch(key, fallback: fallback)
+    }
+
+    var displayName: String {
+        displayName(locale: nil)
     }
 
     var icon: String {

@@ -14,15 +14,28 @@ enum HudPresentationKind {
         }
     }
 
-    var title: String {
+    func title(locale: Locale? = nil) -> String {
+        let key: String
+        let fallback: String
         switch self {
         case .brightness:
-            return "Display"
+            key = "notch.hud.display"
+            fallback = "Display"
         case .keyboard:
-            return "Keyboard"
+            key = "notch.hud.keyboard"
+            fallback = "Keyboard"
         case .volume:
-            return "Volume"
+            key = "notch.hud.volume"
+            fallback = "Volume"
         }
+        if let locale = locale {
+            return locale.dn(key, fallback: fallback)
+        }
+        return L10n.notch(key, fallback: fallback)
+    }
+
+    var title: String {
+        title(locale: nil)
     }
 
     func symbolName(for level: Int) -> String {

@@ -14,6 +14,7 @@ struct FocusOffExpandedNotchView: View {
     @ObservedObject private var manager: DoNotDisturbManager
     @Environment(\.notchScale) private var scale
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
 
     init(
         focusModeType: FocusModeType,
@@ -45,7 +46,7 @@ struct FocusOffExpandedNotchView: View {
                 
                 Spacer()
                 
-                Text(verbatim: "Off")
+                Text(locale.dn("notch.focus.off", fallback: "Off"))
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.white.opacity(0.3))
                     .lineLimit(1)
@@ -67,6 +68,6 @@ struct FocusOffExpandedNotchView: View {
     }
     
     private var titleText: String {
-        focusModeType.displayName
+        focusModeType.displayName(locale: locale)
     }
 }

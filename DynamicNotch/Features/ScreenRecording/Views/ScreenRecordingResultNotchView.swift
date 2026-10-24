@@ -3,6 +3,7 @@ import SwiftUI
 struct ScreenRecordingResultNotchView: View {
     @ObservedObject var viewModel: ScreenRecordingResultViewModel
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     
     var body: some View {
         VStack {
@@ -31,7 +32,7 @@ struct ScreenRecordingResultNotchView: View {
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(.red)
             }
-            Text(verbatim: "Saved to \"\(viewModel.savedLocation)\"")
+            Text(locale.dnFormat("notch.screenRecording.savedTo", fallback: "Saved to \"%@\"", viewModel.savedLocation))
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.white)
                 .lineLimit(1)
@@ -65,14 +66,14 @@ struct ScreenRecordingResultNotchView: View {
     private var buttons: some View {
         HStack {
             Button(action: { viewModel.openVideo() }) {
-                Text(verbatim: "Watch")
+                Text(locale.dn("notch.action.watch", fallback: "Watch"))
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
             }
             .buttonStyle(PrimaryButtonStyle(height: 35, backgroundColor: .gray.opacity(0.25)))
             
             Button(action: { viewModel.deleteVideo() }) {
-                Text(verbatim: "Delete")
+                Text(locale.dn("notch.action.delete", fallback: "Delete"))
                     .fontWeight(.medium)
                     .foregroundStyle(.red)
             }

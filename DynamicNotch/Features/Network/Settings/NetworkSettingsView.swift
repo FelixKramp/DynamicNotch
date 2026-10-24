@@ -3,6 +3,7 @@ import SwiftUI
 struct NetworkSettingsView: View {
     @ObservedObject var connectivitySettings: ConnectivitySettingsStore
     @ObservedObject var appearanceSettings: ApplicationSettingsStore
+    @Environment(\.locale) private var locale
     
     private var hotspotPreviewStrokeColor: Color {
         appearanceSettings.isShowNotchStrokeEnabled ? .green.opacity(0.2) : .clear
@@ -113,7 +114,7 @@ struct NetworkSettingsView: View {
                     
                     Spacer()
                     
-                    Text(verbatim: "On")
+                    Text(locale.dn("notch.focus.on", fallback: "On."))
                         .foregroundStyle(.green)
                 }
                 .padding(.leading, 7)

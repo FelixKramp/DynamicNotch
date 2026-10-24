@@ -36,15 +36,15 @@ enum DragAndDropTarget: String, Hashable, CaseIterable {
     }
 
     @ViewBuilder
-    func titleIcon() -> some View {
+    func titleIcon(locale: Locale? = nil) -> some View {
         switch self {
         case .airDrop:
-            Text(verbatim: "AirDrop")
+            Text(locale?.dn("notch.dragDrop.airDrop", fallback: "AirDrop") ?? L10n.notch("notch.dragDrop.airDrop", fallback: "AirDrop"))
                 .font(.system(size: 12))
                 .foregroundStyle(.white)
 
         case .tray:
-            Text(verbatim: "Tray")
+            Text(locale?.dn("notch.dragDrop.tray", fallback: "Tray") ?? L10n.notch("notch.dragDrop.tray", fallback: "Tray"))
                 .font(.system(size: 12))
                 .foregroundStyle(color)
         }

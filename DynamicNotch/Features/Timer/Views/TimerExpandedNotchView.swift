@@ -28,6 +28,7 @@ private struct TimerExpandedNotchViewInternal<VM: ObservableObject>: View {
     let source: TimerSource
     
     @Environment(\.isNotchlessScreen) var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @ObservedObject var viewModel: VM
     @State private var isControlActionRunning = false
     
@@ -88,7 +89,7 @@ private struct TimerExpandedNotchViewInternal<VM: ObservableObject>: View {
     
     private var rightContent: some View {
         HStack {
-            Text(verbatim: "Timer")
+            Text(locale.dn("notch.timer.title", fallback: "Timer."))
                 .font(.system(size: 14))
                 .foregroundStyle(Color.orange.opacity(0.8))
                 .offset(y: 8)

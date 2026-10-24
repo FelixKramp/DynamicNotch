@@ -12,6 +12,7 @@ internal import AppKit
 struct TrayExpandedActiveNotchView: View {
     @Environment(\.notchScale) private var scale
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @ObservedObject var fileTrayViewModel: FileTrayViewModel
     @ObservedObject var mediaSettings: MediaAndFilesSettingsStore
 
@@ -76,7 +77,7 @@ struct TrayExpandedActiveNotchView: View {
                     if fileTrayViewModel.hasSelection {
                         AnimatedLevelText(level: fileTrayViewModel.selectedCount, fontSize: 14)
                     } else {
-                        Text(verbatim: "All")
+                        Text(locale.dn("notch.dragDrop.all", fallback: "All"))
                             .font(.system(size: 14))
                     }
                 }

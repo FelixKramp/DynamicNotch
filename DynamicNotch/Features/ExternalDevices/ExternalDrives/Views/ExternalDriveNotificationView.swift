@@ -5,6 +5,7 @@ struct ExternalDriveNotificationView: View {
     let onEject: (@MainActor () -> Void)?
 
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @State private var isEjectHovered = false
 
     var body: some View {
@@ -65,7 +66,7 @@ struct ExternalDriveNotificationView: View {
                     .lineLimit(1)
             }
         } else {
-            Text(verbatim: "Safe to disconnect")
+            Text(locale.dn("notch.externalDrive.safeToDisconnect", fallback: "Safe to disconnect"))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)

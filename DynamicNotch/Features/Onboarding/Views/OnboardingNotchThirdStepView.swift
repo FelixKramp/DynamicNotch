@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct OnboardingNotchThirdStepView: View {
+    @Environment(\.locale) private var locale
     @State private var imageAppear = false
 
     var body: some View {
@@ -19,12 +20,12 @@ struct OnboardingNotchThirdStepView: View {
                 .id(imageAppear)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text(verbatim: "Support this app")
+                Text(locale.dn("notch.onboarding.step3.title", fallback: "Support this app"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
                     .lineLimit(1)
                 
-                Text(verbatim: "Please give it a star on GitHub – it will really help with promotion.")
+                Text(locale.dn("notch.onboarding.step3.desc", fallback: "Give it a star on GitHub – it will really help with promotion...."))
                     .foregroundColor(.gray.opacity(0.6))
                     .font(.system(size: 12, weight: .medium))
                     .lineLimit(3)

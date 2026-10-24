@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct OnboardingNotchSecondStepView: View {
+    @Environment(\.locale) private var locale
     @State private var imageAppear = false
 
     var body: some View {
@@ -19,12 +20,12 @@ struct OnboardingNotchSecondStepView: View {
                 .id(imageAppear)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text(verbatim: "Confirm all permissions")
+                Text(locale.dn("notch.onboarding.step2.title", fallback: "Confirm all permissions"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
                     .lineLimit(1)
                 
-                Text(verbatim: "You need to make sure that the application has been granted permission.")
+                Text(locale.dn("notch.onboarding.step2.desc", fallback: "Make sure that the application has been granted all permissions."))
                     .foregroundColor(.gray.opacity(0.6))
                     .font(.system(size: 12, weight: .medium))
                     .lineLimit(3)

@@ -6,6 +6,7 @@ struct TimerFinishedNotchView: View {
 
     @Environment(\.notchScale) private var scale
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
 
     init(
         onDismiss: @escaping @MainActor () -> Void,
@@ -30,7 +31,7 @@ struct TimerFinishedNotchView: View {
     
     private var content: some View {
         HStack {
-            Text(verbatim: "Timer")
+            Text(locale.dn("notch.timer.title", fallback: "Timer."))
                 .font(.system(size: 30, weight: .semibold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(Color.orange)

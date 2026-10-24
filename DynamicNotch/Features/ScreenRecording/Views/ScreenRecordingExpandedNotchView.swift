@@ -3,6 +3,7 @@ import SwiftUI
 struct ScreenRecordingExpandedNotchView: View {
     @ObservedObject var viewModel: ScreenRecordingViewModel
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @State private var isBlinking = false
 
     var body: some View {
@@ -41,7 +42,7 @@ struct ScreenRecordingExpandedNotchView: View {
                     .foregroundColor(.red)
             }
             
-            Text(verbatim: "Screen Recording")
+            Text(locale.dn("notch.screenRecording.title", fallback: "Screen Recording"))
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.white)
                 .lineLimit(1)

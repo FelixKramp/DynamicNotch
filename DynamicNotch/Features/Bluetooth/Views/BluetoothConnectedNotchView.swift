@@ -10,6 +10,7 @@ import SwiftUI
 struct BluetoothConnectedNotchView: View {
     @Environment(\.notchScale) var scale
     @Environment(\.isNotchlessScreen) var isNotchlessScreen
+    @Environment(\.locale) var locale
     
     @ObservedObject var bluetoothViewModel: BluetoothViewModel
     @ObservedObject var settings: ConnectivitySettingsStore
@@ -92,7 +93,7 @@ struct BluetoothConnectedNotchView: View {
                         .padding(.bottom, isNotchlessScreen ? 15 : 10)
                     
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(verbatim: "Connected")
+                        Text(locale.dn("notch.bluetooth.connected", fallback: "Connected"))
                             .lineLimit(1)
                             .font(.system(size: 13))
                             .foregroundStyle(.white.opacity(0.4))

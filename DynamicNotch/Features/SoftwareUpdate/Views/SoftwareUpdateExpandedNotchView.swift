@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SoftwareUpdateExpandedNotchView: View {
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @ObservedObject private var updater = SparkleUpdater.shared
     
     var body: some View {
@@ -25,11 +26,11 @@ struct SoftwareUpdateExpandedNotchView: View {
                     .cornerRadius(12)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: "Update Available")
+                    Text(locale.dn("notch.softwareUpdate.available", fallback: "Update Available"))
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.white)
                     
-                    Text(verbatim: "Version \(updater.latestVersionString)")
+                    Text(locale.dnFormat("notch.softwareUpdate.version", fallback: "Version %@", updater.latestVersionString))
                         .font(.system(size: 14))
                         .foregroundColor(.white.opacity(0.6))
                 }

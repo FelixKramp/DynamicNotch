@@ -4,6 +4,7 @@ internal import EventKit
 struct CalendarExpandedNotchView: View {
     @ObservedObject var calendarViewModel: CalendarViewModel
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     
     let notchViewModel: NotchViewModel
     
@@ -24,7 +25,7 @@ struct CalendarExpandedNotchView: View {
                     buttons(event: event)
                 }
             } else {
-                Text("No upcoming events")
+                Text(locale.dn("notch.calendar.noEvents", fallback: "No upcoming events"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.gray.opacity(0.6))
             }
@@ -56,7 +57,7 @@ struct CalendarExpandedNotchView: View {
                 .foregroundColor(.gray)
             
             if event.isAllDay {
-                Text("All Day")
+                Text(locale.dn("notch.calendar.allDay", fallback: "All Day"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.red)
             } else {
@@ -81,7 +82,7 @@ struct CalendarExpandedNotchView: View {
                 frameWidth: 200
             )
         } else {
-            Text(calendarViewModel.isPrivacyModeEnabled ? "Private Event" : "Empty Location")
+            Text(calendarViewModel.isPrivacyModeEnabled ? locale.dn("notch.calendar.privateEvent", fallback: "Private Event") : locale.dn("notch.calendar.emptyLocation", fallback: "Empty Location"))
                 .font(.system(size: 12))
                 .lineLimit(1)
                 .foregroundColor(.gray.opacity(0.8))
@@ -108,7 +109,7 @@ struct CalendarExpandedNotchView: View {
                 } label: {
                     HStack {
                         Image(systemName: "video.fill")
-                        Text("Join Meeting")
+                        Text(locale.dn("notch.calendar.joinMeeting", fallback: "Join Meeting"))
                             .fontWeight(.bold)
                     }
                     .foregroundColor(.white)

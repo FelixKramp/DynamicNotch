@@ -10,6 +10,7 @@ import SwiftUI
 struct HotspotActiveNotchView: View {
     @Environment(\.notchScale) var scale
     @Environment(\.isNotchlessScreen) var isNotchlessScreen
+    @Environment(\.locale) var locale
     
     let style: HotspotAppearanceStyle
     @ObservedObject var wifiViewModel: WifiViewModel
@@ -71,7 +72,7 @@ struct HotspotActiveNotchView: View {
             
             Spacer()
             
-            Text(verbatim: "On")
+            Text(locale.dn("notch.focus.on", fallback: "On."))
                 .foregroundStyle(.green)
         }
     }

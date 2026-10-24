@@ -19,6 +19,7 @@ struct NotchView: View {
             settingsViewModel: settingsViewModel
         )
         .environment(\.notchScale, notchViewModel.notchModel.scale)
+        .environment(\.locale, settingsViewModel.application.notchLanguage.effectiveNotchLanguage.locale)
         .overlay {
             NotchDragAndDropDestinationOverlay(
                 airDropViewModel: airDropViewModel,

@@ -3,6 +3,7 @@ import SwiftUI
 struct FocusSettingsView: View {
     @ObservedObject var connectivitySettings: ConnectivitySettingsStore
     @ObservedObject var appearanceSettings: ApplicationSettingsStore
+    @Environment(\.locale) private var locale
     
     private var temporaryActivityDurationRange: ClosedRange<Double> {
         Double(SettingsStoreBase.temporaryActivityDurationRange.lowerBound)...Double(SettingsStoreBase.temporaryActivityDurationRange.upperBound)
@@ -139,7 +140,7 @@ struct FocusSettingsView: View {
                     
                     Spacer()
                     
-                    Text(verbatim: "On")
+                    Text(locale.dn("notch.focus.on", fallback: "On."))
                         .foregroundStyle(.indigo.opacity(0.8))
                 }
             }

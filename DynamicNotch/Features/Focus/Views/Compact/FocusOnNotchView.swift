@@ -9,6 +9,7 @@ import SwiftUI
 internal import AppKit
 
 struct FocusOnNotchView: View {
+    @Environment(\.locale) private var locale
     @ObservedObject private var manager: DoNotDisturbManager
     
     let style: FocusAppearanceStyle
@@ -35,6 +36,6 @@ struct FocusOnNotchView: View {
     }
 
     var body: some View {
-        FocusStatusNotchView(title: "On", tint: activeFocusModeType.tint, style: style, icon: activeFocusModeType.icon)
+        FocusStatusNotchView(title: locale.dn("notch.focus.on", fallback: "On."), tint: activeFocusModeType.tint, style: style, icon: activeFocusModeType.icon)
     }
 }

@@ -11,6 +11,7 @@ import SwiftUI
 struct LocalTimerSetupNotchView: View {
     @ObservedObject var localTimerViewModel: LocalTimerViewModel
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
 
     @State private var selectedIndex: Int = 20
     @State private var dragOffset: CGFloat = 0
@@ -137,7 +138,7 @@ struct LocalTimerSetupNotchView: View {
         switch localTimerViewModel.state {
         case .running:
             Button(action: stopTimer) {
-                Text(verbatim: "Stop")
+                Text(locale.dn("notch.timer.stop", fallback: "Stop"))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Color.red)
             }
@@ -145,7 +146,7 @@ struct LocalTimerSetupNotchView: View {
 
         case .paused:
             Button(action: resumeTimer) {
-                Text(verbatim: "Resume")
+                Text(locale.dn("notch.timer.resume", fallback: "Resume"))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Color.green)
             }
@@ -153,7 +154,7 @@ struct LocalTimerSetupNotchView: View {
 
         case .stopped:
             Button(action: startTimer) {
-                Text(verbatim: "Start Timer")
+                Text(locale.dn("notch.timer.startTimer", fallback: "Start Timer"))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Color.orange)
             }

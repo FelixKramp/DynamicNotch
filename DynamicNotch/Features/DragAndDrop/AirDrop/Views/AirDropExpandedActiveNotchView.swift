@@ -10,6 +10,7 @@ struct AirDropExpandedActiveNotchView: View {
     @ObservedObject var airDropViewModel: AirDropNotchViewModel
     @Environment(\.notchScale) private var scale
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
 
     var body: some View {
         VStack {
@@ -44,7 +45,7 @@ struct AirDropExpandedActiveNotchView: View {
                         )
                         
                         if transfer.urls.count > 1 {
-                            Text("\(transfer.urls.count) files")
+                            Text(locale.dnFormat("notch.dragDrop.files", fallback: "%d files", transfer.urls.count))
                                 .font(.system(size: 11))
                                 .foregroundStyle(.white.opacity(0.7))
                         } else if let url = transfer.fileURL {
@@ -103,15 +104,15 @@ struct AirDropExpandedActiveNotchView: View {
         }
     }
 
-    private var statusLocalizedStringKey: LocalizedStringKey {
-        guard let transfer = airDropViewModel.activeTransfer else { return "Ready" }
+    private var statusLocalizedStringKey: String {
+        guard let transfer = airDropViewModel.activeTransfer else { return locale.dn("notch.dragDrop.ready", fallback: "Ready") }
         switch transfer.status {
         case .transferring:
-            return "Sending items..."
+            return locale.dn("notch.dragDrop.sending", fallback: "Sending items...")
         case .completed:
-            return "Transfer complete"
+            return locale.dn("notch.dragDrop.transferComplete", fallback: "Transfer complete")
         case .failed(let message):
-            return message.isEmpty ? "Transfer failed" : LocalizedStringKey(message)
+            return message.isEmpty ? locale.dn("notch.dragDrop.transferFailed", fallback: "Transfer failed") : message
         }
     }
 
