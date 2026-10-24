@@ -15,6 +15,7 @@ struct VpnExpandedNotchView: View {
     
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
     @Environment(\.notchScale) private var notchScale
+    @Environment(\.locale) private var locale
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var timeString: String = "00:00"
     
@@ -58,7 +59,7 @@ struct VpnExpandedNotchView: View {
                 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
-                        Text(verbatim: "IP:")
+                        Text(locale.dn("notch.vpn.ip", fallback: "IP:"))
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(.white.opacity(0.5))
                         
@@ -73,7 +74,7 @@ struct VpnExpandedNotchView: View {
                             .fill(.green)
                             .frame(width: 10, height: 10)
                         
-                        Text(verbatim: "Сonnected (\(timeString))")
+                        Text(locale.dnFormat("notch.vpn.connectedTime", fallback: "Connected (%@)", timeString))
                             .font(.system(size: 14))
                             .foregroundStyle(.white.opacity(0.5))
                             .lineLimit(1)

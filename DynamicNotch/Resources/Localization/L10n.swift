@@ -11,6 +11,16 @@ enum L10n {
         )
     }
 
+    static func notch(_ key: String, fallback: String? = nil) -> String {
+        string(
+            key,
+            language: DynamicNotchLanguage.resolved(
+                UserDefaults.standard.string(forKey: GeneralSettingsStorage.Keys.notchLanguage)
+            ).effectiveNotchLanguage,
+            fallback: fallback
+        )
+    }
+
     static func string(_ key: String, language: DynamicNotchLanguage, fallback: String? = nil) -> String {
         localizedString(
             key,

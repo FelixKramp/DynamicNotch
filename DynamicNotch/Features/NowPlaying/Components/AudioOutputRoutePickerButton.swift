@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AudioOutputRoutePickerButton: View {
+    @Environment(\.locale) private var locale
     @ObservedObject var nowPlayingViewModel: NowPlayingViewModel
     
     var width: CGFloat = 42
@@ -17,7 +18,7 @@ struct AudioOutputRoutePickerButton: View {
     var body: some View {
         Menu {
             if nowPlayingViewModel.audioOutputRoutes.isEmpty {
-                Text(verbatim: "No audio outputs available")
+                Text(locale.dn("nowPlaying.noAudioOutputs", fallback: "No audio outputs available"))
             } else {
                 ForEach(nowPlayingViewModel.audioOutputRoutes) { route in
                     Button {

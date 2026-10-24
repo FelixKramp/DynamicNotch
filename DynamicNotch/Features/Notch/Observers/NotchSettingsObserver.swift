@@ -370,6 +370,14 @@ final class NotchSettingsObserver {
             }
             .store(in: &cancellables)
 
+        settingsViewModel.application.$notchLanguage
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] language in
+                self?.onLanguageChanged(language.effectiveNotchLanguage)
+            }
+            .store(in: &cancellables)
+
         settingsViewModel.application.$notchWidth
             .dropFirst()
             .sink { [weak self] _ in

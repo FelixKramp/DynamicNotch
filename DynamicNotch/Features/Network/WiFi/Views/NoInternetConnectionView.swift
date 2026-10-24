@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NoInternetConnectionView: View {
     @Environment(\.isNotchlessScreen) var isNotchlessScreen
+    @Environment(\.locale) var locale
     
     let onDismiss: @MainActor () -> Void
     let onOpenNetworkSettings: @MainActor () -> Void
@@ -42,12 +43,12 @@ struct NoInternetConnectionView: View {
     @ViewBuilder
     private var titleAndDescription: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: "No Internet Connection")
+            Text(locale.dn("notch.wifi.noInternet", fallback: "No Internet Connection"))
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.white)
                 .lineLimit(1)
 
-            Text(verbatim: "Connect to Wi-Fi, Ethernet, or Personal Hotspot to continue.")
+            Text(locale.dn("notch.wifi.connectPrompt", fallback: "Connect to Wi-Fi, Ethernet, or Personal Hotspot to continue."))
                 .foregroundColor(.white.opacity(0.55))
                 .font(.system(size: 11, weight: .medium))
                 .lineLimit(2)
@@ -61,7 +62,7 @@ struct NoInternetConnectionView: View {
             Button(action: {
                 onDismiss()
             }) {
-                Text(verbatim: "OK")
+                Text(locale.dn("notch.wifi.ok", fallback: "OK"))
                     .font(.system(size: 14))
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
@@ -72,7 +73,7 @@ struct NoInternetConnectionView: View {
                 onOpenNetworkSettings()
                 onDismiss()
             }) {
-                Text(verbatim: "Settings")
+                Text(locale.dn("notch.wifi.settings", fallback: "Settings"))
                     .font(.system(size: 14))
                     .fontWeight(.medium)
                     .foregroundStyle(.blue)

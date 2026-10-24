@@ -10,6 +10,7 @@ import SwiftUI
 struct NowPlayingExpandedNotchView: View {
     @Environment(\.notchScale) var scale
     @Environment(\.isNotchlessScreen) var isNotchlessScreen
+    @Environment(\.locale) private var locale
     
     @ObservedObject var nowPlayingViewModel: NowPlayingViewModel
     @ObservedObject var settings: MediaAndFilesSettingsStore
@@ -22,8 +23,8 @@ struct NowPlayingExpandedNotchView: View {
     
     private var resolvedSnapshot: NowPlayingSnapshot {
         nowPlayingViewModel.snapshot ?? NowPlayingSnapshot(
-            title: "Nothing Playing",
-            artist: "Start playback to see live metadata",
+            title: locale.dn("notch.nowPlaying.nothingPlaying", fallback: "Nothing Playing"),
+            artist: locale.dn("notch.nowPlaying.startPlayback", fallback: "Start playback to see live metadata"),
             album: "Debug Preview",
             duration: 0,
             elapsedTime: 0,
@@ -228,15 +229,15 @@ struct NowPlayingExpandedNotchView: View {
     }
     
     private func displayTitle(for snapshot: NowPlayingSnapshot) -> String {
-        snapshot.title.trimmed.isEmpty ? "Unknown Track" : snapshot.title
+        snapshot.title.trimmed.isEmpty ? locale.dn("notch.nowPlaying.unknownTrack", fallback: "Unknown Track") : snapshot.title
     }
     
     private func displayArtist(for snapshot: NowPlayingSnapshot) -> String {
-        snapshot.artist.trimmed.isEmpty ? "Unknown Artist" : snapshot.artist
+        snapshot.artist.trimmed.isEmpty ? locale.dn("notch.nowPlaying.unknownArtist", fallback: "Unknown Artist") : snapshot.artist
     }
     
     private func displayAlbum(for snapshot: NowPlayingSnapshot) -> String {
-        snapshot.album.trimmed.isEmpty ? "Unknown Album" : snapshot.album
+        snapshot.album.trimmed.isEmpty ? locale.dn("notch.nowPlaying.unknownAlbum", fallback: "Unknown Album") : snapshot.album
     }
     
     private func progressValue(elapsedTime: TimeInterval, duration: TimeInterval) -> CGFloat {

@@ -584,4 +584,33 @@ enum DynamicNotchLanguage: String, CaseIterable, Identifiable {
 
         return language
     }
+
+    static let notchLanguages: [DynamicNotchLanguage] = [
+        .english,
+        .russian,
+        .german,
+        .spanish,
+        .french,
+        .simplifiedChinese
+    ]
+
+    var effectiveNotchLanguage: DynamicNotchLanguage {
+        switch self {
+        case .system:
+            for preferred in Locale.preferredLanguages {
+                let code = preferred.lowercased()
+                if code.starts(with: "ru") { return .russian }
+                if code.starts(with: "de") { return .german }
+                if code.starts(with: "es") { return .spanish }
+                if code.starts(with: "fr") { return .french }
+                if code.starts(with: "zh-hans") || code.starts(with: "zh-cn") { return .simplifiedChinese }
+                if code.starts(with: "en") { return .english }
+            }
+            return .english
+        case .english, .russian, .german, .spanish, .french, .simplifiedChinese:
+            return self
+        default:
+            return .english
+        }
+    }
 }

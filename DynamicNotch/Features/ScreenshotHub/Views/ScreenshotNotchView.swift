@@ -3,6 +3,7 @@ import SwiftUI
 struct ScreenshotNotchView: View {
     @ObservedObject var screenshotViewModel: ScreenshotViewModel
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     
     var body: some View {
         VStack {
@@ -27,11 +28,11 @@ struct ScreenshotNotchView: View {
                     .font(.system(size: 18))
                     .foregroundStyle(.gray)
 
-                Text(verbatim: "Screenshot")
+                Text(locale.dn("notch.screenshot.title", fallback: "Screenshot"))
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(.gray)
             }
-            Text(verbatim: "Saved to \"\(screenshotViewModel.savedLocation)\"")
+            Text(locale.dnFormat("notch.screenshot.savedTo", fallback: "Saved to \"%@\"", screenshotViewModel.savedLocation))
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.white)
                 .lineLimit(1)
@@ -72,14 +73,14 @@ struct ScreenshotNotchView: View {
     private var buttons: some View {
         HStack {
             Button(action: { screenshotViewModel.copyImageToClipboard() }) {
-                Text(verbatim: "Copy")
+                Text(locale.dn("notch.action.copy", fallback: "Copy"))
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
             }
             .buttonStyle(PrimaryButtonStyle(height: 35, backgroundColor: .gray.opacity(0.25)))
             
             Button(action: { screenshotViewModel.deleteScreenshot() }) {
-                Text(verbatim: "Delete")
+                Text(locale.dn("notch.action.delete", fallback: "Delete"))
                     .fontWeight(.medium)
                     .foregroundStyle(.red)
             }

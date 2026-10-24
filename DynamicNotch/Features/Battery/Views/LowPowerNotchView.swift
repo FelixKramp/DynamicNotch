@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LowPowerNotchView: View {
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     @ObservedObject var powerService: PowerService
     @State private var pulse = false
     
@@ -18,7 +19,7 @@ struct LowPowerNotchView: View {
         Group {
             if style == .compact {
                 BatteryCompactStatusView(
-                    title: "Low Battery",
+                    title: locale.dn("notch.battery.low", fallback: "Low Battery"),
                     batteryLevel: powerService.batteryLevel,
                     tint: batteryColor
                 )
@@ -55,7 +56,7 @@ struct LowPowerNotchView: View {
     @ViewBuilder
     private var title: some View {
         HStack {
-            Text(verbatim: "Battery Low")
+            Text(locale.dn("notch.battery.detail.lowTitle", fallback: "Battery Low"))
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(.white)
                 .lineLimit(1)
@@ -70,15 +71,15 @@ struct LowPowerNotchView: View {
     @ViewBuilder
     private var description: some View {
         if powerService.isLowPowerMode {
-            Text(verbatim: "Low Power Mode enabled")
+            Text(locale.dn("notch.battery.detail.lowPowerModeEnabled", fallback: "Low Power Mode enabled"))
                 .foregroundColor(.yellow)
                 .font(.system(size: 11, weight: .medium))
 
-            + Text(verbatim: ", it is recommended to charge it.")
+            + Text(locale.dn("notch.battery.detail.recommendedCharge", fallback: ", it is recommended to charge it."))
                 .foregroundColor(.gray.opacity(0.55))
                 .font(.system(size: 11, weight: .medium))
         } else {
-            Text(verbatim: "Turn on Low Power Mode or it \nis recommended to charge it.")
+            Text(locale.dn("notch.battery.detail.turnOnLowPower", fallback: "Turn on Low Power Mode or it \nis recommended to charge it."))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.gray.opacity(0.55))
                 .lineLimit(2)

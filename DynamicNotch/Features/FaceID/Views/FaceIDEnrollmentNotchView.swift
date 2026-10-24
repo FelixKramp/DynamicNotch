@@ -14,6 +14,7 @@ struct FaceIDEnrollmentNotchView: View {
     @ObservedObject var settings: FaceIDSettingsStore
     @ObservedObject var cameraService: FaceIDEnrollmentCameraService
     @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+    @Environment(\.locale) private var locale
     
     @State private var scanCompleted = false
     @State private var scanWorkItem: DispatchWorkItem?
@@ -51,12 +52,12 @@ struct FaceIDEnrollmentNotchView: View {
                     .foregroundStyle(.green)
                 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(verbatim: "Set Up Face ID")
+                    Text(locale.dn("notch.faceId.setupTitle", fallback: "Set Up Face ID"))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
                         .lineLimit(1)
                     
-                    Text(verbatim: "Position your face in the camera frame and move your head to scan.")
+                    Text(locale.dn("notch.faceId.setupDesc", fallback: "Position your face in the camera frame and move head to scan.."))
                         .foregroundColor(.gray.opacity(0.6))
                         .font(.system(size: 12, weight: .medium))
                         .lineLimit(2)
@@ -68,7 +69,7 @@ struct FaceIDEnrollmentNotchView: View {
                     cameraService.stopEnrollment()
                     notchViewModel.hideTemporaryNotification()
                 }) {
-                    Text(verbatim: "Exit")
+                    Text(locale.dn("notch.onboarding.exit", fallback: "Exit"))
                         .fontWeight(.medium)
                         .foregroundStyle(.red)
                 }
@@ -90,7 +91,7 @@ struct FaceIDEnrollmentNotchView: View {
                         )
                     )
                 }) {
-                    Text(verbatim: "Continue")
+                    Text(locale.dn("notch.onboarding.continue", fallback: "Continue"))
                         .fontWeight(.medium)
                         .foregroundStyle(.blue)
                 }
@@ -134,7 +135,7 @@ struct FaceIDEnrollmentNotchView: View {
                         Image(systemName: "camera.fill.badge.ellipsis")
                             .font(.system(size: 22))
                             .foregroundStyle(.orange)
-                        Text(verbatim: "No Camera Access")
+                        Text(locale.dn("notch.faceId.noCamera", fallback: "No Camera Access"))
                             .font(.system(size: 9, weight: .medium))
                             .foregroundStyle(.secondary)
                     }
@@ -186,12 +187,12 @@ struct FaceIDEnrollmentNotchView: View {
                 .foregroundStyle(.green)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text(verbatim: "Face ID is Ready")
+                Text(locale.dn("notch.faceId.ready", fallback: "Face ID is Ready"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.white)
                     .lineLimit(1)
                 
-                Text(verbatim: "You can now use Face ID to quickly unlock your Mac.")
+                Text(locale.dn("notch.faceId.readyDesc", fallback: "You can now use Face ID to quickly unlock your Mac"))
                     .foregroundColor(.gray.opacity(0.6))
                     .font(.system(size: 12, weight: .medium))
                     .lineLimit(2)

@@ -112,6 +112,9 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     @StoredDefault(key: GeneralSettingsStorage.Keys.appLanguage, defaultValue: .system)
     var appLanguage: DynamicNotchLanguage
 
+    @StoredDefault(key: GeneralSettingsStorage.Keys.notchLanguage, defaultValue: .system)
+    var notchLanguage: DynamicNotchLanguage
+
     @StoredDefault(key: GeneralSettingsStorage.Keys.hideNotchInFullscreenEnabled, defaultValue: true)
     var isNotchHiddenInFullscreenEnabled: Bool
 
@@ -239,6 +242,9 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
         appLanguage = DynamicNotchLanguage.resolved(
             defaultString(for: GeneralSettingsStorage.Keys.appLanguage)
         )
+        notchLanguage = DynamicNotchLanguage.resolved(
+            defaultString(for: GeneralSettingsStorage.Keys.notchLanguage)
+        )
         isNotchHiddenInFullscreenEnabled = defaultBool(
             for: GeneralSettingsStorage.Keys.hideNotchInFullscreenEnabled
         )
@@ -280,6 +286,9 @@ final class ApplicationSettingsStore: SettingsStoreBase, NotchSettingsProviding 
     func resetLanguage() {
         appLanguage = DynamicNotchLanguage.resolved(
             defaultString(for: GeneralSettingsStorage.Keys.appLanguage)
+        )
+        notchLanguage = DynamicNotchLanguage.resolved(
+            defaultString(for: GeneralSettingsStorage.Keys.notchLanguage)
         )
     }
 

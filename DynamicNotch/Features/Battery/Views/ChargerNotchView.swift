@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ChargerNotchView: View {
+    @Environment(\.locale) private var locale
     @ObservedObject var powerService: PowerService
     
     private var batteryColor: Color {
@@ -22,7 +23,7 @@ struct ChargerNotchView: View {
     
     var body: some View {
         BatteryCompactStatusView(
-            title: "Charging",
+            title: locale.dn("notch.battery.charging", fallback: "Charging"),
             batteryLevel: powerService.batteryLevel,
             tint: batteryColor
         )
