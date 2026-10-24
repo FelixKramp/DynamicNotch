@@ -25,7 +25,7 @@ struct NoInternetConnectionContent: NotchContentProtocol, DynamicIslandCustomiza
         self.onOpenNetworkSettings = onOpenNetworkSettings
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 110, height: baseHeight + 120)
     }
     
@@ -33,7 +33,7 @@ struct NoInternetConnectionContent: NotchContentProtocol, DynamicIslandCustomiza
         .init(width: baseWidth + 200, height: baseHeight + 120)
     }
 
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         return (top: 24, bottom: 36)
     }
     
@@ -42,7 +42,7 @@ struct NoInternetConnectionContent: NotchContentProtocol, DynamicIslandCustomiza
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         let onDismiss = onDismiss
         let onOpenNetworkSettings = onOpenNetworkSettings
 

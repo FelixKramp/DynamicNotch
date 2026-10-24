@@ -15,7 +15,7 @@ struct TrayActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var priority: Int { NotchContentRegistry.DragAndDrop.trayActive.priority }
     var isExpandable: Bool { true }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 75, height: baseHeight)
     }
 
@@ -36,12 +36,12 @@ struct TrayActiveNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(TrayActiveNotchView(fileTrayViewModel: fileTrayViewModel))
     }
     
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(
             TrayExpandedActiveNotchView(
                 fileTrayViewModel: fileTrayViewModel,

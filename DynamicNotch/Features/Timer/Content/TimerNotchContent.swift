@@ -57,7 +57,7 @@ struct TimerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         self.id = NotchContentRegistry.Media.timer.id
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + minimalTimerSize, height: baseHeight)
     }
     
@@ -82,12 +82,12 @@ struct TimerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(TimerMinimalNotchView(source: source))
     }
 
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(TimerExpandedNotchView(source: source))
     }
 }

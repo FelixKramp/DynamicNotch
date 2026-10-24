@@ -53,7 +53,7 @@ struct FaceIDEnrollmentNotchContent: NotchContentProtocol, DynamicIslandCustomiz
     let notchViewModel: NotchViewModel
     let cameraService: FaceIDEnrollmentCameraService
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         step.notchSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
 
@@ -61,7 +61,7 @@ struct FaceIDEnrollmentNotchContent: NotchContentProtocol, DynamicIslandCustomiz
         step.dynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
 
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         (top: 24, bottom: 44)
     }
 
@@ -70,7 +70,7 @@ struct FaceIDEnrollmentNotchContent: NotchContentProtocol, DynamicIslandCustomiz
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             FaceIDEnrollmentNotchView(
                 step: step,

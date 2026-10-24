@@ -19,7 +19,7 @@ struct CalendarNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         return time.contains("am") || time.contains("pm") || time.contains("a.m.") || time.contains("p.m.")
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         let extraWidth: CGFloat = isAMPM ? 145 : 110
         return .init(width: baseWidth + extraWidth, height: baseHeight)
     }
@@ -46,12 +46,12 @@ struct CalendarNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(CalendarMinimalNotchView(calendarViewModel: calendarViewModel))
     }
     
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(CalendarExpandedNotchView(calendarViewModel: calendarViewModel, notchViewModel: notchViewModel))
     }
 }

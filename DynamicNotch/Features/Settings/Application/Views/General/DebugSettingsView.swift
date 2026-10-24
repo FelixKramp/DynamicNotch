@@ -705,8 +705,8 @@ struct DebugSequenceNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     var expandsOnTap: Bool { base.expandsOnTap }
     var windowLink: (@MainActor () -> Void)? { base.windowLink }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        base.size(baseWidth: baseWidth, baseHeight: baseHeight)
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        base.compactSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
@@ -721,8 +721,8 @@ struct DebugSequenceNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
         base.expandedDynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
-        base.cornerRadius(baseRadius: baseRadius)
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+        base.compactCornerRadius(baseRadius: baseRadius)
     }
     
     func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
@@ -738,13 +738,13 @@ struct DebugSequenceNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     }
     
     @MainActor
-    func makeView() -> AnyView {
-        base.makeView()
+    func compactView() -> AnyView {
+        base.compactView()
     }
     
     @MainActor
-    func makeExpandedView() -> AnyView {
-        base.makeExpandedView()
+    func expandedView() -> AnyView {
+        base.expandedView()
     }
 }
 #endif

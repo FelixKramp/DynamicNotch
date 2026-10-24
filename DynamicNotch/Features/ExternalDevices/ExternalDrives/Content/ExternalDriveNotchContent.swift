@@ -9,11 +9,11 @@ struct ExternalDriveNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     var priority: Int { NotchContentRegistry.Notifications.externalDrive.priority }
     var windowLink: (@MainActor () -> Void)? { onOpen }
 
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         (top: 20, bottom: 38)
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 120, height: baseHeight + 60)
     }
     
@@ -26,7 +26,7 @@ struct ExternalDriveNotchContent: NotchContentProtocol, DynamicIslandCustomizabl
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             ExternalDriveNotificationView(drive: drive, onEject: onEject)
         )

@@ -21,7 +21,7 @@ struct FaceIDNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         }
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         CGSize(width: baseWidth + 40, height: baseHeight + 125)
     }
 
@@ -29,7 +29,7 @@ struct FaceIDNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         CGSize(width: baseWidth + 40, height: baseHeight + 120)
     }
 
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         (top: 24, bottom: 44)
     }
 
@@ -38,7 +38,7 @@ struct FaceIDNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             FaceIDNotchView(service: service)
         )

@@ -49,7 +49,7 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         self.applicationSettings = applicationSettings
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         if isStyleExpanded {
             return (top: baseRadius + 6, bottom: baseRadius + 10)
         } else {
@@ -65,7 +65,7 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         }
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         let width = isStyleExpanded ? baseWidth + 20 : baseWidth + widthOffset
         let height = isStyleExpanded ? baseHeight + heightOffset : baseHeight
         
@@ -80,7 +80,7 @@ struct HudNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             HudContentView(
                 kind: kind,

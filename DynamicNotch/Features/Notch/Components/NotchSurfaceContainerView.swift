@@ -88,33 +88,32 @@ struct NotchSurfaceContainerView: View {
     
     @ViewBuilder
     private var contentOverlay: some View {
-        if let content = notchViewModel.displayedContent {
-            renderedContentView(for: content)
-                .scaleEffect(
-                    x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                    y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
-                    anchor: notchViewModel.isDynamicIsland ? .center : .top
-                )
-                .resizeAwareBlur(
-                    size: notchViewModel.interactiveNotchSize,
+        let content = notchViewModel.effectiveDisplayedContent
+        renderedContentView(for: content)
+            .scaleEffect(
+                x: shouldApplyPressScale ? notchViewModel.pressScale : 1,
+                y: shouldApplyPressScale ? notchViewModel.pressScale : 1,
+                anchor: notchViewModel.isDynamicIsland ? .center : .top
+            )
+            .resizeAwareBlur(
+                size: notchViewModel.interactiveNotchSize,
+                baseHeight: notchViewModel.notchModel.baseHeight,
+                isResizeEffectEnabled: content.usesContentResizeEffect,
+                interactiveBlur: notchViewModel.contentResizeBlurRadius,
+                interactiveOpacity: notchViewModel.contentResizeOpacity,
+                swipeProgress: notchViewModel.easedSwipeStretchProgress,
+                swipeInteraction: notchViewModel.swipeInteraction
+            )
+            .id(notchViewModel.effectiveDisplayedPresentationID)
+            .transition(
+                notchViewModel.contentTransition(
+                    notchWidth: notchViewModel.presentedNotchSize.width,
+                    notchHeight: notchViewModel.presentedNotchSize.height,
+                    baseWidth: notchViewModel.notchModel.baseWidth,
                     baseHeight: notchViewModel.notchModel.baseHeight,
-                    isResizeEffectEnabled: content.usesContentResizeEffect,
-                    interactiveBlur: notchViewModel.contentResizeBlurRadius,
-                    interactiveOpacity: notchViewModel.contentResizeOpacity,
-                    swipeProgress: notchViewModel.easedSwipeStretchProgress,
-                    swipeInteraction: notchViewModel.swipeInteraction
+                    isExpandedPresentation: notchViewModel.isDisplayingExpandedLiveActivity
                 )
-                .id(notchViewModel.displayedPresentationID)
-                .transition(
-                    notchViewModel.contentTransition(
-                        notchWidth: notchViewModel.presentedNotchSize.width,
-                        notchHeight: notchViewModel.presentedNotchSize.height,
-                        baseWidth: notchViewModel.notchModel.baseWidth,
-                        baseHeight: notchViewModel.notchModel.baseHeight,
-                        isExpandedPresentation: notchViewModel.isDisplayingExpandedLiveActivity
-                    )
-                )
-        }
+            )
     }
     
     @MainActor
@@ -122,9 +121,9 @@ struct NotchSurfaceContainerView: View {
     private func renderedContentView(for content: NotchContentProtocol) -> some View {
         Group {
             if notchViewModel.isDisplayingExpandedLiveActivity {
-                content.makeExpandedView()
+                content.expandedView()
             } else {
-                content.makeView()
+                content.compactView()
             }
         }
         .id(content.id)

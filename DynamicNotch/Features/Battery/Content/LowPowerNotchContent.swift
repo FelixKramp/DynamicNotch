@@ -15,14 +15,14 @@ struct LowPowerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         powerService.isLowPowerMode ? .yellow.opacity(0.3) : .red.opacity(0.3)
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         if style == .compact {
             return (top: baseRadius - 4, bottom: baseRadius)
         }
         return (top: 22, bottom: 40)
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         if style == .compact {
             return .init(width: baseWidth + 180, height: baseHeight)
         }
@@ -41,7 +41,7 @@ struct LowPowerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             LowPowerNotchView(
                 powerService: powerService,

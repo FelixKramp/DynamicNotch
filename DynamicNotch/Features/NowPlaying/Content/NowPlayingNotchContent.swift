@@ -38,7 +38,7 @@ struct NowPlayingNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         }
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 70, height: baseHeight)
     }
     
@@ -67,7 +67,7 @@ struct NowPlayingNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             NowPlayingMinimalNotchView(
                 nowPlayingViewModel: nowPlayingViewModel,
@@ -77,7 +77,7 @@ struct NowPlayingNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(
             NowPlayingExpandedNotchView(
                 nowPlayingViewModel: nowPlayingViewModel,

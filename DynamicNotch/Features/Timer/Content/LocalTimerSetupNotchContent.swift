@@ -16,11 +16,11 @@ struct LocalTimerSetupNotchContent: NotchContentProtocol, DynamicIslandCustomiza
         .orange.opacity(0.3)
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         (top: 24, bottom: 42)
     }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         .init(width: baseWidth + 160, height: baseHeight + 130)
     }
 
@@ -33,7 +33,7 @@ struct LocalTimerSetupNotchContent: NotchContentProtocol, DynamicIslandCustomiza
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(LocalTimerSetupNotchView(localTimerViewModel: localTimerViewModel, onClose: onClose))
     }
 }

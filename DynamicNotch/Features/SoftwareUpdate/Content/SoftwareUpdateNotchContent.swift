@@ -18,7 +18,7 @@ struct SoftwareUpdateNotchContent: NotchContentProtocol, DynamicIslandCustomizab
         self.settingsViewModel = settingsViewModel
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 70, height: baseHeight)
     }
 
@@ -53,12 +53,12 @@ struct SoftwareUpdateNotchContent: NotchContentProtocol, DynamicIslandCustomizab
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(SoftwareUpdateNotchView())
     }
     
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(SoftwareUpdateExpandedNotchView())
     }
 }

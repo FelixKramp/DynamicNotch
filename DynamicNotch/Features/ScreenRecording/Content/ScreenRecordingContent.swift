@@ -34,7 +34,7 @@ struct ScreenRecordingContent: NotchContentProtocol, DynamicIslandCustomizable {
     var isExpandable: Bool { true }
     var strokeColor: Color { .red.opacity(0.3) }
 
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         switch style {
         case .compact:
             return .init(width: baseWidth + 60, height: baseHeight)
@@ -69,12 +69,12 @@ struct ScreenRecordingContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
 
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(ScreenRecordingView(style: style, viewModel: screenRecordingViewModel))
     }
 
     @MainActor
-    func makeExpandedView() -> AnyView {
+    func expandedView() -> AnyView {
         AnyView(ScreenRecordingExpandedNotchView(viewModel: screenRecordingViewModel))
     }
 }

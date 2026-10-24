@@ -25,11 +25,11 @@ struct AirDropNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         DragAndDropTarget.airDrop.activityStrokeColor
     }
     
-    func cornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+    func compactCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
         return (top: 20, bottom: 26)
     }
     
-    func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+    func compactSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         return .init(width: baseWidth + 40, height: baseHeight + 110)
     }
     
@@ -38,7 +38,7 @@ struct AirDropNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     }
     
     @MainActor
-    func makeView() -> AnyView {
+    func compactView() -> AnyView {
         AnyView(
             AirDropNotchView(
                 airDropViewModel: airDropViewModel

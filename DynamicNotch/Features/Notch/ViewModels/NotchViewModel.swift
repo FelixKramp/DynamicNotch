@@ -34,6 +34,7 @@ final class NotchViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var expansionTransitionTask: Task<Void, Never>?
     private var swipeStretchResetWorkItem: DispatchWorkItem?
+    private var restoreContentWorkItem: DispatchWorkItem?
     private var notchPulseResetWorkItem: DispatchWorkItem?
     private var isClosingHeightStaged = false
     private var isFocusCloseAnimating = false
@@ -54,6 +55,14 @@ final class NotchViewModel: ObservableObject {
         displayedNotchModel.presentationID
     }
 
+    var effectiveDisplayedContent: NotchContentProtocol {
+        displayedContent ?? IdleNotchContent()
+    }
+
+    var effectiveDisplayedPresentationID: String {
+        displayedPresentationID ?? NotchContentRegistry.Idle.idle.id
+    }
+
     var isDynamicIsland: Bool {
         topInset == 0
     }
@@ -62,12 +71,17 @@ final class NotchViewModel: ObservableObject {
         displayedNotchModel.isPresentingExpandedLiveActivity
     }
 
+    var hasRealDisplayedContent: Bool {
+        guard let content = displayedContent else { return false }
+        return content.id != NotchContentRegistry.Idle.idle.id
+    }
+
     var shouldRenderStroke: Bool {
-        displayedContent != nil || isHoldingStrokeAfterContentHide
+        hasRealDisplayedContent || isHoldingStrokeAfterContentHide
     }
 
     var shouldApplyPressScale: Bool {
-        guard let content = displayedContent else { return false }
+        guard let content = displayedContent else { return true }
         guard !isDisplayingExpandedLiveActivity else { return false }
 
         return content.allowsPressScaleEffect && content.allowsCompactPressScaleEffect
@@ -97,6 +111,7 @@ final class NotchViewModel: ObservableObject {
                 return false
             }
         }
+        guard hasRealDisplayedContent else { return false }
         return engine.canExpandActiveLiveActivity
     }
     
@@ -143,6 +158,7 @@ final class NotchViewModel: ObservableObject {
     var canOpenActiveWindowLink: Bool {
         guard !isLocked else { return false }
         guard !isActivityPresentationHidden || notchModel.temporaryNotificationContent != nil else { return false }
+        guard hasRealDisplayedContent else { return false }
         return engine.canOpenActiveWindowLink
     }
     
@@ -150,7 +166,7 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchMouseDragGesturesEnabled &&
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
-        displayedContent != nil
+        hasRealDisplayedContent
     }
     
     var canRestoreWithMouseDrag: Bool {
@@ -165,7 +181,7 @@ final class NotchViewModel: ObservableObject {
         settings.isNotchTrackpadSwipeGesturesEnabled &&
         settings.isNotchSwipeDismissEnabled &&
         (!isActivityPresentationHidden || isLocked || notchModel.temporaryNotificationContent != nil) &&
-        displayedContent != nil
+        hasRealDisplayedContent
     }
     
     var canRestoreWithTrackpadSwipe: Bool {
@@ -365,7 +381,7 @@ final class NotchViewModel: ObservableObject {
 
         withAnimation(animations.notchVisibility) {
             isActivityPresentationHidden = isHidden
-            hasDisplayedContent = displayedContent != nil
+            hasDisplayedContent = hasRealDisplayedContent
         }
     }
     
@@ -393,7 +409,20 @@ final class NotchViewModel: ObservableObject {
             return
         }
 
-        engine.restoreDismissedContent()
+        restoreContentWorkItem?.cancel()
+        restoreContentWorkItem = nil
+
+        if swipeStretchProgress > 0 || swipeInteraction != nil {
+            applySwipeStretchReset()
+            let workItem = DispatchWorkItem { [weak self] in
+                self?.restoreContentWorkItem = nil
+                self?.engine.restoreDismissedContent()
+            }
+            restoreContentWorkItem = workItem
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.18, execute: workItem)
+        } else {
+            engine.restoreDismissedContent()
+        }
     }
 
     func openActiveWindowLink() {
@@ -548,8 +577,8 @@ final class NotchViewModel: ObservableObject {
 
     private var isHoldingStrokeAfterContentHide: Bool {
         showNotch &&
-        displayedContent == nil &&
-        notchModel.content == nil
+        !hasRealDisplayedContent &&
+        (notchModel.content == nil || notchModel.content?.id == NotchContentRegistry.Idle.idle.id)
     }
 
     private var displayedNotchModel: NotchModel {
@@ -592,8 +621,8 @@ final class NotchViewModel: ObservableObject {
             )
         } else {
             return .asymmetric(
-                insertion: compactTransition.animation(animations.expandLiveActivity),
-                removal: compactTransition.animation(animations.expandedLiveActivityContentTransition)
+                insertion: compactTransition.animation(animations.showContent),
+                removal: compactTransition.animation(animations.hideContent)
             )
         }
     }
@@ -604,7 +633,7 @@ final class NotchViewModel: ObservableObject {
         cachedStrokeColor = engine.cachedStrokeColor
         stagedNotchHeight = engine.notchModel.size.height
         isClosingHeightStaged = false
-        hasDisplayedContent = displayedContent != nil
+        hasDisplayedContent = hasRealDisplayedContent
         
         engine.$notchModel
             .dropFirst()
@@ -612,7 +641,7 @@ final class NotchViewModel: ObservableObject {
                 guard let self else { return }
                 self.scheduleStagedHeightUpdate(to: $0.size.height)
                 self.notchModel = $0
-                self.hasDisplayedContent = self.displayedContent != nil
+                self.hasDisplayedContent = self.hasRealDisplayedContent
             }
             .store(in: &cancellables)
         
