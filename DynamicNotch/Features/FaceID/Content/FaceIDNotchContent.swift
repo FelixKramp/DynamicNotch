@@ -10,12 +10,13 @@ struct FaceIDNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     var priority: Int { NotchContentPriority.faceID }
 
     let service: FaceIDService
+    var style: FaceIDPresentationStyle = .expanded
 
     var strokeColor: Color {
         if service.state.isSuccess {
             return .green.opacity(0.3)
         } else if service.state.isFailed {
-            return .green.opacity(0.3)
+            return .red.opacity(0.3)
         } else {
             return .white.opacity(0.2)
         }
@@ -40,7 +41,7 @@ struct FaceIDNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     @MainActor
     func compactView() -> AnyView {
         AnyView(
-            FaceIDNotchView(service: service)
+            FaceIDNotchView(style: style, service: service)
         )
     }
 }

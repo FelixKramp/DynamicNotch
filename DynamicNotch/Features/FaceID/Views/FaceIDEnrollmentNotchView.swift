@@ -105,6 +105,7 @@ struct FaceIDEnrollmentNotchView: View {
         return ZStack {
             if isScanning {
                 FaceIDNotchTickMarksView(
+                    progress: cameraService.enrollmentProgress,
                     isCompleted: scanCompleted || cameraService.isCompleted,
                     radius: 105,
                     tickCount: 36,
@@ -148,31 +149,20 @@ struct FaceIDEnrollmentNotchView: View {
         }
         .frame(height: isScanning ? 180 : 220)
         .padding(.bottom, isScanning ? 25 : 0)
-        .onChange(of: cameraService.isFaceInFrame) { _, inFrame in
-            guard !scanCompleted else { return }
-            if inFrame {
-                scanWorkItem?.cancel()
-                let item = DispatchWorkItem {
-                    scanCompleted = true
-                    cameraService.isCompleted = true
-                    notchViewModel.send(
-                        .showTemporaryNotification(
-                            FaceIDEnrollmentNotchContent(
-                                step: .success,
-                                settings: settings,
-                                notchViewModel: notchViewModel,
-                                cameraService: cameraService
-                            ),
-                            duration: 3.0
-                        )
-                    )
-                }
-                scanWorkItem = item
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: item)
-            } else {
-                scanWorkItem?.cancel()
-                scanWorkItem = nil
-            }
+        .onChange(of: cameraService.isCompleted) { _, completed in
+            guard completed, !scanCompleted else { return }
+            scanCompleted = true
+            notchViewModel.send(
+                .showTemporaryNotification(
+                    FaceIDEnrollmentNotchContent(
+                        step: .success,
+                        settings: settings,
+                        notchViewModel: notchViewModel,
+                        cameraService: cameraService
+                    ),
+                    duration: 3.0
+                )
+            )
         }
         .onDisappear {
             scanWorkItem?.cancel()
@@ -222,13 +212,16 @@ struct FaceIDNotchTickMarksView: View {
     var body: some View {
         ZStack {
             ForEach(0..<tickCount, id: \.self) { index in
+                let tickFraction = Double(index) / Double(tickCount)
+                let isActive = isCompleted || (tickFraction <= progress)
                 RoundedRectangle(cornerRadius: 30)
-                    .fill(isCompleted ? Color.green : Color.white.opacity(0.2))
+                    .fill(isActive ? Color.green : Color.white.opacity(0.2))
                     .frame(width: tickWidth, height: tickLength)
                     .offset(y: -radius)
-                    .rotationEffect(.degrees(Double(index) / Double(tickCount) * 360.0))
+                    .rotationEffect(.degrees(tickFraction * 360.0))
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: progress)
         .animation(.easeInOut(duration: 0.3), value: isCompleted)
         .frame(width: (radius + tickLength) * 2, height: (radius + tickLength) * 2)
     }

@@ -477,245 +477,6 @@
         }
       }
     },
-    "--:--": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "--:--"
-          }
-        }
-      }
-    },
     "%@%%": {},
     "%lld": {
       "localizations": {
@@ -955,292 +716,53 @@
         }
       }
     },
-    "%lld files": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld ملفات"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld файла"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lldটি ফাইল"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld fitxers"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld souborů"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld filer"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld Dateien"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld αρχεία"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld files"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld archivos"
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld فایل"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld tiedostoa"
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld na file"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld fichiers"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld קבצים"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld फ़ाइलें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld datoteka"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld fájl"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld file"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld file"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld個のファイル"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld файл"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld개 파일"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld fail"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld filer"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld bestanden"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld plików"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld ficheiros"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld fișiere"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld файлов"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld súborov"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld датотека"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld filer"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld ไฟล์"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld dosya"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld файлів"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld tệp"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 个文件"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld 個檔案"
-          }
-        }
-      }
-    },
     "%lld%%": {
       "localizations": {
         "ar": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "bg": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "bn": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "ca": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "cs": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "da": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "de": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "el": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
@@ -1252,181 +774,181 @@
         },
         "es": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "fa": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "fi": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "fil": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "fr": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "he": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "hi": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "hr": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "hu": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "id": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "it": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "ja": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "kk": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "ko": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "ms": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "nb": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "nl": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "pl": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "pt": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "ro": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "ru": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "sk": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "sr": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "sv": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "th": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "tr": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "uk": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "vi": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "zh-Hans": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         },
         "zh-Hant": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
             "value": "%lld%%"
           }
         }
@@ -30560,6 +30082,245 @@
           "stringUnit": {
             "state": "translated",
             "value": "播放中已停止"
+          }
+        }
+      }
+    },
+    "nowPlaying.noAudioOutputs": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لا توجد مخارج صوت متاحة"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Няма налични аудио изходи"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "কোনো অডিও আউটপুট উপলব্ধ নেই"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hi ha sortides d'àudio disponibles"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nejsou k dispozici žádné zvukové výstupy"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen lydudgange tilgængelige"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Audioausgänge verfügbar"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Δεν υπάρχουν διαθέσιμες έξοδοι ήχου"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No audio outputs available"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay salidas de audio disponibles"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "هیچ خروجی صوتی در دسترس نیست"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ei käytettävissä olevia äänilähtöjä"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Walang available na audio output"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune sortie audio disponible"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "אין יציאות שמע זמינות"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "कोई ऑडियो आउटपुट उपलब्ध नहीं है"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nema dostupnih audio izlaza"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nincs elérhető hangkimenet"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tidak ada output audio yang tersedia"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna uscita audio disponibile"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能なオーディオ出力がありません"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Қолжетімді аудио шығыстары жоқ"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사용 가능한 오디오 출력이 없습니다"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiada output audio tersedia"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ingen lydutganger tilgjengelig"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geen audio-uitgangen beschikbaar"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brak dostępnych wyjść audio"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma saída de áudio disponível"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nu există ieșiri audio disponibile"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет доступных аудиовыходов"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie sú k dispozícii žiadne zvukové výstupy"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нема доступних аудио излаза"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inga ljudutgångar tillgängliga"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ไม่มีสัญญาณเสียงออกที่พร้อมใช้งาน"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanılabilir ses çıkışı yok"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Немає доступних аудіовиходів"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có đầu ra âm thanh khả dụng"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可用的音频输出设备"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有可用的音訊輸出裝置"
           }
         }
       }
@@ -73109,18 +72870,6 @@
     "settings.faceid.toggle.requireAttention.desc": {
       "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Provides an additional level of security by verifying that you are looking at the screen with your eyes open"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Обеспечивает дополнительный уровень безопасности, требуя, чтобы вы смотрели на экран с открытыми глазами"
-          }
-        },
         "ar": {
           "stringUnit": {
             "state": "translated",
@@ -73167,6 +72916,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Παρέχει επιπλέον επίπεδο ασφάλειας επιβεβαιώνοντας ότι κοιτάτε την οθόνη με ανοιχτά μάτια"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provides an additional level of security by verifying that you are looking at the screen with your eyes open"
           }
         },
         "es": {
@@ -73289,6 +73044,12 @@
             "value": "Oferă un nivel suplimentar de securitate verificând că priviți ecranul cu ochii deschiși"
           }
         },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обеспечивает дополнительный уровень безопасности, требуя, чтобы вы смотрели на экран с открытыми глазами"
+          }
+        },
         "sk": {
           "stringUnit": {
             "state": "translated",
@@ -73348,18 +73109,6 @@
     "settings.faceid.toggle.requireAttention.title": {
       "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Require Attention"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Требование внимания"
-          }
-        },
         "ar": {
           "stringUnit": {
             "state": "translated",
@@ -73406,6 +73155,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Απαίτηση προσοχής"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Require Attention"
           }
         },
         "es": {
@@ -73526,6 +73281,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Necesită atenție"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Требование внимания"
           }
         },
         "sk": {
@@ -104654,6 +104415,484 @@
         }
       }
     },
+    "settings.language.notch.desc": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwende die Systemsprache für die Notch oder wähle eine der 6 optimierten Sprachen."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa el idioma del sistema para el notch o elige uno de los 6 idiomas optimizados."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utiliser la langue du système pour l'encoche ou choisir l'une des 6 langues optimisées."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa la lingua di sistema per il notch o seleziona una delle 6 lingue ottimizzate."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチにシステム言語を使用するか、最適化された6つの言語から選択します。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "노치에 시스템 언어를 사용하거나 최적화된 6개 언어 중 하나를 선택하세요."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Użyj języka systemowego dla notcha lub wybierz jeden z 6 zoptymalizowanych języków."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use o idioma do sistema para o notch ou selecione um dos 6 idiomas otimizados."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использовать системный язык для выреза или выбрать один из 6 оптимизированных языков."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentik için sistem dilini kullanın veya optimize edilmiş 6 dilden birini seçin."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Використовувати системну мову для вирізу або вибрати одну з 6 оптимізованих мов."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在刘海中使用系统语言，或选择 6 种经过优化的核心语言之一。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在瀏海中使用系統語言，或選擇 6 種經過最佳化的核心語言之一。"
+          }
+        }
+      }
+    },
+    "settings.language.notch.notice": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تم تحسين 6 لغات أساسية بعرض متساوٍ للأحرف لمنع إزاحة التنسيق في النوتش."
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 основни езика са оптимизирани с еднаква ширина на символите за предотвратяване на разместване в прореза."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "নচে লেআউট পরিবর্তন রোধ করতে সমান অক্ষরের প্রস্থ সহ ৬টি প্রধান ভাষা অপ্টিমাইজ করা হয়েছে।"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 idiomes principals estan optimitzats amb amplada de caràcters uniforme per evitar desplaçaments al notch."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 hlavních jazyků je optimalizováno se stejnou šířkou znaků, aby se zabránilo posunům v zářezu."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 kernesprog er optimeret med ens tegnbredde for at forhindre layoutforskydninger i indhakket."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 Kernsprachen sind mit gleicher Zeichenbreite pixelgenau optimiert, um Verschiebungen in der Notch zu verhindern."
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 βασικές γλώσσες έχουν βελτιστοποιηθεί με ίσο πλάτος χαρακτήρων για αποφυγή μετατοπίσεων στην εγκοπή."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 core languages are pixel-optimized with character-equal widths to prevent layout shifts in the notch."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 idiomas principales están optimizados con ancho exacto para evitar desplazamientos en el notch."
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "۶ زبان اصلی با عرض کاراکتر یکسان بهینه‌سازی شده‌اند تا از جابجایی چیدمان در ناچ جلوگیری شود."
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 keskeistä kieltä on optimoitu tasalevyisillä merkeillä asettelun siirtymisen estämiseksi lovessa."
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ang 6 na pangunahing wika ay na-optimize gamit ang pare-parehong lapad upang maiwasan ang pagkausog sa notch."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 langues principales sont optimisées avec une largeur de caractères identique pour éviter les décalages dans l'encoche."
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 שפות עיקריות מותאמות ברוחב תווים שווה כדי למנוע הסטות במבנה המגרעת."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "नॉच में लेआउट शिफ्ट को रोकने के लिए 6 मुख्य भाषाओं को समान वर्ण चौड़ाई के साथ अनुकूलित किया गया है।"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 glavnih jezika optimizirano je s jednakom širinom znakova kako bi se spriječili pomaci u urezu."
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 alapnyelv azonos karakterszélességgel lett optimalizálva, hogy elkerülje az elcsúszást a kivágásban."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 bahasa utama dioptimalkan dengan lebar karakter yang sama untuk mencegah pergeseran tata letak di notch."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 lingue principali sono ottimizzate con larghezza uniforme per evitare spostamenti nel notch."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチのレイアウトずれを防ぐため、6つの主要言語で文字幅が均一に最適化されています。"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ойықтағы пішімнің ығысуын болдырмау үшін 6 негізгі тіл таңба ені бірдей етіп оңтайландырылған."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "노치의 레이아웃 틀어짐을 방지하기 위해 6개 주요 언어가 동일한 문자 폭으로 최적화되었습니다."
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 bahasa teras dioptimumkan dengan lebar aksara yang sama untuk mengelakkan anjakan reka letak dalam takuk."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 kjernespråk er optimalisert med lik tegnbredde for å forhindre layoutforskyvninger i skjermhakket."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 kerntalen zijn geoptimaliseerd met gelijke tekenbreedtes om lay-outverschuivingen in de notch te voorkomen."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 głównych języków zostało zoptymalizowanych pod kątem równej szerokości znaków w notchu."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 idiomas principais são otimizados com largura uniforme para evitar deslocamentos no notch."
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 limbi principale sunt optimizate cu lățime egală a caracterelor pentru a preveni decalajele în decupaj."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Для выреза оптимизированы 6 основных языков с посимвольно одинаковой шириной строк для идеального отображения без сдвигов."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 hlavných jazykov je optimalizovaných s rovnakou šírkou znakov, aby sa zabránilo posunom vo výreze."
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 главних језика је оптимизовано са једнаком ширином знакова како би се спречила померања у урезу."
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 kärnspråk är optimerade med lika teckenbredd för att förhindra layoutförskjutningar i flärpen."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 ภาษาหลักได้รับการปรับให้มีความกว้างของอักขระเท่ากันเพื่อป้องกันการเลื่อนของเลย์เอาต์ในรอยบาก"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentikte kaymaları önlemek için 6 temel dil eşit karakter genişliğiyle optimize edilmiştir."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Для вирізу оптимізовано 6 основних мов із посимвольно однаковою шириною рядків для ідеального вигляду."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "6 ngôn ngữ chính được tối ưu hóa với độ rộng ký tự bằng nhau để tránh xê dịch bố cục trong tai thỏ."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "针对刘海特别优化了 6 种核心语言，并保持字符宽度严格一致，防止界面偏移或截断。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "針對瀏海特別最佳化了 6 種核心語言，並保持字元寬度嚴格一致，防止介面偏移或截斷。"
+          }
+        }
+      }
+    },
     "settings.language.notice": {
       "extractionState": "manual",
       "localizations": {
@@ -114449,6 +114688,484 @@
           "stringUnit": {
             "state": "translated",
             "value": "越南文"
+          }
+        }
+      }
+    },
+    "settings.language.target.notch": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "النوتش"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прорез"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "নচ"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výřez"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ناچ"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lovinäyttö"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encoche"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מגרעת"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "नॉच"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urez"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kivágás"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチ"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ойық"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "노치"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takuk"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decupaj"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вырез"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výrez"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Урез"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notch"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รอยบาก"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çentik"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Виріз"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tai thỏ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刘海"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "瀏海"
+          }
+        }
+      }
+    },
+    "settings.language.target.settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الإعدادات"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "সেটিংস"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustos"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavení"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indstillinger"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ρυθμίσεις"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تنظیمات"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asetukset"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mga Setting"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "הגדרות"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "सेटिंग्स"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postavke"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beállítások"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pengaturan"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Баптаулар"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "설정"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tetapan"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Innstillinger"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instellingen"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ustawienia"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurări"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavenia"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подешавања"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inställningar"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "การตั้งค่า"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Параметри"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "设置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定"
           }
         }
       }
@@ -137878,18 +138595,6 @@
     "settings.notch.priorities.row.vpn": {
       "extractionState": "manual",
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VPN"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VPN"
-          }
-        },
         "ar": {
           "stringUnit": {
             "state": "translated",
@@ -137933,6 +138638,12 @@
           }
         },
         "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VPN"
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "VPN"
@@ -138053,6 +138764,12 @@
           }
         },
         "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VPN"
+          }
+        },
+        "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "VPN"
@@ -214832,1197 +215549,958 @@
         }
       }
     },
-    "settings.language.target.settings": {
+    "settings.faceid.style.title": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Settings"
+            "value": "Display Style"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Настройки"
+            "value": "Стиль анимации"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Einstellungen"
+            "value": "Anzeigestil"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ajustes"
+            "value": "Estilo de visualización"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Réglages"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "設定"
+            "value": "Style d'affichage"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impostazioni"
+            "value": "Stile di visualizzazione"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ajustes"
+            "value": "Estilo de exibição"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示样式"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "顯示樣式"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "設定"
+            "value": "表示スタイル"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "설정"
+            "value": "표시 스타일"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Параметри"
+            "value": "Стиль відображення"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ustawienia"
+            "value": "Styl wyświetlania"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ayarlar"
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإعدادات"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Настройки"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "সেটিংস"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajustos"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nastavení"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Indstillinger"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ρυθμίσεις"
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنظیمات"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Asetukset"
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mga Setting"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "הגדרות"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "सेटिंग्स"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Postavke"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beállítások"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pengaturan"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Баптаулар"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tetapan"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Innstillinger"
+            "value": "Görünüm Stili"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instellingen"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Configurări"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nastavenia"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Подешавања"
+            "value": "Weergavestijl"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inställningar"
+            "value": "Visningsstil"
           }
         },
-        "th": {
+        "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "การตั้งค่า"
+            "value": "Visningsstil"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Näyttötyyli"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visningsstil"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Styl zobrazení"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štýl zobrazenia"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Megjelenítési stílus"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stil de afișare"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Στυλ εμφάνισης"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стил на показване"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stil prikaza"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стил приказа"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gaya Tampilan"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gaya Paparan"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cài đặt"
+            "value": "Kiểu hiển thị"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "รูปแบบการแสดงผล"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "प्रदर्शन शैली"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "প্রদর্শন শৈলী"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نمط العرض"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "سبک نمایش"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "סגנון תצוגה"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estil de visualització"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estilo ng Display"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Көрсету стилі"
           }
         }
       }
     },
-    "settings.language.target.notch": {
+    "settings.faceid.style.desc": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Choose how Face ID appears in the notch"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Вырез"
+            "value": "Выберите внешний вид Face ID в вырезе"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Wählen Sie, wie Face ID in der Notch erscheint"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Elige cómo aparece Face ID en el notch"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Encoche"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "刘海"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "瀏海"
+            "value": "Choisissez comment Face ID apparaît dans l'encoche"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Scegli come appare Face ID nella tacca"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Escolha como o Face ID aparece no entalhe"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择 Face ID 在刘海中的显示方式"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選擇 Face ID 在瀏海中的顯示方式"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ノッチ"
+            "value": "Face IDのノッチでの表示形式を選択します"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "노치"
+            "value": "노치에서 Face ID가 표시되는 방식을 선택합니다"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Виріз"
+            "value": "Виберіть вигляд Face ID у вирізі"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Wybierz, jak Face ID pojawia się w wycięciu"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Çentik"
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "النوتش"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Прорез"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "নচ"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Výřez"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch"
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ناچ"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lovinäyttö"
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "מגרעת"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "नॉच"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Urez"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kivágás"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ойық"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Takuk"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch"
+            "value": "Face ID'nin çentikte nasıl görüneceğini seçin"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Decupaj"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Výrez"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Урез"
+            "value": "Kies hoe Face ID in de notch verschijnt"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notch"
+            "value": "Välj hur Face ID visas i flärpen"
           }
         },
-        "th": {
+        "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "รอยบาก"
+            "value": "Vælg hvordan Face ID vises i hakket"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valitse, miten Face ID näkyy lovessa"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Velg hvordan Face ID vises i hakket"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyberte, jak se Face ID zobrazí ve výřezu"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyberte, ako sa Face ID zobrazí vo výreze"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Válassza ki a Face ID megjelenését a bevágásban"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alegeți cum apare Face ID în decupaj"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Επιλέξτε πώς θα εμφανίζεται το Face ID στην εγκοπή"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изберете как да се показва Face ID в прореза"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odaberite kako se Face ID prikazuje u izrezu"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изаберите како се Face ID приказује у зарезу"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pilih cara Face ID muncul di notch"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pilih cara Face ID dipaparkan pada takuk"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tai thỏ"
+            "value": "Chọn cách Face ID xuất hiện trên tai thỏ"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "เลือกรูปแบบการแสดง Face ID ในรอยบาก"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "चुनें कि नॉच में Face ID कैसे दिखाई दे"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "নচে Face ID কীভাবে প্রদর্শিত হবে তা চয়ন করুন"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "اختر كيفية ظهور Face ID في النتوء"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "نحوه نمایش Face ID در بریدگی را انتخاب کنید"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "בחר כיצד Face ID מופיע במגרעת"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tria com apareix Face ID a la osca"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Piliin kung paano lalabas ang Face ID sa notch"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ойықта Face ID қалай көрсетілетінін таңдаңыз"
           }
         }
       }
     },
-    "settings.language.notch.desc": {
+    "settings.faceid.style.expanded": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+            "value": "Expanded"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Использовать системный язык для выреза или выбрать один из 6 оптимизированных языков."
+            "value": "Развернутый"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Verwende die Systemsprache für die Notch oder wähle eine der 6 optimierten Sprachen."
+            "value": "Erweitert"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Usa el idioma del sistema para el notch o elige uno de los 6 idiomas optimizados."
+            "value": "Expandido"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Utiliser la langue du système pour l'encoche ou choisir l'une des 6 langues optimisées."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在刘海中使用系统语言，或选择 6 种经过优化的核心语言之一。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在瀏海中使用系統語言，或選擇 6 種經過最佳化的核心語言之一。"
+            "value": "Étendu"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Usa la lingua di sistema per il notch o seleziona una delle 6 lingue ottimizzate."
+            "value": "Espanso"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Use o idioma do sistema para o notch ou selecione um dos 6 idiomas otimizados."
+            "value": "Expandido"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "展开"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "展開"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ノッチにシステム言語を使用するか、最適化された6つの言語から選択します。"
+            "value": "展開"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "노치에 시스템 언어를 사용하거나 최적화된 6개 언어 중 하나를 선택하세요."
+            "value": "확장됨"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Використовувати системну мову для вирізу або вибрати одну з 6 оптимізованих мов."
+            "value": "Розгорнутий"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Użyj języka systemowego dla notcha lub wybierz jeden z 6 zoptymalizowanych języków."
+            "value": "Rozwinięty"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Çentik için sistem dilini kullanın veya optimize edilmiş 6 dilden birini seçin."
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+            "value": "Genişletilmiş"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+            "value": "Uitgevouwen"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+            "value": "Expanderad"
           }
         },
-        "th": {
+        "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+            "value": "Udvidet"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laajennettu"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utvidet"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozbalený"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozbalený"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiterjesztett"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Extins"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ανεπτυγμένο"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разширен"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prošireno"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проширено"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diperluas"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diperluas"
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Use system language for the notch, or select one of the 6 optimized languages."
+            "value": "Mở rộng"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ขยาย"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "विस्तारित"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "প্রসারিত"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "موسع"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "گسترش‌یافته"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "מורחב"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ampliat"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinalawak"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жайылған"
           }
         }
       }
     },
-    "settings.language.notch.notice": {
+    "settings.faceid.style.compact": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "6 core languages are pixel-optimized with character-equal widths to prevent layout shifts in the notch."
+            "value": "Compact in Lock"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Для выреза оптимизированы 6 основных языков с посимвольно одинаковой шириной строк для идеального отображения без сдвигов."
+            "value": "Компактный в замке"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "6 Kernsprachen sind mit gleicher Zeichenbreite pixelgenau optimiert, um Verschiebungen in der Notch zu verhindern."
+            "value": "Kompakt im Schloss"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "6 idiomas principales están optimizados con ancho exacto para evitar desplazamientos en el notch."
+            "value": "Compacto en candado"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "6 langues principales sont optimisées avec une largeur de caractères identique pour éviter les décalages dans l'encoche."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "针对刘海特别优化了 6 种核心语言，并保持字符宽度严格一致，防止界面偏移或截断。"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "針對瀏海特別最佳化了 6 種核心語言，並保持字元寬度嚴格一致，防止介面偏移或截斷。"
+            "value": "Compact dans cadenas"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "6 lingue principali sono ottimizzate con larghezza uniforme per evitare spostamenti nel notch."
+            "value": "Compatto nel lucchetto"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "6 idiomas principais são otimizados com largura uniforme para evitar deslocamentos no notch."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ノッチのレイアウトずれを防ぐため、6つの主要言語で文字幅が均一に最適化されています。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "노치의 레이아웃 틀어짐을 방지하기 위해 6개 주요 언어가 동일한 문자 폭으로 최적화되었습니다."
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Для вирізу оптимізовано 6 основних мов із посимвольно однаковою шириною рядків для ідеального вигляду."
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 głównych języków zostało zoptymalizowanych pod kątem równej szerokości znaków w notchu."
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Çentikte kaymaları önlemek için 6 temel dil eşit karakter genişliğiyle optimize edilmiştir."
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تم تحسين 6 لغات أساسية بعرض متساوٍ للأحرف لمنع إزاحة التنسيق في النوتش."
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 основни езика са оптимизирани с еднаква ширина на символите за предотвратяване на разместване в прореза."
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "নচে লেআউট পরিবর্তন রোধ করতে সমান অক্ষরের প্রস্থ সহ ৬টি প্রধান ভাষা অপ্টিমাইজ করা হয়েছে।"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 idiomes principals estan optimitzats amb amplada de caràcters uniforme per evitar desplaçaments al notch."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 hlavních jazyků je optimalizováno se stejnou šířkou znaků, aby se zabránilo posunům v zářezu."
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 kernesprog er optimeret med ens tegnbredde for at forhindre layoutforskydninger i indhakket."
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 βασικές γλώσσες έχουν βελτιστοποιηθεί με ίσο πλάτος χαρακτήρων για αποφυγή μετατοπίσεων στην εγκοπή."
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "۶ زبان اصلی با عرض کاراکتر یکسان بهینه‌سازی شده‌اند تا از جابجایی چیدمان در ناچ جلوگیری شود."
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 keskeistä kieltä on optimoitu tasalevyisillä merkeillä asettelun siirtymisen estämiseksi lovessa."
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ang 6 na pangunahing wika ay na-optimize gamit ang pare-parehong lapad upang maiwasan ang pagkausog sa notch."
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 שפות עיקריות מותאמות ברוחב תווים שווה כדי למנוע הסטות במבנה המגרעת."
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "नॉच में लेआउट शिफ्ट को रोकने के लिए 6 मुख्य भाषाओं को समान वर्ण चौड़ाई के साथ अनुकूलित किया गया है।"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 glavnih jezika optimizirano je s jednakom širinom znakova kako bi se spriječili pomaci u urezu."
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 alapnyelv azonos karakterszélességgel lett optimalizálva, hogy elkerülje az elcsúszást a kivágásban."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 bahasa utama dioptimalkan dengan lebar karakter yang sama untuk mencegah pergeseran tata letak di notch."
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ойықтағы пішімнің ығысуын болдырмау үшін 6 негізгі тіл таңба ені бірдей етіп оңтайландырылған."
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 bahasa teras dioptimumkan dengan lebar aksara yang sama untuk mengelakkan anjakan reka letak dalam takuk."
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 kjernespråk er optimalisert med lik tegnbredde for å forhindre layoutforskyvninger i skjermhakket."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 kerntalen zijn geoptimaliseerd met gelijke tekenbreedtes om lay-outverschuivingen in de notch te voorkomen."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 limbi principale sunt optimizate cu lățime egală a caracterelor pentru a preveni decalajele în decupaj."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 hlavných jazykov je optimalizovaných s rovnakou šírkou znakov, aby sa zabránilo posunom vo výreze."
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 главних језика је оптимизовано са једнаком ширином знакова како би се спречила померања у урезу."
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 kärnspråk är optimerade med lika teckenbredd för att förhindra layoutförskjutningar i flärpen."
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 ภาษาหลักได้รับการปรับให้มีความกว้างของอักขระเท่ากันเพื่อป้องกันการเลื่อนของเลย์เอาต์ในรอยบาก"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "6 ngôn ngữ chính được tối ưu hóa với độ rộng ký tự bằng nhau để tránh xê dịch bố cục trong tai thỏ."
-          }
-        }
-      }
-    },
-    "nowPlaying.noAudioOutputs": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No audio outputs available"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нет доступных аудиовыходов"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keine Audioausgänge verfügbar"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucune sortie audio disponible"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No hay salidas de audio disponibles"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nessuna uscita audio disponibile"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhuma saída de áudio disponível"
+            "value": "Compacto no cadeado"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "没有可用的音频输出设备"
+            "value": "锁形紧凑"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "沒有可用的音訊輸出裝置"
+            "value": "鎖形緊湊"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "利用可能なオーディオ出力がありません"
+            "value": "ロック内でコンパクト"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "사용 가능한 오디오 출력이 없습니다"
+            "value": "자물쇠에 콤팩트"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Немає доступних аудіовиходів"
+            "value": "Компактний у замку"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Brak dostępnych wyjść audio"
+            "value": "Kompaktowy w kłódce"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kullanılabilir ses çıkışı yok"
+            "value": "Kilitte Kompakt"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Geen audio-uitgangen beschikbaar"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nejsou k dispozici žádné zvukové výstupy"
+            "value": "Compact in slot"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inga ljudutgångar tillgängliga"
+            "value": "Kompakt i lås"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ingen lydudgange tilgængelige"
+            "value": "Kompakt i lås"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ei käytettävissä olevia äänilähtöjä"
+            "value": "Kompakti lukossa"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ingen lydutganger tilgjengelig"
+            "value": "Kompakt i lås"
           }
         },
-        "hu": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nincs elérhető hangkimenet"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Δεν υπάρχουν διαθέσιμες έξοδοι ήχου"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nu există ieșiri audio disponibile"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tidak ada output audio yang tersedia"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiada output audio tersedia"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có đầu ra âm thanh khả dụng"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ไม่มีสัญญาณเสียงออกที่พร้อมใช้งาน"
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لا توجد مخارج صوت متاحة"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "אין יציאות שמע זמינות"
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "هیچ خروجی صوتی در دسترس نیست"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "कोई ऑडियो आउटपुट उपलब्ध नहीं है"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "কোনো অডিও আউটপুট উপলব্ধ নেই"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Няма налични аудио изходи"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No hi ha sortides d'àudio disponibles"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nema dostupnih audio izlaza"
+            "value": "Kompaktní v zámku"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nie sú k dispozícii žiadne zvukové výstupy"
+            "value": "Kompaktný v zámku"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompakt a zárban"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compact în lacăt"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Συμπαγές στην κλειδαριά"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Компактен в катинара"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompaktno u bravi"
           }
         },
         "sr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Нема доступних аудио излаза"
+            "value": "Компактно у брави"
           }
         },
-        "kk": {
+        "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Қолжетімді аудио шығыстары жоқ"
+            "value": "Kompak di kunci"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padat dalam kunci"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu gọn trong khóa"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "กะทัดรัดในแม่กุญแจ"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ताले में संक्षिप्त"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "তালায় সংক্ষিপ্ত"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مدمج في القفل"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "فشرده در قفل"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "קומפקטי במנעול"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compacte al cadenat"
           }
         },
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Walang available na audio output"
+            "value": "Maliit sa kandado"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Құлыпта ықшам"
           }
         }
       }

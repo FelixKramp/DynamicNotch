@@ -40,6 +40,14 @@ final class FaceIDSettingsStore: SettingsStoreBase {
     @StoredDefault(key: FaceIDSettings.showLockScreenButtonKey, defaultValue: true)
     var showLockScreenButton: Bool
 
+    @StoredDefault(key: FaceIDSettings.presentationStyleKey, defaultValue: FaceIDPresentationStyle.expanded.rawValue)
+    private var rawPresentationStyle: String
+
+    var presentationStyle: FaceIDPresentationStyle {
+        get { FaceIDPresentationStyle(rawValue: rawPresentationStyle) ?? .expanded }
+        set { rawPresentationStyle = newValue.rawValue }
+    }
+
     func reset() {
         isFaceIDEnabled = defaultBool(for: FaceIDSettings.enabledKey)
         isEnrolled = defaultBool(for: FaceIDSettings.isEnrolledKey)
@@ -50,6 +58,7 @@ final class FaceIDSettingsStore: SettingsStoreBase {
         unlockOnWake = defaultBool(for: FaceIDSettings.unlockOnWakeKey)
         isLowLightAssistEnabled = defaultBool(for: FaceIDSettings.lowLightAssistKey)
         showLockScreenButton = defaultBool(for: FaceIDSettings.showLockScreenButtonKey)
+        rawPresentationStyle = FaceIDPresentationStyle.expanded.rawValue
     }
 
     func enrollFace() {

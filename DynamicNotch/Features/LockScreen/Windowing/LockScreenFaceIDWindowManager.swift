@@ -93,10 +93,27 @@ final class LockScreenFaceIDWindowManager {
             .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 guard let self else { return }
+                if self.faceIDSettings.presentationStyle == .compact {
+                    if state == .idle {
+                        if self.lockScreenManager.didUnlockWithFaceID || !self.lockScreenManager.isShowingLockPresentation {
+                            self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.LockScreen.activity.id))
+                        }
+                    } else {
+                        self.notchViewModel.send(.showLiveActivity(
+                            LockScreenNotchContent(
+                                lockScreenManager: self.lockScreenManager,
+                                faceIDSettings: self.faceIDSettings,
+                                faceIDService: self.faceIDService
+                            )
+                        ))
+                    }
+                    return
+                }
+
                 if state.isActivelyEvaluating || state.isSuccess || state.isFailed {
                     let duration: TimeInterval = state.isSuccess ? 1.5 : (state.isFailed ? 1.8 : 8.0)
                     self.notchViewModel.send(.showTemporaryNotification(
-                        FaceIDNotchContent(service: self.faceIDService),
+                        FaceIDNotchContent(service: self.faceIDService, style: self.faceIDSettings.presentationStyle),
                         duration: duration
                     ))
                 } else if state == .idle {
@@ -255,11 +272,21 @@ final class LockScreenFaceIDWindowManager {
         let requireEyes = faceIDSettings.requireOpenEyes
         let liveness = faceIDSettings.livenessCheck
 
-        // Show FaceIDNotchContent view as temporary notification when Face ID triggers
-        notchViewModel.send(.showTemporaryNotification(
-            FaceIDNotchContent(service: faceIDService),
-            duration: 8.0
-        ))
+        // In expanded style, show FaceIDNotchContent view as temporary notification
+        if faceIDSettings.presentationStyle == .expanded {
+            notchViewModel.send(.showTemporaryNotification(
+                FaceIDNotchContent(service: faceIDService, style: faceIDSettings.presentationStyle),
+                duration: 8.0
+            ))
+        } else {
+            notchViewModel.send(.showLiveActivity(
+                LockScreenNotchContent(
+                    lockScreenManager: lockScreenManager,
+                    faceIDSettings: faceIDSettings,
+                    faceIDService: faceIDService
+                )
+            ))
+        }
 
         faceIDService.startScan(
             requireOpenEyes: requireEyes,
@@ -273,6 +300,7 @@ final class LockScreenFaceIDWindowManager {
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
                     self?.notchViewModel.hideTemporaryNotification()
+                    self?.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.LockScreen.activity.id))
                     self?.faceIDService.cancelScan()
                 }
             } else {
