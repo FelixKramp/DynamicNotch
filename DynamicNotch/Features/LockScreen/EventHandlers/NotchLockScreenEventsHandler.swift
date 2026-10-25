@@ -33,7 +33,8 @@ final class NotchLockScreenEventsHandler {
             notchViewModel.send(
                 .showLiveActivity(
                     LockScreenNotchContent(
-                        lockScreenManager: lockScreenManager
+                        lockScreenManager: lockScreenManager,
+                        faceIDSettings: settingsViewModel.faceID
                     )
                 )
             )
