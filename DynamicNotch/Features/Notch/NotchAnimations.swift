@@ -50,7 +50,7 @@ struct NotchAnimations {
     static let `default`: Self = .balanced
 
     static let balanced: Self = {
-        let damping: Double = 0.75
+        let damping: Double = 0.70
         let expandDamping: Double = 0.75
         let baseResponse: Double = 0.47
         let blend: Double = 1.0
@@ -64,8 +64,8 @@ struct NotchAnimations {
             expandLiveActivity: .spring(response: baseResponse, dampingFraction: expandDamping, blendDuration: blend),
             expandedLiveActivityContentTransition: .spring(response: baseResponse, dampingFraction: expandDamping, blendDuration: blend),
             
-            collapseLiveActivity: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
-            collapsedLiveActivityContentTransition: .spring(response: baseResponse, dampingFraction: damping, blendDuration: blend),
+            collapseLiveActivity: .spring(response: baseResponse, blendDuration: blend),
+            collapsedLiveActivityContentTransition: .spring(response: baseResponse, blendDuration: blend),
             
             stretchReset: .spring(response: baseResponse, blendDuration: blend),
             focusDismissBounce: .spring(response: baseResponse, blendDuration: blend),

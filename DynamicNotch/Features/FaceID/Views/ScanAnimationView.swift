@@ -2,8 +2,11 @@
 //  ScanAnimationView.swift
 //  DynamicNotch
 //
-//  Adapted from jonnyoo/glance (Glance Face ID animation).
-//  Plays Apple's official Face ID scan animation video and holds its final frame.
+//  Adapted from Apple's official Face ID animations (via Glance / jonnyoo).
+//  Plays Apple's official Face ID video animations:
+//  - idle / scanning: `idleanimation.mp4` (authentic looking-around scanning loop)
+//  - success: `unlockanimation.mp4` (morphs into circle and draws checkmark, holds final frame)
+//  - failure: `unsuccessfulunlockanimation.mp4` (authentic shake on failure)
 //  Supports dynamic GPU tinting via CIColorMonochrome so any custom color can be used.
 //
 
@@ -14,12 +17,14 @@ import CoreImage
 
 enum ScanMedia: Equatable {
     case idle
+    case searching
+    case scanning
     case success
     case failure
     
     var videoResourceName: String? {
         switch self {
-        case .idle: return nil
+        case .idle, .searching, .scanning: return "idleanimation"
         case .success: return "unlockanimation"
         case .failure: return "unsuccessfulunlockanimation"
         }
@@ -49,6 +54,8 @@ final class ScanAnimationHostView: NSView {
     private var currentTintColor: NSColor?
     private var readyObservation: NSKeyValueObservation?
     private var fallbackRevealWorkItem: DispatchWorkItem?
+    private var endNotificationObserver: NSObjectProtocol?
+    private var hasSucceeded = false
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -57,7 +64,12 @@ final class ScanAnimationHostView: NSView {
         
         stillImageLayer.contentsGravity = .resizeAspect
         if let still = Self.loadStillFromBundle() {
-            stillImageLayer.contents = still
+            var rect = NSRect(origin: .zero, size: still.size)
+            if let cgImage = still.cgImage(forProposedRect: &rect, context: nil, hints: nil) {
+                stillImageLayer.contents = cgImage
+            } else {
+                stillImageLayer.contents = still
+            }
         }
         layer?.addSublayer(stillImageLayer)
         
@@ -84,7 +96,18 @@ final class ScanAnimationHostView: NSView {
     }
     
     func apply(media: ScanMedia, tintColor: NSColor?) {
-        let mediaChanged = (media != currentMedia)
+        if media == .success {
+            hasSucceeded = true
+        } else if media == .searching || media == .scanning {
+            hasSucceeded = false
+        }
+        
+        // Once successfully completed, do not revert to idle/face glyph while closing
+        if hasSucceeded && media == .idle {
+            return
+        }
+        
+        let resourceChanged = (media.videoResourceName != currentMedia?.videoResourceName)
         let tintChanged = (tintColor != currentTintColor)
         
         if tintChanged {
@@ -92,10 +115,20 @@ final class ScanAnimationHostView: NSView {
             applyTint(tintColor)
         }
         
-        guard mediaChanged else { return }
+        // If resource is unchanged (e.g. idle -> scanning), keep playing smoothly
+        guard resourceChanged || currentMedia == nil else {
+            currentMedia = media
+            return
+        }
+        
         currentMedia = media
         readyObservation = nil
         fallbackRevealWorkItem?.cancel()
+        
+        if let observer = endNotificationObserver {
+            NotificationCenter.default.removeObserver(observer)
+            endNotificationObserver = nil
+        }
         
         guard let resource = media.videoResourceName else {
             teardownPlayer()
@@ -115,6 +148,18 @@ final class ScanAnimationHostView: NSView {
         let newPlayer = AVPlayer(url: url)
         newPlayer.isMuted = true
         newPlayer.actionAtItemEnd = .none
+        
+        // Loop idle/scanning animation
+        if media == .idle || media == .scanning {
+            endNotificationObserver = NotificationCenter.default.addObserver(
+                forName: .AVPlayerItemDidPlayToEndTime,
+                object: newPlayer.currentItem,
+                queue: .main
+            ) { [weak newPlayer] _ in
+                newPlayer?.seek(to: .zero)
+                newPlayer?.play()
+            }
+        }
         
         playerLayer.player = newPlayer
         player = newPlayer
@@ -163,8 +208,13 @@ final class ScanAnimationHostView: NSView {
     }
     
     private func teardownPlayer() {
+        if let observer = endNotificationObserver {
+            NotificationCenter.default.removeObserver(observer)
+            endNotificationObserver = nil
+        }
         readyObservation = nil
         fallbackRevealWorkItem?.cancel()
+        fallbackRevealWorkItem = nil
         player?.pause()
         player = nil
         playerLayer.player = nil

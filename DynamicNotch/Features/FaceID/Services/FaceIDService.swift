@@ -25,6 +25,8 @@ final class FaceIDService: NSObject, ObservableObject {
     private var scanTimeoutTimer: AnyCancellable?
     private var scanProgress: Double = 0.0
     private var completionHandler: ((Bool) -> Void)?
+    private var requireOpenEyes: Bool = true
+    private var livenessCheck: Bool = true
 
     override init() {
         super.init()
@@ -48,6 +50,8 @@ final class FaceIDService: NSObject, ObservableObject {
         cancelScan()
 
         self.completionHandler = completion
+        self.requireOpenEyes = requireOpenEyes
+        self.livenessCheck = livenessCheck
         self.state = .searching
         self.detectedFaceCount = 0
         self.areEyesOpen = true
@@ -275,7 +279,13 @@ extension FaceIDService: AVCaptureVideoDataOutputSampleBufferDelegate {
                     let isCentered = (0.15...0.85).contains(box.midX) && (0.15...0.85).contains(box.midY)
                     let isGoodSize = box.width >= 0.14
 
-                    if isCentered && isGoodSize {
+                    let eyesPass = !self.requireOpenEyes || FaceAttentionEvaluator.areEyesOpen(face: face)
+                    let attentionPass = !self.livenessCheck || (FaceAttentionEvaluator.isFacingCamera(face: face) && FaceAttentionEvaluator.isGazeDirect(face: face))
+
+                    self.areEyesOpen = eyesPass
+                    self.livenessScore = attentionPass ? 1.0 : 0.0
+
+                    if isCentered && isGoodSize && eyesPass && attentionPass {
                         self.detectedFaceCount = 1
                         self.scanProgress = min(1.0, self.scanProgress + 0.18)
                         self.state = .scanning(progress: self.scanProgress)
@@ -284,10 +294,13 @@ extension FaceIDService: AVCaptureVideoDataOutputSampleBufferDelegate {
                             self.handleFaceVerified()
                         }
                     } else {
+                        self.detectedFaceCount = 1
+                        self.scanProgress = max(0.0, self.scanProgress - 0.04)
                         self.state = .searching
                     }
                 } else {
                     self.detectedFaceCount = 0
+                    self.scanProgress = max(0.0, self.scanProgress - 0.04)
                     if self.scanProgress == 0 {
                         self.state = .searching
                     }

@@ -15,4 +15,5 @@ enum FaceIDSettings {
     static let unlockOnWakeKey = "settings.faceid.unlockOnWake"
     static let lowLightAssistKey = "settings.faceid.lowLightAssist"
     static let showLockScreenButtonKey = "settings.faceid.showLockScreenButton"
+    static let presentationStyleKey = "settings.faceid.presentationStyle"
 }

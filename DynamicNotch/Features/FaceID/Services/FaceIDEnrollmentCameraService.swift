@@ -225,20 +225,76 @@ final class FaceIDEnrollmentCameraService: NSObject, ObservableObject {
         isFaceInFrame = true
         lastSuccessfulObservationTime = Date()
 
-        enrollmentProgress = min(1.0, enrollmentProgress + 0.025)
+        let eyesOpen = FaceAttentionEvaluator.areEyesOpen(face: face)
+        let yaw = FaceAttentionEvaluator.getYaw(face: face) ?? 0.0
 
-        if enrollmentProgress < 0.30 {
-            updateInstruction("faceid.camera.instruction.holdStill", fallback: "Great! Hold your face in the frame")
-        } else if enrollmentProgress < 0.60 {
-            updateInstruction("faceid.camera.instruction.turnRightSlightly", fallback: "Slightly turn your head to the right")
-        } else if enrollmentProgress < 0.85 {
-            updateInstruction("faceid.camera.instruction.turnLeftSlightly", fallback: "Now slightly turn your head to the left")
-        } else if enrollmentProgress < 1.0 {
-            updateInstruction("faceid.camera.instruction.finishing", fallback: "Finishing scan...")
+        if enrollmentProgress < 0.40 {
+            // Phase 1: Look straight into the camera with open eyes
+            let facingStraight = FaceAttentionEvaluator.isFacingCamera(face: face, maxAngleRadians: 0.18)
+            let gazeForward = FaceAttentionEvaluator.isGazeDirect(face: face)
+
+            if !eyesOpen || !facingStraight || !gazeForward {
+                updateInstruction("faceid.camera.instruction.lookAtCamera", fallback: "Look directly at the camera with eyes open")
+                return
+            }
+
+            enrollmentProgress = min(0.40, enrollmentProgress + 0.02)
+            if enrollmentProgress < 0.40 {
+                updateInstruction("faceid.camera.instruction.holdStill", fallback: "Great! Hold your face in the frame")
+            } else {
+                updateInstruction("faceid.camera.instruction.turnRightSlightly", fallback: "Slightly turn your head to the right")
+            }
+        } else if enrollmentProgress < 0.70 {
+            // Phase 2: Slightly turn head to the right
+            if !eyesOpen {
+                updateInstruction("faceid.camera.instruction.lookAtCamera", fallback: "Look directly at the camera with eyes open")
+                return
+            }
+
+            // Yaw indicates turning: positive/negative depending on orientation. Check if turning away from center (|yaw| > 0.10)
+            if abs(yaw) >= 0.10 {
+                enrollmentProgress = min(0.70, enrollmentProgress + 0.02)
+                if enrollmentProgress >= 0.70 {
+                    updateInstruction("faceid.camera.instruction.turnLeftSlightly", fallback: "Now slightly turn your head to the left")
+                } else {
+                    updateInstruction("faceid.camera.instruction.turnRightSlightly", fallback: "Slightly turn your head to the right")
+                }
+            } else {
+                updateInstruction("faceid.camera.instruction.turnRightSlightly", fallback: "Slightly turn your head to the right")
+            }
+        } else if enrollmentProgress < 0.92 {
+            // Phase 3: Slightly turn head to the left
+            if !eyesOpen {
+                updateInstruction("faceid.camera.instruction.lookAtCamera", fallback: "Look directly at the camera with eyes open")
+                return
+            }
+
+            if abs(yaw) >= 0.10 {
+                enrollmentProgress = min(0.92, enrollmentProgress + 0.02)
+                if enrollmentProgress >= 0.92 {
+                    updateInstruction("faceid.camera.instruction.finishing", fallback: "Finishing scan...")
+                } else {
+                    updateInstruction("faceid.camera.instruction.turnLeftSlightly", fallback: "Now slightly turn your head to the left")
+                }
+            } else {
+                updateInstruction("faceid.camera.instruction.turnLeftSlightly", fallback: "Now slightly turn your head to the left")
+            }
         } else {
-            isCompleted = true
-            updateInstruction("faceid.camera.instruction.completed", fallback: "Face ID successfully set up!")
-            stopCameraSession()
+            // Phase 4: Final verification and finish
+            let facingStraight = FaceAttentionEvaluator.isFacingCamera(face: face, maxAngleRadians: 0.22)
+            if !eyesOpen || !facingStraight {
+                updateInstruction("faceid.camera.instruction.lookAtCamera", fallback: "Look directly at the camera with eyes open")
+                return
+            }
+
+            enrollmentProgress = min(1.0, enrollmentProgress + 0.03)
+            if enrollmentProgress >= 1.0 {
+                isCompleted = true
+                updateInstruction("faceid.camera.instruction.completed", fallback: "Face ID successfully set up!")
+                stopCameraSession()
+            } else {
+                updateInstruction("faceid.camera.instruction.finishing", fallback: "Finishing scan...")
+            }
         }
     }
 

@@ -127,6 +127,17 @@ struct FaceIDSettingsView: View {
                     requestSecurityVerification()
                 }
             }
+            Divider()
+                .opacity(0.6)
+
+            SettingsMenuRow(
+                title: "settings.faceid.style.title",
+                description: "settings.faceid.style.desc",
+                options: FaceIDPresentationStyle.allCases,
+                optionTitle: { $0.title },
+                accessibilityIdentifier: "settings.faceid.style",
+                selection: $settings.presentationStyle
+            )
         }
     }
 
@@ -289,7 +300,7 @@ struct FaceIDSettingsView: View {
     private func testFaceIDInNotch() {
         guard let notchViewModel else { return }
 
-        let content = FaceIDNotchContent(service: service)
+        let content = FaceIDNotchContent(service: service, style: settings.presentationStyle)
         notchViewModel.send(.showTemporaryNotification(content, duration: 8.0))
 
         service.startScan(
