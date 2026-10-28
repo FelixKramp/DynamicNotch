@@ -43,6 +43,10 @@ final class NotchEngine: ObservableObject {
     /// Last dismissed activity or alert saved for user restoration.
     private var lastDismissedContent: RestorableDismissedContent?
 
+    /// Mod: Live Activity, die per Wischen im aufgeklappten Zustand nach vorne geholt wurde
+    /// (z. B. Startseite über laufender Musik). Gilt nur, solange die Notch aufgeklappt ist.
+    private var pinnedLiveActivityID: String?
+
     private var currentTemporaryNotificationDuration: TimeInterval?
     private var eventQueue: [NotchState] = []
     private var isProcessingQueue = false
@@ -372,7 +376,15 @@ final class NotchEngine: ObservableObject {
             return
         }
 
-        guard let liveActivityContent = notchModel.liveActivityContent else { return }
+        guard var liveActivityContent = notchModel.liveActivityContent else { return }
+
+        // Beim Zuklappen kehrt die per Wischen vorgeholte Ansicht wieder hinter die Musik zurück
+        if pinnedLiveActivityID != nil {
+            pinnedLiveActivityID = nil
+            if let best = activeLiveActivities.first(where: { dismissedLiveActivityIDs.contains($0.id) == false }) {
+                liveActivityContent = best
+            }
+        }
 
         transition(
             hide: {
@@ -403,7 +415,47 @@ final class NotchEngine: ObservableObject {
     }
 
     private var highestPriorityVisibleActivity: NotchContentProtocol? {
-        activeLiveActivities.first { dismissedLiveActivityIDs.contains($0.id) == false }
+        if notchModel.isLiveActivityExpanded,
+           let pinnedLiveActivityID,
+           let pinned = activeLiveActivities.first(where: { $0.id == pinnedLiveActivityID }) {
+            return pinned
+        }
+        return activeLiveActivities.first { dismissedLiveActivityIDs.contains($0.id) == false }
+    }
+
+    /// Mod: Zeigt eine andere Live Activity im aufgeklappten Zustand, ohne die Notch zu schließen.
+    /// Beim Zuklappen gilt wieder die normale Priorität.
+    var isShowingPinnedLiveActivity: Bool {
+        pinnedLiveActivityID != nil && notchModel.liveActivityContent?.id == pinnedLiveActivityID
+    }
+
+    func presentPinnedExpanded(_ content: NotchContentProtocol) {
+        guard notchModel.isLiveActivityExpanded,
+              notchModel.temporaryNotificationContent == nil else { return }
+
+        dismissedLiveActivityIDs.removeAll(where: { $0 == content.id })
+        updateLiveActivityStack(with: content)
+        pinnedLiveActivityID = content.id
+
+        withAnimation(animations.contentUpdate) {
+            notchModel.liveActivityContent = content
+            notchModel.updateToken = UUID()
+        }
+    }
+
+    func releasePinnedLiveActivity() {
+        guard pinnedLiveActivityID != nil else { return }
+        pinnedLiveActivityID = nil
+
+        guard notchModel.isLiveActivityExpanded,
+              notchModel.temporaryNotificationContent == nil,
+              let best = highestPriorityVisibleActivity,
+              best.id != notchModel.liveActivityContent?.id else { return }
+
+        withAnimation(animations.contentUpdate) {
+            notchModel.liveActivityContent = best
+            notchModel.updateToken = UUID()
+        }
     }
 
     private func recordDismissedLiveActivity(id: String) {
@@ -541,7 +593,8 @@ final class NotchEngine: ObservableObject {
 
                     withAnimation(self.notchModel.isLiveActivityExpanded ? self.animations.closeLiveActivity : self.animations.contentHide) {
                         if self.notchModel.liveActivityContent != nil {
-                            self.suspendedActivity = self.notchModel.liveActivityContent
+                            self.pinnedLiveActivityID = nil
+                            self.suspendedActivity = self.highestPriorityVisibleActivity
                             self.notchModel.isLiveActivityExpanded = false
                             self.notchModel.liveActivityContent = nil
                         }
@@ -569,6 +622,7 @@ final class NotchEngine: ObservableObject {
         await withCheckedContinuation { continuation in
             transition(
                 hide: {
+                    self.pinnedLiveActivityID = nil
                     withAnimation(self.notchModel.isLiveActivityExpanded ? self.animations.closeLiveActivity : self.animations.contentHide) {
                         self.notchModel.isLiveActivityExpanded = false
                         self.notchModel.temporaryNotificationContent = nil

@@ -16,6 +16,9 @@ struct NowPlayingExpandedNotchView: View {
     @ObservedObject var applicationSettings: ApplicationSettingsStore
     
     let onOpenPlaybackSource: @MainActor () -> Void
+    /// Wischen nach links: standardmäßig die Startseite mit Kamera, Timer, VPN
+    var onSwipeLeft: (@MainActor () -> Void)? = nil
+    var isSwipeEnabled = true
     
     @State private var scrubProgress: CGFloat?
     @State private var showsMediaSources = false
@@ -45,13 +48,17 @@ struct NowPlayingExpandedNotchView: View {
                     currentBundleIdentifier: nowPlayingViewModel.snapshot?.playbackSource?.preferredBundleIdentifier,
                     onClose: { toggleMediaSources() }
                 )
-                .transition(.opacity.combined(with: .scale(scale: 0.96)))
+                // Quellen liegen links vom Player
+                .transition(.notchPage(edgeOffset: -90))
             } else {
                 TimelineView(.periodic(from: .now, by: progressTick(for: snapshot))) { context in
                     timelineContent(snapshot: snapshot, at: context.date)
                 }
-                .transition(.opacity.combined(with: .scale(scale: 1.04)))
+                .transition(.notchPage(edgeOffset: 90))
             }
+        }
+        .onNotchHorizontalSwipe(isEnabled: isSwipeEnabled) { direction in
+            handleSwipe(direction)
         }
         .onAppear {
             mediaSources.startObserving()
@@ -104,8 +111,22 @@ struct NowPlayingExpandedNotchView: View {
         .help("Zwischen Quellen wechseln")
     }
 
+    /// Seitenreihe: Quellen ← Player → Startseite
+    private func handleSwipe(_ direction: NotchHorizontalSwipeDirection) {
+        switch direction {
+        case .right where !showsMediaSources:
+            toggleMediaSources()
+        case .left where showsMediaSources:
+            toggleMediaSources()
+        case .left:
+            (onSwipeLeft ?? NotchPageSwitcher.showHomePage)()
+        case .right:
+            break
+        }
+    }
+
     private func toggleMediaSources() {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+        withAnimation(AnyTransition.notchPageAnimation) {
             showsMediaSources.toggle()
         }
     }

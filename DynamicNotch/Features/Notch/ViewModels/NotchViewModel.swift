@@ -537,6 +537,36 @@ final class NotchViewModel: ObservableObject {
     func handleOutsideClick() {
         engine.handleOutsideClick()
     }
+
+    /// Mod: Wischen im aufgeklappten Zustand holt eine andere Ansicht nach vorne
+    var isShowingPinnedLiveActivity: Bool {
+        engine.isShowingPinnedLiveActivity
+    }
+
+    func presentPinnedExpanded(_ content: NotchContentProtocol) {
+        // Startseite liegt rechts vom Player: kommt von rechts, Player geht nach links
+        preparePageSlide(offset: 90)
+        engine.presentPinnedExpanded(content)
+    }
+
+    func releasePinnedLiveActivity() {
+        preparePageSlide(offset: -90)
+        engine.releasePinnedLiveActivity()
+    }
+
+    /// Seitliche Blätter-Animation für den nächsten Inhaltswechsel statt der normalen Aufklapp-Animation
+    private var pageSlideOffset: CGFloat?
+    private var pageSlideResetTask: Task<Void, Never>?
+
+    private func preparePageSlide(offset: CGFloat) {
+        pageSlideOffset = offset
+        pageSlideResetTask?.cancel()
+        pageSlideResetTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(700))
+            guard !Task.isCancelled else { return }
+            self?.pageSlideOffset = nil
+        }
+    }
     
     func handleStrokeVisibility() {
         engine.handleStrokeVisibility()
@@ -584,6 +614,11 @@ final class NotchViewModel: ObservableObject {
             baseHeight: baseHeight,
             isNotchlessScreen: isDynamicIsland
         )
+
+        if isExpandedPresentation, let pageSlideOffset {
+            return AnyTransition.notchPage(insertionOffset: pageSlideOffset, removalOffset: -pageSlideOffset)
+                .animation(AnyTransition.notchPageAnimation)
+        }
 
         if isExpandedPresentation {
             return .asymmetric(

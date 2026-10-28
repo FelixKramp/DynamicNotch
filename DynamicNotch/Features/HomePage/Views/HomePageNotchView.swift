@@ -112,6 +112,17 @@ struct HomePageNotchView: View {
                 }
             }
         }
+        .onNotchHorizontalSwipe(isEnabled: currentPage != .mediaPlayer) { direction in
+            guard direction == .right else { return }
+            // Über laufender Musik geöffnet: zurück zum Player. Sonst zur Musik-Seite.
+            if notchViewModel.isShowingPinnedLiveActivity {
+                NotchPageSwitcher.returnFromHomePage()
+            } else if activePages.contains(.mediaPlayer) {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                    currentPage = .mediaPlayer
+                }
+            }
+        }
         .onChange(of: activePages) { _, newActivePages in
             let updatedPage: HomePages?
             if let current = currentPage, !newActivePages.contains(current) {
@@ -186,6 +197,14 @@ struct HomePageNotchView: View {
         }
     }
     
+    private func showPage(after page: HomePages) {
+        let activePages = settings.homePageOrder.filter { !settings.homePageDisabled.contains($0) }
+        guard let index = activePages.firstIndex(of: page), index + 1 < activePages.count else { return }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+            currentPage = activePages[index + 1]
+        }
+    }
+
     private func updateLastPageStatus(page: HomePages?, activePages: [HomePages]) {
         let isLast = page != nil && page == activePages.last
         if notchViewModel.isHomePageOnLastPage != isLast {
@@ -201,7 +220,9 @@ struct HomePageNotchView: View {
                 nowPlayingViewModel: nowPlayingViewModel,
                 settings: mediaAndFilesSettings,
                 applicationSettings: applicationSettings,
-                onOpenPlaybackSource: { nowPlayingViewModel.openPlaybackSource() }
+                onOpenPlaybackSource: { nowPlayingViewModel.openPlaybackSource() },
+                onSwipeLeft: { showPage(after: .mediaPlayer) },
+                isSwipeEnabled: currentPage == .mediaPlayer
             )
         case .camera:
             CameraNotchView(notchViewModel: notchViewModel, settings: settings, localTimerViewModel: localTimerViewModel, nowPlayingViewModel: nowPlayingViewModel, mediaAndFilesSettings: mediaAndFilesSettings, applicationSettings: applicationSettings)

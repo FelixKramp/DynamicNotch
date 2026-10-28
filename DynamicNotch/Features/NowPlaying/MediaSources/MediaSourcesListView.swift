@@ -16,7 +16,7 @@ struct MediaSourcesListView: View {
     let onClose: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
             header
 
             if mediaSources.sources.isEmpty {
@@ -28,7 +28,7 @@ struct MediaSourcesListView: View {
                 Spacer()
             } else if mediaSources.sources.count <= 3 {
                 rows
-                Spacer(minLength: 0)
+                    .frame(maxHeight: .infinity, alignment: mediaSources.sources.count == 1 ? .center : .top)
             } else {
                 ScrollView(.vertical, showsIndicators: false) {
                     rows
@@ -36,16 +36,20 @@ struct MediaSourcesListView: View {
             }
         }
         .padding(.horizontal, isNotchlessScreen ? 18 : 40)
-        .padding(.top, isNotchlessScreen ? 10 : 16)
-        .padding(.bottom, 10)
+        // Unterhalb der Kamera-Aussparung (32 pt), sonst ist der Zurück-Pfeil verdeckt
+        .padding(.top, isNotchlessScreen ? 10 : 35)
+        .padding(.bottom, 8)
     }
 
     private var rows: some View {
-        VStack(spacing: 6) {
+        // Bei ein oder zwei Quellen ist Platz für große Zeilen, ab drei wird es kompakt
+        let metrics: MediaSourceRowMetrics = mediaSources.sources.count <= 2 ? .large : .compact
+        return VStack(spacing: metrics.spacing) {
             ForEach(mediaSources.sources) { source in
                 MediaSourceRow(
                     mediaSources: mediaSources,
                     source: source,
+                    metrics: metrics,
                     isCurrent: currentBundleIdentifier.map { $0 == source.bundleIdentifier } ?? source.isNowPlaying
                 )
             }
@@ -59,7 +63,7 @@ struct MediaSourcesListView: View {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 12, weight: .semibold))
                     Text("Quellen")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                 }
                 .foregroundStyle(.white.opacity(0.85))
                 .contentShape(Rectangle())
@@ -75,9 +79,34 @@ struct MediaSourcesListView: View {
     }
 }
 
+private struct MediaSourceRowMetrics {
+    let icon: CGFloat
+    let title: CGFloat
+    let subtitle: CGFloat
+    let playButton: CGFloat
+    let playSymbol: CGFloat
+    let nextButton: CGFloat
+    let nextSymbol: CGFloat
+    let verticalPadding: CGFloat
+    let spacing: CGFloat
+    let cornerRadius: CGFloat
+
+    static let large = MediaSourceRowMetrics(
+        icon: 38, title: 16, subtitle: 13,
+        playButton: 44, playSymbol: 19, nextButton: 36, nextSymbol: 14,
+        verticalPadding: 7, spacing: 7, cornerRadius: 15
+    )
+    static let compact = MediaSourceRowMetrics(
+        icon: 26, title: 13, subtitle: 11,
+        playButton: 34, playSymbol: 16, nextButton: 28, nextSymbol: 12,
+        verticalPadding: 3, spacing: 4, cornerRadius: 12
+    )
+}
+
 private struct MediaSourceRow: View {
     @ObservedObject var mediaSources: MediaSourcesViewModel
     let source: MediaSource
+    let metrics: MediaSourceRowMetrics
     let isCurrent: Bool
 
     var body: some View {
@@ -91,7 +120,7 @@ private struct MediaSourceRow: View {
                     VStack(alignment: .leading, spacing: 1) {
                         HStack(spacing: 5) {
                             Text(source.name)
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.system(size: metrics.title, weight: .semibold))
                                 .foregroundStyle(.white.opacity(0.95))
                                 .lineLimit(1)
 
@@ -104,7 +133,7 @@ private struct MediaSourceRow: View {
                         }
 
                         Text(source.subtitle.isEmpty ? " " : source.subtitle)
-                            .font(.system(size: 12))
+                            .font(.system(size: metrics.subtitle))
                             .foregroundStyle(.white.opacity(0.55))
                             .lineLimit(1)
                             .truncationMode(.tail)
@@ -116,26 +145,26 @@ private struct MediaSourceRow: View {
             }
             .buttonStyle(.plain)
 
-            controlButton(systemImage: source.isPlaying ? "pause.fill" : "play.fill", size: 16) {
+            controlButton(systemImage: source.isPlaying ? "pause.fill" : "play.fill", symbolSize: metrics.playSymbol, diameter: metrics.playButton) {
                 mediaSources.send(source.isPlaying ? .pause : .play, to: source)
             }
 
             // Weiter geht nur bei der aktiven App, macOS leitet es sonst falsch weiter
-            controlButton(systemImage: "forward.fill", size: 13) {
+            controlButton(systemImage: "forward.fill", symbolSize: metrics.nextSymbol, diameter: metrics.nextButton) {
                 mediaSources.send(.nextTrack, to: source)
             }
             .opacity(source.isNowPlaying ? 1 : 0.25)
             .disabled(!source.isNowPlaying)
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 5)
+        .padding(.vertical, metrics.verticalPadding)
         .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous)
                 .fill(.white.opacity(isCurrent ? 0.14 : 0.05))
         )
         .overlay(
             // Die aktive Quelle bekommt einen Rahmen, damit man sie sofort sieht
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: metrics.cornerRadius, style: .continuous)
                 .stroke(.white.opacity(isCurrent ? 0.35 : 0), lineWidth: 1)
         )
     }
@@ -146,21 +175,22 @@ private struct MediaSourceRow: View {
             Image(nsImage: icon)
                 .resizable()
                 .interpolation(.high)
-                .frame(width: 30, height: 30)
+                .frame(width: metrics.icon, height: metrics.icon)
         } else {
             Image(systemName: "music.note")
-                .font(.system(size: 16))
-                .frame(width: 30, height: 30)
+                .font(.system(size: metrics.icon * 0.55))
+                .frame(width: metrics.icon, height: metrics.icon)
                 .foregroundStyle(.white.opacity(0.7))
         }
     }
 
-    private func controlButton(systemImage: String, size: CGFloat, action: @escaping () -> Void) -> some View {
+    private func controlButton(systemImage: String, symbolSize: CGFloat, diameter: CGFloat, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
-                .font(.system(size: size, weight: .semibold))
+                .font(.system(size: symbolSize, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.9))
-                .frame(width: 32, height: 32)
+                .contentTransition(.symbolEffect(.replace))
+                .frame(width: diameter, height: diameter)
                 .background(Circle().fill(.white.opacity(0.12)))
                 .contentShape(Circle())
         }
