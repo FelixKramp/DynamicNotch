@@ -87,6 +87,10 @@ final class NotchViewModel: ObservableObject {
         return content.allowsPressScaleEffect && content.allowsCompactPressScaleEffect
     }
 
+    var displayedBaseNotchSize: CGSize {
+        displayedNotchModel.size
+    }
+
     var presentedNotchSize: CGSize {
         let size = interactiveNotchSize
 
@@ -247,22 +251,16 @@ final class NotchViewModel: ObservableObject {
         let baseCornerRadius = model.cornerRadius
         let radiusOffset = (focusCloseStretchHeight + notchPulseHeight) * 0.3
         
-        let swipeRadiusExpansion: CGFloat
-        if swipeInteraction != nil && model.size.height > model.baseHeight {
-            swipeRadiusExpansion = SwipeFeedbackMetrics.swipeCornerRadiusExpansion * easedSwipeStretchProgress
-        } else {
-            swipeRadiusExpansion = 0
-        }
-        
         return (
             top: baseCornerRadius.top + radiusOffset,
-            bottom: baseCornerRadius.bottom + radiusOffset + swipeRadiusExpansion
+            bottom: baseCornerRadius.bottom + radiusOffset
         )
     }
     
     var dynamicIslandCornerRadius: CGFloat {
-        let height = presentedNotchSize.height
+        let height = swipeInteraction != nil ? displayedNotchModel.size.height : presentedNotchSize.height
         let baseRadius: CGFloat
+        
         if isDisplayingExpandedLiveActivity {
             if let customizable = displayedContent {
                 baseRadius = customizable.expandedDynamicIslandCornerRadius(baseHeight: height)
@@ -278,7 +276,7 @@ final class NotchViewModel: ObservableObject {
         }
         
         let model = displayedNotchModel
-        if swipeInteraction != nil && model.size.height > model.baseHeight {
+        if isDynamicIsland && swipeInteraction != nil && model.size.height > model.baseHeight {
             let swipeRadiusExpansion = SwipeFeedbackMetrics.swipeCornerRadiusExpansion * easedSwipeStretchProgress
             return baseRadius + swipeRadiusExpansion
         }
