@@ -31,14 +31,16 @@ final class NotchHomePageEventsHandler {
         self.nowPlayingViewModel = nowPlayingViewModel
 
         NotchPageSwitcher.showHomePage = { [weak self] in self?.showHomePageOverActivity() }
+        NotchPageSwitcher.showSpecificHomePage = { [weak self] page in self?.showHomePageOverActivity(preferred: page) }
         NotchPageSwitcher.returnFromHomePage = { [weak notchViewModel] in notchViewModel?.releasePinnedLiveActivity() }
     }
 
     /// Mod: Startseite (Kamera, Timer, VPN) zeigen, obwohl gerade Musik läuft.
     /// Beim Zuklappen kommt der Player von selbst wieder nach vorne.
-    private func showHomePageOverActivity() {
+    private func showHomePageOverActivity(preferred: HomePages? = nil) {
         let activePages = settingsViewModel.homePage.homePageOrder.filter { !settingsViewModel.homePage.homePageDisabled.contains($0) }
-        guard let page = activePages.first(where: { $0 != .mediaPlayer }) ?? activePages.first else { return }
+        let fallback = activePages.first(where: { $0 != .mediaPlayer }) ?? activePages.first
+        guard let page = preferred.flatMap({ activePages.contains($0) ? $0 : nil }) ?? fallback else { return }
         notchViewModel.presentPinnedExpanded(HomePageNotchContent(
             notchViewModel: notchViewModel,
             settings: settingsViewModel.homePage,
@@ -76,4 +78,5 @@ final class NotchHomePageEventsHandler {
 enum NotchPageSwitcher {
     static var showHomePage: () -> Void = {}
     static var returnFromHomePage: () -> Void = {}
+    static var showSpecificHomePage: (HomePages) -> Void = { _ in }
 }

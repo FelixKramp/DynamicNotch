@@ -61,12 +61,21 @@ struct HomePageNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         activePageContent.dynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
 
+    /// Alle Seiten so groß wie der Player, damit die Notch beim Blättern nicht springt.
+    /// Nur die laufende Kamera behält ihre eigenen Videogrößen.
+    private var sizeContent: any NotchContentProtocol {
+        if homePages == .camera, UserDefaults.standard.bool(forKey: "isCameraStarted") {
+            return activePageContent
+        }
+        return MediaPlayerHomePageNotchContent()
+    }
+
     func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        activePageContent.expandedDynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
+        sizeContent.expandedDynamicIslandSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
 
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        activePageContent.expandedSize(baseWidth: baseWidth, baseHeight: baseHeight)
+        sizeContent.expandedSize(baseWidth: baseWidth, baseHeight: baseHeight)
     }
     
     @MainActor

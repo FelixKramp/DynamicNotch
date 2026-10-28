@@ -23,6 +23,11 @@ struct MediaSource: Identifiable, Equatable, Decodable, Sendable {
     let title: String?
     let artist: String?
     let album: String?
+    let duration: Double?
+    let elapsedTime: Double?
+    let playbackRate: Double?
+    /// Zeitpunkt von elapsedTime, Sekunden seit 1970
+    let timestamp: Double?
 
     var id: String { bundleIdentifier }
     var isPlaying: Bool { playbackState == 1 }
@@ -57,6 +62,9 @@ final class MediaSourcesViewModel: ObservableObject {
     static let shared = MediaSourcesViewModel()
 
     @Published private(set) var sources: [MediaSource] = []
+    /// Quelle, die zuletzt statt der von macOS gemeldeten auf der Hauptkarte lag.
+    /// Bleibt dort auch pausiert, damit Play wieder sie trifft und nicht die gemeldete App.
+    var heldBundleIdentifier: String?
 
     private var pollTask: Task<Void, Never>?
     private var activeObservers = 0
@@ -214,7 +222,9 @@ final class MediaSourcesViewModel: ObservableObject {
     }
 
     func activate(_ source: MediaSource) {
-        NSRunningApplication(processIdentifier: source.processIdentifier)?.activate()
+        // activate() allein ignoriert macOS bei Apps im Hintergrund
+        guard let app = NSRunningApplication(processIdentifier: source.processIdentifier) else { return }
+        Task { await bringToFront(app) }
     }
 
     private nonisolated static func runHelper(_ arguments: [String]) async -> (status: Int32, data: Data) {
@@ -242,5 +252,26 @@ final class MediaSourcesViewModel: ObservableObject {
                 }
             }
         }
+    }
+}
+
+extension MediaSource {
+    /// Für die Hauptkarte, wenn diese Quelle spielt, macOS aber noch eine andere als aktiv meldet
+    func makeSnapshot() -> NowPlayingSnapshot {
+        NowPlayingSnapshot(
+            title: title ?? "",
+            artist: artist ?? "",
+            album: album ?? "",
+            duration: duration ?? 0,
+            elapsedTime: elapsedTime ?? 0,
+            playbackRate: isPlaying ? max(playbackRate ?? 1, 0.01) : 0,
+            artworkData: nil,
+            playbackSource: NowPlayingPlaybackSource(
+                bundleIdentifier: bundleIdentifier,
+                parentBundleIdentifier: parentBundleIdentifier,
+                processIdentifier: Int(processIdentifier)
+            ),
+            refreshedAt: timestamp.map { Date(timeIntervalSince1970: $0) } ?? .now
+        )
     }
 }

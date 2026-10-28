@@ -34,6 +34,7 @@ final class NotchEventCoordinator: ObservableObject {
     private let softwareUpdateHandler: NotchSoftwareUpdateEventsHandler
     private let claudeHandler: NotchClaudeEventsHandler
     private let dragProximityMonitor: DragProximityMonitor
+    private let whisperBarHandler: NotchWhisperBarEventsHandler
     private var settingsObserver: NotchSettingsObserver?
     private var cancellables = Set<AnyCancellable>()
 
@@ -202,6 +203,9 @@ final class NotchEventCoordinator: ObservableObject {
         let dragProximityMonitor = DragProximityMonitor(airDropViewModel: airDropViewModel)
         self.dragProximityMonitor = dragProximityMonitor
         dragProximityMonitor.start()
+        let whisperBarHandler = NotchWhisperBarEventsHandler(notchViewModel: notchViewModel)
+        self.whisperBarHandler = whisperBarHandler
+        whisperBarHandler.start()
 
         setupEventSubscriptions(
             powerViewModel: powerViewModel,

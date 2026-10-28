@@ -7,10 +7,13 @@
 > - **Medienquellen einzeln steuern:** Liste aller Apps, die gerade Ton melden (z. B. TIDAL, YouTube, Pocket Casts), jede mit eigener Play/Pause-Taste. Erreichbar über die Pille über dem Titel.
 > - **Musik als erste Seite** der Startseite, damit ein Klick auf die leere Notch gleich den Player zeigt.
 > - **Wischen mit zwei Fingern** im aufgeklappten Player: nach links zur Startseite (Kamera, Timer, VPN), auch wenn Musik läuft, nach rechts zur Quellen-Liste. Die Seiten gleiten mit derselben Unschärfe-Animation wie beim Blättern der Startseite. Die Quellen-Liste passt die Zeilengröße an die Anzahl an.
+> - **Hauptkarte folgt der Quelle, die wirklich spielt:** Bleibt macOS bei einer pausierten App hängen (TIDAL kurz an und aus, Pocket Casts läuft weiter), zeigt und steuert die Karte die laufende.
+> - **WhisperBar-Diktat in der Notch:** rotes Mikrofon und Aufnahmezeit, solange WhisperBar das Mikrofon nutzt (erkannt über CoreAudio, ohne Zusatzrechte).
+> - Kamera, Timer und VPN sind so groß wie der Player, die Notch springt beim Blättern nicht mehr.
 > - **Datei-Ablage öffnet früher:** Die Felder gehen schon auf, wenn man eine Datei in die Nähe der Notch zieht, nicht erst am oberen Rand, wo macOS Mission Control öffnet. Drittes Feld **[Blip](https://blip.net)** (Dateien auch an Android), wenn Blip installiert ist.
 >
 > **Einrichten**
-> 1. Bauen mit `./build_mod.sh` (braucht Xcode). Das Skript legt die bisherige App als `DynamicNotch.app.original-1.6.3` ab.
+> 1. Bauen mit `./build_mod.sh` (braucht Xcode). Das Skript legt die bisherige App als `DynamicNotch.app.original-1.6.3` ab. Liegt in `.signing/` ein eigener Schlüsselbund mit dem Zertifikat „DynamicNotch Mod“ (plus Datei `keychain-password`), signiert es damit, sonst ad hoc. Mit festem Zertifikat bleiben die macOS-Freigaben über Neubauten erhalten.
 > 2. Für den Claude-Fortschritt `ClaudeHook/dynamicnotch-claude.py` nach `~/.claude/hooks/` kopieren und in `~/.claude/settings.json` für `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Notification`, `Stop`, `SubagentStop` und `SessionEnd` eintragen.
 > 3. Für die Steuerung von Apps, die gerade nicht aktiv sind, DynamicNotch unter *Bedienungshilfen* freigeben. macOS lässt Medienbefehle von außen nur an die aktive App durch; alle anderen werden über die Bedienungshilfen bedient.
 >

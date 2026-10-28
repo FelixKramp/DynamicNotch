@@ -23,6 +23,9 @@ struct HomePageNotchView: View {
     @State private var isWaitingForSizeUpdate = false
     @State private var isPageSettled = true
     @State private var settleTask: Task<Void, Never>? = nil
+    // Ändern die Breite der Kamera-Seite, deshalb hier mitbeobachtet
+    @AppStorage("isCameraStarted") private var isCameraStarted = false
+    @AppStorage("isCameraLarge") private var isCameraLarge = false
     
     init(notchViewModel: NotchViewModel, settings: HomePageSettingsStore, localTimerViewModel: LocalTimerViewModel, nowPlayingViewModel: NowPlayingViewModel, mediaAndFilesSettings: MediaAndFilesSettingsStore, applicationSettings: ApplicationSettingsStore, initialPage: HomePages) {
         self.notchViewModel = notchViewModel
@@ -48,6 +51,10 @@ struct HomePageNotchView: View {
                     VStack(spacing: 20) {
                         ForEach(activePages) { page in
                             pageView(for: page)
+                                // Jede Seite in ihrer eigenen Breite: sonst gibt die breiteste
+                                // (Musik) allen anderen ihre Breite vor und die Kamera ragt
+                                // über die Notch hinaus
+                                .frame(width: pageWidth(for: page))
                                 .containerRelativeFrame(.vertical)
                                 .scrollTransition(.interactive) { content, phase in
                                     content
@@ -197,6 +204,24 @@ struct HomePageNotchView: View {
         }
     }
     
+    private func pageWidth(for page: HomePages) -> CGFloat? {
+        let model = notchViewModel.notchModel
+        guard model.baseWidth > 0 else { return nil }
+        let content = HomePageNotchContent(
+            notchViewModel: notchViewModel,
+            settings: settings,
+            homePages: page,
+            localTimerViewModel: localTimerViewModel,
+            nowPlayingViewModel: nowPlayingViewModel,
+            mediaAndFilesSettings: mediaAndFilesSettings,
+            applicationSettings: applicationSettings
+        )
+        let size = model.isDynamicIsland
+            ? content.expandedDynamicIslandSize(baseWidth: model.baseWidth, baseHeight: model.baseHeight)
+            : content.expandedSize(baseWidth: model.baseWidth, baseHeight: model.baseHeight)
+        return size.width
+    }
+
     private func showPage(after page: HomePages) {
         let activePages = settings.homePageOrder.filter { !settings.homePageDisabled.contains($0) }
         guard let index = activePages.firstIndex(of: page), index + 1 < activePages.count else { return }

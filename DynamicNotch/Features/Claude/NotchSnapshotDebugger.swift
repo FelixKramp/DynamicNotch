@@ -23,6 +23,31 @@ enum NotchSnapshotDebugger {
     /// Prüfhilfe für die Quellenliste: "media-command-request" enthält
     /// "<bundle-id> <befehl>" und wird ausgeführt wie ein Tipp in der Liste.
     /// "accessibility-trusted" zeigt, ob die Bedienungshilfen freigegeben sind.
+    /// "open-request" aufklappen und Startseite zeigen, "close-request" zuklappen
+    private static func handleOpenRequests(notch: NotchViewModel?) {
+        guard let notch else { return }
+        let openURL = directory.appendingPathComponent("open-request")
+        let closeURL = directory.appendingPathComponent("close-request")
+        if FileManager.default.fileExists(atPath: openURL.path) {
+            // Optional steht der Seitenname drin, z. B. "localTimer"
+            let pageName = (try? String(contentsOf: openURL, encoding: .utf8))?
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            try? FileManager.default.removeItem(at: openURL)
+            notch.handleActiveContentTap()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                if let page = HomePages(rawValue: pageName) {
+                    NotchPageSwitcher.showSpecificHomePage(page)
+                } else {
+                    NotchPageSwitcher.showHomePage()
+                }
+            }
+        }
+        if FileManager.default.fileExists(atPath: closeURL.path) {
+            try? FileManager.default.removeItem(at: closeURL)
+            notch.handleOutsideClick()
+        }
+    }
+
     static func handleMediaRequests() {
         let trusted = AXIsProcessTrusted() ? "true" : "false"
         if (try? String(contentsOf: accessibilityURL, encoding: .utf8)) != trusted {
@@ -63,6 +88,7 @@ enum NotchSnapshotDebugger {
 
     static func captureIfRequested(claude: ClaudeActivityViewModel) {
         handleMediaRequests()
+        handleOpenRequests(notch: claude.notchViewModel)
         guard FileManager.default.fileExists(atPath: requestURL.path) else { return }
         try? FileManager.default.removeItem(at: requestURL)
 
@@ -72,6 +98,7 @@ enum NotchSnapshotDebugger {
                 "live: \(model.liveActivityContent?.id ?? "-")",
                 "alert: \(model.alertContent?.id ?? "-")",
                 "expanded: \(model.isExpanded)",
+                "base: \(model.baseWidth)x\(model.baseHeight) size: \(model.size) presented: \(notch.presentedNotchSize)",
                 "claude aktiv: \(claude.activeSessions.map(\.status))",
                 "musik: \(claude.nowPlayingViewModel?.snapshot.map { "\($0.title) spielt=\($0.isPlaying)" } ?? "-")",
                 "frontmost: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-")",
