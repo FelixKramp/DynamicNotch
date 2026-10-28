@@ -83,7 +83,7 @@ struct TimerNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
 
     @MainActor
     func compactView() -> AnyView {
-        AnyView(TimerMinimalNotchView(source: source))
+        AnyView(TimerNotchView(source: source))
     }
 
     @MainActor
