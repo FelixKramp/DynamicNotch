@@ -247,25 +247,42 @@ final class NotchViewModel: ObservableObject {
         let baseCornerRadius = model.cornerRadius
         let radiusOffset = (focusCloseStretchHeight + notchPulseHeight) * 0.3
         
+        let swipeRadiusExpansion: CGFloat
+        if swipeInteraction != nil && model.size.height > model.baseHeight {
+            swipeRadiusExpansion = SwipeFeedbackMetrics.swipeCornerRadiusExpansion * easedSwipeStretchProgress
+        } else {
+            swipeRadiusExpansion = 0
+        }
+        
         return (
             top: baseCornerRadius.top + radiusOffset,
-            bottom: baseCornerRadius.bottom + radiusOffset
+            bottom: baseCornerRadius.bottom + radiusOffset + swipeRadiusExpansion
         )
     }
     
     var dynamicIslandCornerRadius: CGFloat {
         let height = presentedNotchSize.height
+        let baseRadius: CGFloat
         if isDisplayingExpandedLiveActivity {
             if let customizable = displayedContent {
-                return customizable.expandedDynamicIslandCornerRadius(baseHeight: height)
+                baseRadius = customizable.expandedDynamicIslandCornerRadius(baseHeight: height)
+            } else {
+                baseRadius = height * 0.2
             }
-            return height * 0.2
         } else {
             if let customizable = displayedContent {
-                return customizable.dynamicIslandCornerRadius(baseHeight: height)
+                baseRadius = customizable.dynamicIslandCornerRadius(baseHeight: height)
+            } else {
+                baseRadius = height * 0.5
             }
-            return height * 0.5
         }
+        
+        let model = displayedNotchModel
+        if swipeInteraction != nil && model.size.height > model.baseHeight {
+            let swipeRadiusExpansion = SwipeFeedbackMetrics.swipeCornerRadiusExpansion * easedSwipeStretchProgress
+            return baseRadius + swipeRadiusExpansion
+        }
+        return baseRadius
     }
     
     var contentResizeBlurRadius: CGFloat {
