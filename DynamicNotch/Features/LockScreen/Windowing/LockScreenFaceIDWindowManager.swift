@@ -67,8 +67,17 @@ final class LockScreenFaceIDWindowManager {
         )
         .receive(on: RunLoop.main)
         .sink { [weak self] lockState, settingsState in
-            let (isLocked, isPreparingLock, _) = lockState
+            let (isLocked, isPreparingLock, didUnlockWithFaceID) = lockState
             let (isLockIdle, showButton) = settingsState
+            
+            if !isLocked && !isPreparingLock && !didUnlockWithFaceID {
+                if self?.faceIDService.state.isActivelyEvaluating == true {
+                    self?.faceIDService.cancelScan()
+                    self?.notchViewModel.hideTemporaryNotification()
+                    self?.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.LockScreen.activity.id))
+                }
+            }
+            
             self?.syncPresentation(
                 isLocked: isLocked,
                 isPreparingLock: isPreparingLock,
