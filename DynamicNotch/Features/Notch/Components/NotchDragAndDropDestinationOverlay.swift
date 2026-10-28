@@ -32,6 +32,15 @@ struct NotchDragAndDropDestinationOverlay: View {
                         pasteboard,
                         mode: settingsViewModel.mediaAndFiles.fileTrayUsageMode
                     )
+                case .blip:
+                    guard settingsViewModel.mediaAndFiles.dragAndDropActivityMode.showsBlip,
+                          BlipService.send(pasteboard) else {
+                        return false
+                    }
+
+                    airDropController.resetTargetState()
+                    airDropViewModel.handleSuccessfulDrop()
+                    return true
                 }
             }
         )

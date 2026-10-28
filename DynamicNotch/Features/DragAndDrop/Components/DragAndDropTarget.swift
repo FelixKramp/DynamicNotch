@@ -3,6 +3,8 @@ import SwiftUI
 enum DragAndDropTarget: String, Hashable, CaseIterable {
     case airDrop
     case tray
+    /// Blip: Dateien auch an Android-Geräte schicken
+    case blip
 
     var title: LocalizedStringKey {
         switch self {
@@ -11,6 +13,9 @@ enum DragAndDropTarget: String, Hashable, CaseIterable {
             
         case .tray:
             return "Tray"
+
+        case .blip:
+            return "Blip"
         }
     }
 
@@ -21,6 +26,9 @@ enum DragAndDropTarget: String, Hashable, CaseIterable {
 
         case .tray:
             return .white
+
+        case .blip:
+            return Color(red: 0.36, green: 0.84, blue: 0.62)
         }
     }
 
@@ -30,7 +38,7 @@ enum DragAndDropTarget: String, Hashable, CaseIterable {
 
     var acceptsDrop: Bool {
         switch self {
-        case .airDrop, .tray:
+        case .airDrop, .tray, .blip:
             return true
         }
     }
@@ -45,6 +53,11 @@ enum DragAndDropTarget: String, Hashable, CaseIterable {
 
         case .tray:
             Text(verbatim: "Tray")
+                .font(.system(size: 12))
+                .foregroundStyle(color)
+
+        case .blip:
+            Text(verbatim: "Blip")
                 .font(.system(size: 12))
                 .foregroundStyle(color)
         }
@@ -65,6 +78,18 @@ enum DragAndDropTarget: String, Hashable, CaseIterable {
                 .font(.system(size: 22))
                 .foregroundStyle(color)
                 .frame(width: 28, height: 28)
+
+        case .blip:
+            if let icon = BlipService.appIcon {
+                Image(nsImage: icon)
+                    .resizable()
+                    .frame(width: 30, height: 30)
+            } else {
+                Image(systemName: "paperplane.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(color)
+                    .frame(width: 28, height: 28)
+            }
         }
     }
 }

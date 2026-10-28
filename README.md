@@ -6,6 +6,7 @@
 > - **Claude-Code-Fortschritt in der Notch:** laufende Pixel-Krabbe, „Schritt X/Y“, aktuelles Werkzeug, eine Figur pro Subagent. Figuren übernommen aus [savvy-progress](https://github.com/JohnnyVizz/claude-kit/tree/main/plugins/savvy-progress) (MIT). Läuft Musik, teilt sich die Notch: links Claude, rechts die Musik.
 > - **Medienquellen einzeln steuern:** Liste aller Apps, die gerade Ton melden (z. B. TIDAL, YouTube, Pocket Casts), jede mit eigener Play/Pause-Taste. Erreichbar über die Pille über dem Titel.
 > - **Musik als erste Seite** der Startseite, damit ein Klick auf die leere Notch gleich den Player zeigt.
+> - **Datei-Ablage öffnet früher:** Die Felder gehen schon auf, wenn man eine Datei in die Nähe der Notch zieht, nicht erst am oberen Rand, wo macOS Mission Control öffnet. Drittes Feld **[Blip](https://blip.net)** (Dateien auch an Android), wenn Blip installiert ist.
 >
 > **Einrichten**
 > 1. Bauen mit `./build_mod.sh` (braucht Xcode). Das Skript legt die bisherige App als `DynamicNotch.app.original-1.6.3` ab.

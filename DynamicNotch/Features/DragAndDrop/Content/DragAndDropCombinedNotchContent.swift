@@ -23,6 +23,9 @@ struct DragAndDropCombinedNotchContent: NotchContentProtocol, DynamicIslandCusto
         case .tray:
             return DragAndDropTarget.tray.activityStrokeColor
 
+        case .blip:
+            return DragAndDropTarget.blip.activityStrokeColor
+
         case nil:
             return .white.opacity(0.2)
         }

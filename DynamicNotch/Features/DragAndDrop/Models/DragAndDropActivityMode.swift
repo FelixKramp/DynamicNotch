@@ -23,7 +23,8 @@ enum DragAndDropActivityMode: String, CaseIterable {
         case .tray:
             return [.tray]
         case .combined:
-            return [.airDrop, .tray]
+            // Blip nur, wenn die App installiert ist
+            return BlipService.isAvailable ? [.airDrop, .tray, .blip] : [.airDrop, .tray]
         }
     }
 
@@ -33,6 +34,10 @@ enum DragAndDropActivityMode: String, CaseIterable {
 
     var showsTray: Bool {
         targets.contains(.tray)
+    }
+
+    var showsBlip: Bool {
+        targets.contains(.blip)
     }
 
     static func resolved(_ rawValue: String?) -> DragAndDropActivityMode {

@@ -617,7 +617,7 @@ final class DebugSettingsViewModel: ObservableObject {
         switch target {
         case .airDrop:
             id = Self.sequenceAirDropID
-        case .tray:
+        case .tray, .blip:
             id = Self.sequenceTrayID
         }
 
@@ -667,7 +667,7 @@ final class DebugSettingsViewModel: ObservableObject {
                 settingsViewModel: settingsViewModel
             )
 
-        case .tray:
+        case .tray, .blip:
             return TrayNotchContent(
                 airDropViewModel: dragAndDropPreviewViewModel,
                 settingsViewModel: settingsViewModel

@@ -47,6 +47,8 @@ struct DragAndDropDropZoneContent: View {
             AirDropDropZoneContent(isTargeted: isTargeted)
         case .tray:
             TrayDropZoneContent(isTargeted: isTargeted)
+        case .blip:
+            BlipDropZoneContent(isTargeted: isTargeted)
         }
     }
 }
