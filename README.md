@@ -1,3 +1,19 @@
+> [!NOTE]
+> **Dies ist eine Mod von [DynamicNotch](https://github.com/jackson-storm/DynamicNotch) (v1.6.3) von jackson-storm.**
+> *A personal mod of DynamicNotch v1.6.3: Claude Code progress in the notch, per-app media controls, music as the first home page.*
+>
+> **Was die Mod ergänzt**
+> - **Claude-Code-Fortschritt in der Notch:** laufende Pixel-Krabbe, „Schritt X/Y“, aktuelles Werkzeug, eine Figur pro Subagent. Figuren übernommen aus [savvy-progress](https://github.com/JohnnyVizz/claude-kit/tree/main/plugins/savvy-progress) (MIT). Läuft Musik, teilt sich die Notch: links Claude, rechts die Musik.
+> - **Medienquellen einzeln steuern:** Liste aller Apps, die gerade Ton melden (z. B. TIDAL, YouTube, Pocket Casts), jede mit eigener Play/Pause-Taste. Erreichbar über die Pille über dem Titel.
+> - **Musik als erste Seite** der Startseite, damit ein Klick auf die leere Notch gleich den Player zeigt.
+>
+> **Einrichten**
+> 1. Bauen mit `./build_mod.sh` (braucht Xcode). Das Skript legt die bisherige App als `DynamicNotch.app.original-1.6.3` ab.
+> 2. Für den Claude-Fortschritt `ClaudeHook/dynamicnotch-claude.py` nach `~/.claude/hooks/` kopieren und in `~/.claude/settings.json` für `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Notification`, `Stop`, `SubagentStop` und `SessionEnd` eintragen.
+> 3. Für die Steuerung von Apps, die gerade nicht aktiv sind, DynamicNotch unter *Bedienungshilfen* freigeben. macOS lässt Medienbefehle von außen nur an die aktive App durch; alle anderen werden über die Bedienungshilfen bedient.
+>
+> Lizenz bleibt GPL-3.0 wie beim Original.
+
 <p align="center">
   <img src="DynamicNotch/Resources/Assets.xcassets/AppIcon.appiconset/logo256.png" alt="DynamicNotch logo" width="96" />
 </p>

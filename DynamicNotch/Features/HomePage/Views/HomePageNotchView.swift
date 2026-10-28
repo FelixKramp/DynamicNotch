@@ -196,6 +196,13 @@ struct HomePageNotchView: View {
     @ViewBuilder
     private func pageView(for page: HomePages) -> some View {
         switch page {
+        case .mediaPlayer:
+            NowPlayingExpandedNotchView(
+                nowPlayingViewModel: nowPlayingViewModel,
+                settings: mediaAndFilesSettings,
+                applicationSettings: applicationSettings,
+                onOpenPlaybackSource: { nowPlayingViewModel.openPlaybackSource() }
+            )
         case .camera:
             CameraNotchView(notchViewModel: notchViewModel, settings: settings, localTimerViewModel: localTimerViewModel, nowPlayingViewModel: nowPlayingViewModel, mediaAndFilesSettings: mediaAndFilesSettings, applicationSettings: applicationSettings)
         case .localTimer:

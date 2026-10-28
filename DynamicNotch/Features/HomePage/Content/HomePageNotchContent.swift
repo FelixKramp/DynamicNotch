@@ -30,6 +30,8 @@ struct HomePageNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     
     private var activePageContent: any NotchContentProtocol {
         switch homePages {
+        case .mediaPlayer:
+            return MediaPlayerHomePageNotchContent()
         case .camera:
             return CameraActiveNotchContent()
         case .localTimer:

@@ -83,6 +83,7 @@
 			membershipExceptions = (
 				Application/Info.plist,
 				Resources/MediaRemoteAdapter/MediaRemoteAdapter.framework,
+				Resources/MediaSources/NotchMediaSources.m,
 			);
 			target = E2EF78502EDDB60E00F96D1E /* DynamicNotch */;
 		};

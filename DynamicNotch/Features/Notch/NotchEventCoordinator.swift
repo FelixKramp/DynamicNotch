@@ -32,6 +32,7 @@ final class NotchEventCoordinator: ObservableObject {
     private let lockScreenHandler: NotchLockScreenEventsHandler
     private let onboardingHandler: NotchOnboardingEventsHandler
     private let softwareUpdateHandler: NotchSoftwareUpdateEventsHandler
+    private let claudeHandler: NotchClaudeEventsHandler
     private var settingsObserver: NotchSettingsObserver?
     private var cancellables = Set<AnyCancellable>()
 
@@ -191,6 +192,12 @@ final class NotchEventCoordinator: ObservableObject {
             notchViewModel: notchViewModel,
             settingsViewModel: settingsViewModel
         )
+        let claudeHandler = NotchClaudeEventsHandler(
+            notchViewModel: notchViewModel,
+            nowPlayingViewModel: nowPlayingViewModel
+        )
+        self.claudeHandler = claudeHandler
+        claudeHandler.start()
 
         setupEventSubscriptions(
             powerViewModel: powerViewModel,

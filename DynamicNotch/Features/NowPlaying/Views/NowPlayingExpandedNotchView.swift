@@ -18,12 +18,14 @@ struct NowPlayingExpandedNotchView: View {
     let onOpenPlaybackSource: @MainActor () -> Void
     
     @State private var scrubProgress: CGFloat?
+    @State private var showsMediaSources = false
+    @ObservedObject private var mediaSources = MediaSourcesViewModel.shared
     private let detailedPresentationSource = "nowPlaying.notch.expanded"
     
     private var resolvedSnapshot: NowPlayingSnapshot {
         nowPlayingViewModel.snapshot ?? NowPlayingSnapshot(
-            title: "Nothing Playing",
-            artist: "Start playback to see live metadata",
+            title: "Gerade läuft nichts",
+            artist: "Starte Musik in TIDAL, YouTube oder Pocket Casts",
             album: "Debug Preview",
             duration: 0,
             elapsedTime: 0,
@@ -36,20 +38,75 @@ struct NowPlayingExpandedNotchView: View {
     var body: some View {
         let snapshot = resolvedSnapshot
 
-        return TimelineView(.periodic(from: .now, by: progressTick(for: snapshot))) { context in
-            timelineContent(snapshot: snapshot, at: context.date)
+        return ZStack {
+            if showsMediaSources {
+                MediaSourcesListView(
+                    mediaSources: mediaSources,
+                    currentBundleIdentifier: nowPlayingViewModel.snapshot?.playbackSource?.preferredBundleIdentifier,
+                    onClose: { toggleMediaSources() }
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.96)))
+            } else {
+                TimelineView(.periodic(from: .now, by: progressTick(for: snapshot))) { context in
+                    timelineContent(snapshot: snapshot, at: context.date)
+                }
+                .transition(.opacity.combined(with: .scale(scale: 1.04)))
+            }
         }
         .onAppear {
+            mediaSources.startObserving()
             nowPlayingViewModel.setDetailedPresentationActive(
                 true,
                 source: detailedPresentationSource
             )
         }
         .onDisappear {
+            mediaSources.stopObserving()
+            showsMediaSources = false
             nowPlayingViewModel.setDetailedPresentationActive(
                 false,
                 source: detailedPresentationSource
             )
+        }
+    }
+
+    private var currentSource: MediaSource? {
+        let bundleIdentifier = nowPlayingViewModel.snapshot?.playbackSource?.preferredBundleIdentifier
+        return mediaSources.sources.first { $0.bundleIdentifier == bundleIdentifier }
+            ?? mediaSources.sources.first(where: \.isNowPlaying)
+    }
+
+    /// "TIDAL · 3 ⌄" über dem Titel: zeigt die aktive Quelle und ist der einzige Weg zur Liste
+    private var sourcePill: some View {
+        Button(action: toggleMediaSources) {
+            HStack(spacing: 4) {
+                if let source = currentSource, let icon = mediaSources.icon(for: source) {
+                    Image(nsImage: icon)
+                        .resizable()
+                        .frame(width: 13, height: 13)
+                }
+                Text(currentSource?.name ?? "Quellen")
+                    .font(.system(size: 11, weight: .semibold))
+                    .lineLimit(1)
+                Text("· \(mediaSources.sources.count)")
+                    .font(.system(size: 11, weight: .semibold).monospacedDigit())
+                    .foregroundStyle(.white.opacity(0.55))
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 8, weight: .bold))
+            }
+            .foregroundStyle(.white.opacity(0.85))
+            .padding(.horizontal, 7)
+            .padding(.vertical, 2)
+            .background(Capsule().fill(.white.opacity(0.14)))
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .help("Zwischen Quellen wechseln")
+    }
+
+    private func toggleMediaSources() {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+            showsMediaSources.toggle()
         }
     }
 
@@ -129,34 +186,40 @@ struct NowPlayingExpandedNotchView: View {
             .disabled(!nowPlayingViewModel.canOpenPlaybackSource)
 
             HStack(alignment: .top, spacing: 10) {
-                Button(action: {
-                    openPlaybackSource()
-                }) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        MarqueeText(
-                            .constant(displayTitle(for: snapshot)),
-                            font: .system(size: 16, weight: .medium),
-                            nsFont: .headline,
-                            textColor: .white.opacity(0.8),
-                            backgroundColor: .clear,
-                            minDuration: 2.0,
-                            frameWidth: 170
-                        )
-
-                        MarqueeText(
-                            .constant(displayArtist(for: snapshot)),
-                            font: .system(size: 14),
-                            nsFont: .headline,
-                            textColor: .white.opacity(0.5),
-                            backgroundColor: .clear,
-                            minDuration: 3.0,
-                            frameWidth: 170
-                        )
+                VStack(alignment: .leading, spacing: 3) {
+                    if mediaSources.sources.count > 1 {
+                        sourcePill
                     }
-                    .contentShape(Rectangle())
+
+                    Button(action: {
+                        openPlaybackSource()
+                    }) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            MarqueeText(
+                                .constant(displayTitle(for: snapshot)),
+                                font: .system(size: 16, weight: .medium),
+                                nsFont: .headline,
+                                textColor: .white.opacity(0.8),
+                                backgroundColor: .clear,
+                                minDuration: 2.0,
+                                frameWidth: 170
+                            )
+
+                            MarqueeText(
+                                .constant(displayArtist(for: snapshot)),
+                                font: .system(size: 14),
+                                nsFont: .headline,
+                                textColor: .white.opacity(0.5),
+                                backgroundColor: .clear,
+                                minDuration: 3.0,
+                                frameWidth: 170
+                            )
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(PlaybackSourceButtonStyle())
+                    .disabled(!nowPlayingViewModel.canOpenPlaybackSource)
                 }
-                .buttonStyle(PlaybackSourceButtonStyle())
-                .disabled(!nowPlayingViewModel.canOpenPlaybackSource)
 
                 Spacer()
 

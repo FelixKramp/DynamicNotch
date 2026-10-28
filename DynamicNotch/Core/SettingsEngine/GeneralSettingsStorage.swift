@@ -252,7 +252,7 @@ enum GeneralSettingsStorage {
         Keys.lowBatterySound: true,
         Keys.fullBatterySound: true,
         Keys.homePageLiveActivity: true,
-        Keys.homePageOrder: ["camera", "mediaPlayer", "localTimer", "vpn"],
+        Keys.homePageOrder: ["mediaPlayer", "camera", "localTimer", "vpn"],
         Keys.homePageDisabled: [String](),
         Keys.homePagePageIndicator: true,
         Keys.homePageIndicatorSize: "medium",
