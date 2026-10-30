@@ -58,6 +58,9 @@ private final class NotchHorizontalSwipeMonitorView: NSView {
     var isEnabled = true
     var action: ((NotchHorizontalSwipeDirection) -> Void)?
 
+    /// Gemeinsam für alle Monitore, siehe process(_:)
+    private static var lastTriggerUptime: TimeInterval = 0
+
     private var localMonitor: Any?
     private var globalMonitor: Any?
     private var isTracking = false
@@ -128,6 +131,11 @@ private final class NotchHorizontalSwipeMonitorView: NSView {
               abs(horizontal) > vertical * Metrics.dominance else { return }
 
         didTrigger = true
+        // Beim Seitenwechsel liegen alte und neue Seite kurz übereinander, beide mit eigenem
+        // Monitor. Eine Geste darf trotzdem nur einmal blättern.
+        let now = ProcessInfo.processInfo.systemUptime
+        guard now - Self.lastTriggerUptime > 0.35 else { return }
+        Self.lastTriggerUptime = now
         let direction: NotchHorizontalSwipeDirection = horizontal > 0 ? .right : .left
         MediaSourcesViewModel.log("Wischen \(direction == .right ? "rechts" : "links") (natürlich: \(event.isDirectionInvertedFromDevice))")
         DispatchQueue.main.async { [weak self] in
