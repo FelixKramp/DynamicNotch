@@ -21,14 +21,24 @@ extension NotchContentRegistry {
     }
 }
 
-/// Fragt alle 0,4 s CoreAudio, ob WhisperBar gerade vom Mikrofon liest
+/// Fragt alle 0,4 s CoreAudio, ob WhisperBar gerade vom Mikrofon liest. Der Kurzbefehl
+/// meldet Start und Ende schon vorher, weil Bluetooth-Kopfhörer erst nach etwa einer
+/// Sekunde in den Headset-Modus wechseln.
 @MainActor
 final class WhisperBarMonitor: ObservableObject {
     static let bundleIdentifier = "com.kchromik.WhisperBar"
 
+    /// Beim Wechsel in den Headset-Modus meldet macOS eine neue Lautstärke. Bis hierhin
+    /// zeigt die Notch dafür keine Lautstärke-Anzeige, sonst käme die vor der Aufnahme.
+    static var volumeHUDSuppressedUntil = Date.distantPast
+
     @Published private(set) var recordingStartedAt: Date?
 
     private var timer: Timer?
+    /// Kurzbefehl gesehen, Mikrofon aber noch nicht an
+    private var pendingSince: Date?
+    /// Gerade beendet: Das Mikrofon läuft noch kurz nach, das ist keine neue Aufnahme
+    private var stoppedAt: Date?
 
     func start() {
         guard timer == nil else { return }
@@ -37,12 +47,49 @@ final class WhisperBarMonitor: ObservableObject {
         }
     }
 
+    /// WhisperBars Kurzbefehl wurde gedrückt (von Hand oder über „Fertig“)
+    func hotkeyPressed() {
+        guard !NSRunningApplication.runningApplications(withBundleIdentifier: Self.bundleIdentifier).isEmpty else { return }
+        MediaSourcesViewModel.log("WhisperBar: Kurzbefehl gesehen, \(recordingStartedAt == nil ? "Start" : "Ende")")
+        if recordingStartedAt == nil {
+            markStarted()
+        } else {
+            markStopped()
+        }
+    }
+
+    func markStarted() {
+        Self.volumeHUDSuppressedUntil = .now + 3
+        recordingStartedAt = .now
+        pendingSince = .now
+        stoppedAt = nil
+    }
+
+    func markStopped() {
+        Self.volumeHUDSuppressedUntil = .now + 3
+        recordingStartedAt = nil
+        pendingSince = nil
+        stoppedAt = .now
+    }
+
     private func poll() {
+        let now = Date()
         let isRecording = Self.isUsingMicrophone(bundleIdentifier: Self.bundleIdentifier)
-        if isRecording, recordingStartedAt == nil {
-            recordingStartedAt = .now
-        } else if !isRecording, recordingStartedAt != nil {
-            recordingStartedAt = nil
+        if isRecording {
+            if pendingSince != nil {
+                MediaSourcesViewModel.log("WhisperBar: Mikrofon läuft")
+            }
+            pendingSince = nil
+            let justStopped = stoppedAt.map { now.timeIntervalSince($0) < 2.5 } ?? false
+            if recordingStartedAt == nil, !justStopped {
+                // Ohne Kurzbefehl gestartet, z. B. über die Menüleiste
+                Self.volumeHUDSuppressedUntil = now + 2
+                recordingStartedAt = now
+            }
+        } else if recordingStartedAt != nil {
+            // Nach dem Kurzbefehl bis zu 3 s aufs Mikrofon warten
+            if let pendingSince, now.timeIntervalSince(pendingSince) < 3 { return }
+            markStopped()
         }
     }
 
@@ -93,15 +140,27 @@ final class WhisperBarMonitor: ObservableObject {
 /// denselben Kurzbefehl, den man selbst drückt, und den Abbrechen-Knopf im Overlay.
 /// Beides braucht die Bedienungshilfen, die DynamicNotch für die Medienquellen ohnehin hat.
 enum WhisperBarRemote {
-    private struct Hotkey: Decodable {
+    struct Hotkey: Decodable {
         let keyCode: Int
         let modifiers: UInt
     }
 
-    /// Aufnahme beenden: WhisperBar transkribiert und fügt den Text in die vorderste App ein
+    /// Aufnahme beenden: WhisperBar transkribiert und fügt den Text in die vorderste App ein.
+    /// Hat der Klick auf die Notch DynamicNotch nach vorne geholt, kommt erst die App
+    /// zurück, in der man geschrieben hat, sonst landet der Text nur in der Zwischenablage.
+    @MainActor
     static func finish() {
         let hotkey = currentHotkey()
-        post(keyCode: CGKeyCode(hotkey.keyCode), flags: CGEventFlags(rawValue: UInt64(hotkey.modifiers)))
+        let send = {
+            post(keyCode: CGKeyCode(hotkey.keyCode), flags: CGEventFlags(rawValue: UInt64(hotkey.modifiers)))
+        }
+        let restored = WhisperBarTargetApp.restoreIfNeeded()
+        MediaSourcesViewModel.log("WhisperBar: Fertig, vorige App nach vorne: \(restored ? WhisperBarTargetApp.last?.bundleIdentifier ?? "-" : "nicht nötig")")
+        if restored {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: send)
+        } else {
+            send()
+        }
     }
 
     /// Schiebt WhisperBars Overlay unter die Notch, wo DynamicNotch es verdeckt.
@@ -146,7 +205,9 @@ enum WhisperBarRemote {
 
     /// Aufnahme verwerfen über den Abbrechen-Knopf im (unter der Notch versteckten) Overlay.
     /// Kein Escape als Ersatz: Das ginge auch an die vorderste App, und WhisperBar ignoriert es ohne Overlay.
+    @MainActor
     static func cancel() {
+        NotchWhisperBarEventsHandler.current?.monitor.markStopped()
         guard let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier)
             .first?.processIdentifier else { return }
         Task.detached {
@@ -159,7 +220,8 @@ enum WhisperBarRemote {
         guard let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier)
             .first?.processIdentifier else { return }
         let centerX = NSScreen.screens.first?.frame.midX ?? 0
-        for delay in [0.05, 0.3, 0.8] {
+        // Das Overlay erscheint sofort, die Notch reagiert aber schon auf den Kurzbefehl
+        for delay in [0.05, 0.3, 0.8, 1.5, 2.5] {
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + delay) {
                 tuckOverlayUnderNotch(processIdentifier: pid, notchCenterX: centerX, notchHeight: notchHeight)
             }
@@ -168,7 +230,7 @@ enum WhisperBarRemote {
 
     /// Kurzbefehl aus WhisperBars Einstellungen, sonst dessen Standard ⌥ Leertaste.
     /// Die Modifier sind dort als NSEvent-Flags gespeichert, deren Bits gleichen den CGEvent-Flags.
-    private static func currentHotkey() -> Hotkey {
+    static func currentHotkey() -> Hotkey {
         let value = CFPreferencesCopyAppValue("hotkeyCombo" as CFString, WhisperBarMonitor.bundleIdentifier as CFString)
         if let data = value as? Data, let hotkey = try? JSONDecoder().decode(Hotkey.self, from: data) {
             return hotkey
@@ -190,6 +252,7 @@ struct WhisperBarRecordingNotchContent: NotchContentProtocol, DynamicIslandCusto
     let id = NotchContentRegistry.WhisperBar.recording.id
     let startedAt: Date
     let nowPlayingViewModel: NowPlayingViewModel
+    let levelMeter: MicLevelMeter
     /// Beim Erstellen festgehalten; der Handler schickt die Anzeige neu, wenn sich das ändert
     let hasMusic: Bool
 
@@ -222,18 +285,19 @@ struct WhisperBarRecordingNotchContent: NotchContentProtocol, DynamicIslandCusto
 
     @MainActor
     func makeView() -> AnyView {
-        AnyView(WhisperBarRecordingNotchView(startedAt: startedAt))
+        AnyView(WhisperBarRecordingNotchView(startedAt: startedAt, levelMeter: levelMeter))
     }
 
     @MainActor
     func makeExpandedView() -> AnyView {
-        AnyView(WhisperBarExpandedNotchView(startedAt: startedAt, nowPlayingViewModel: nowPlayingViewModel))
+        AnyView(WhisperBarExpandedNotchView(startedAt: startedAt, nowPlayingViewModel: nowPlayingViewModel, levelMeter: levelMeter))
     }
 }
 
 struct WhisperBarRecordingNotchView: View {
     @Environment(\.notchScale) private var scale
     let startedAt: Date
+    @ObservedObject var levelMeter: MicLevelMeter
 
     var body: some View {
         HStack {
@@ -242,7 +306,7 @@ struct WhisperBarRecordingNotchView: View {
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.red)
                     .symbolEffect(.pulse, options: .repeating)
-                WhisperBarLevelBars()
+                WhisperBarLevelBars(levelMeter: levelMeter)
             }
 
             Spacer()
@@ -269,6 +333,7 @@ struct WhisperBarExpandedNotchView: View {
 
     let startedAt: Date
     @ObservedObject var nowPlayingViewModel: NowPlayingViewModel
+    @ObservedObject var levelMeter: MicLevelMeter
 
     var body: some View {
         VStack(spacing: 12) {
@@ -288,7 +353,7 @@ struct WhisperBarExpandedNotchView: View {
                 }
             }
 
-            WhisperBarLevelBars(count: 30, maxHeight: 20, barWidth: 3, spacing: 3)
+            WhisperBarLevelBars(levelMeter: levelMeter, count: 30, maxHeight: 20, barWidth: 3, spacing: 3)
                 .frame(maxWidth: .infinity)
 
             HStack(spacing: 10) {
@@ -306,6 +371,7 @@ struct WhisperBarExpandedNotchView: View {
         .padding(.horizontal, isNotchlessScreen ? 22 : 40)
         .padding(.top, isNotchlessScreen ? 12 : 20)
         .padding(.bottom, 12)
+        .onNotchHorizontalSwipe(perform: NotchPageSwitcher.handleOverlaySwipe)
     }
 
     private func actionButton(_ systemImage: String, _ title: String, isPrimary: Bool, action: @escaping () -> Void) -> some View {
@@ -326,14 +392,33 @@ struct WhisperBarExpandedNotchView: View {
     }
 }
 
-/// Wippende Balken als Zeichen „hört zu“. Den echten Pegel sieht nur WhisperBar.
+/// Pegelbalken: echter Mikrofonpegel, die neuesten Werte rechts. Ohne Mikrofon-Freigabe
+/// wippen sie nur als Zeichen „hört zu“.
 private struct WhisperBarLevelBars: View {
+    @ObservedObject var levelMeter: MicLevelMeter
     var count = 4
     var maxHeight: CGFloat = 13
     var barWidth: CGFloat = 2.5
     var spacing: CGFloat = 2
 
     var body: some View {
+        if levelMeter.isActive {
+            let levels = levelMeter.history.suffix(count)
+            HStack(spacing: spacing) {
+                ForEach(Array(levels.enumerated()), id: \.offset) { _, level in
+                    Capsule()
+                        .fill(.white.opacity(0.85))
+                        .frame(width: barWidth, height: 3 + (maxHeight - 3) * level)
+                }
+            }
+            .frame(height: maxHeight + 1)
+            .animation(.linear(duration: 0.08), value: levelMeter.history)
+        } else {
+            idleBars
+        }
+    }
+
+    private var idleBars: some View {
         TimelineView(.animation(minimumInterval: 1 / 20)) { context in
             let time = context.date.timeIntervalSinceReferenceDate
             HStack(spacing: spacing) {
@@ -357,7 +442,9 @@ final class NotchWhisperBarEventsHandler {
 
     private let notchViewModel: NotchViewModel
     private let nowPlayingViewModel: NowPlayingViewModel
-    private let monitor = WhisperBarMonitor()
+    let monitor = WhisperBarMonitor()
+    private let hotkeyWatcher = WhisperBarHotkeyWatcher()
+    private let levelMeter = MicLevelMeter()
     private var cancellables = Set<AnyCancellable>()
 
     init(notchViewModel: NotchViewModel, nowPlayingViewModel: NowPlayingViewModel) {
@@ -383,8 +470,10 @@ final class NotchWhisperBarEventsHandler {
                 guard let self else { return }
                 if let startedAt {
                     self.show(startedAt: startedAt)
+                    self.levelMeter.start()
                     WhisperBarRemote.tuckOverlayWhenShown(notchHeight: self.notchViewModel.notchModel.baseHeight)
                 } else {
+                    self.levelMeter.stop()
                     self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.WhisperBar.recording.id))
                 }
             }
@@ -402,6 +491,9 @@ final class NotchWhisperBarEventsHandler {
             }
             .store(in: &cancellables)
 
+        hotkeyWatcher.onHotkey = { [weak self] in self?.monitor.hotkeyPressed() }
+        hotkeyWatcher.start()
+        WhisperBarTargetApp.startTracking()
         monitor.start()
     }
 
@@ -409,6 +501,7 @@ final class NotchWhisperBarEventsHandler {
         notchViewModel.send(.showLiveActivity(WhisperBarRecordingNotchContent(
             startedAt: startedAt,
             nowPlayingViewModel: nowPlayingViewModel,
+            levelMeter: levelMeter,
             hasMusic: hasMusic ?? (nowPlayingViewModel.snapshot != nil)
         )))
     }

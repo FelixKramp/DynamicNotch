@@ -53,6 +53,8 @@ final class NotchHUDEventsHandler {
 
         case .volume(let level, let deviceName):
             guard settingsViewModel.isHUDEnabled(.volume) else { return }
+            // Mod: Bluetooth-Kopfhörer wechseln bei Diktatstart und -ende den Modus, das ist keine Lautstärke-Änderung
+            guard Date() >= WhisperBarMonitor.volumeHUDSuppressedUntil else { return }
             notchViewModel.send(
                 .showTemporaryNotification(
                     HudNotchContent(

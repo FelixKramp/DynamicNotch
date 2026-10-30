@@ -239,6 +239,7 @@ struct ClaudeExpandedNotchView: View {
         .padding(.horizontal, isNotchlessScreen ? 22 : 40)
         .padding(.top, isNotchlessScreen ? 12 : 20)
         .padding(.bottom, 12)
+        .onNotchHorizontalSwipe(perform: NotchPageSwitcher.handleOverlaySwipe)
     }
 
     private func content(for session: ClaudeSession) -> some View {

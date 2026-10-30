@@ -448,6 +448,14 @@ final class NotchEngine: ObservableObject {
         }
     }
 
+    /// Mod: Holt eine Live Activity aus dem Stapel nach vorne, z. B. den Player über Claude
+    @discardableResult
+    func presentPinnedExpanded(id: String) -> Bool {
+        guard let content = activeLiveActivities.first(where: { $0.id == id }) else { return false }
+        presentPinnedExpanded(content)
+        return true
+    }
+
     func releasePinnedLiveActivity() {
         guard pinnedLiveActivityID != nil else { return }
         pinnedLiveActivityID = nil

@@ -553,6 +553,14 @@ final class NotchViewModel: ObservableObject {
         engine.presentPinnedExpanded(content)
     }
 
+    /// Mod: Player aus dem Stapel nach vorne holen; er liegt links von Claude bzw. der Aufnahme
+    /// Gibt false zurück, wenn gerade kein Player im Stapel liegt
+    @discardableResult
+    func presentPinnedPlayer() -> Bool {
+        preparePageSlide(offset: -90)
+        return engine.presentPinnedExpanded(id: NotchContentRegistry.Media.nowPlaying.id)
+    }
+
     func releasePinnedLiveActivity() {
         preparePageSlide(offset: -90)
         engine.releasePinnedLiveActivity()

@@ -33,6 +33,11 @@ final class NotchHomePageEventsHandler {
         NotchPageSwitcher.showHomePage = { [weak self] in self?.showHomePageOverActivity() }
         NotchPageSwitcher.showSpecificHomePage = { [weak self] page in self?.showHomePageOverActivity(preferred: page) }
         NotchPageSwitcher.returnFromHomePage = { [weak notchViewModel] in notchViewModel?.releasePinnedLiveActivity() }
+        NotchPageSwitcher.showPlayer = { [weak self] in
+            // Kein Player im Stapel (z. B. Musik pausiert): die Musik-Seite der Startseite
+            guard let self, !self.notchViewModel.presentPinnedPlayer() else { return }
+            self.showHomePageOverActivity(preferred: .mediaPlayer)
+        }
     }
 
     /// Mod: Startseite (Kamera, Timer, VPN) zeigen, obwohl gerade Musik läuft.
@@ -79,4 +84,13 @@ enum NotchPageSwitcher {
     static var showHomePage: () -> Void = {}
     static var returnFromHomePage: () -> Void = {}
     static var showSpecificHomePage: (HomePages) -> Void = { _ in }
+    static var showPlayer: () -> Void = {}
+
+    /// Claude und Diktat belegen die aufgeklappte Notch: rechts holt den Player, links die Startseite
+    static func handleOverlaySwipe(_ direction: NotchHorizontalSwipeDirection) {
+        switch direction {
+        case .right: showPlayer()
+        case .left: showHomePage()
+        }
+    }
 }

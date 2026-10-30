@@ -206,6 +206,12 @@ enum NotchSnapshotDebugger {
             default: break
             }
         }
+        // "swipe-request" mit left/right: wie Wischen in der Claude- bzw. Diktat-Ansicht
+        let swipeURL = directory.appendingPathComponent("swipe-request")
+        if let direction = try? String(contentsOf: swipeURL, encoding: .utf8) {
+            try? FileManager.default.removeItem(at: swipeURL)
+            NotchPageSwitcher.handleOverlaySwipe(direction.hasPrefix("left") ? .left : .right)
+        }
         handleOpenRequests(notch: claude.notchViewModel)
         guard FileManager.default.fileExists(atPath: requestURL.path) else { return }
         try? FileManager.default.removeItem(at: requestURL)
@@ -274,7 +280,7 @@ enum NotchSnapshotDebugger {
 
         if let nowPlaying = claude.nowPlayingViewModel {
             render(
-                WhisperBarExpandedNotchView(startedAt: .now.addingTimeInterval(-23), nowPlayingViewModel: nowPlaying),
+                WhisperBarExpandedNotchView(startedAt: .now.addingTimeInterval(-23), nowPlayingViewModel: nowPlaying, levelMeter: MicLevelMeter()),
                 size: CGSize(width: 385, height: nowPlaying.snapshot == nil ? 150 : 196),
                 name: "snapshot-whisperbar-expanded.png"
             )
