@@ -49,6 +49,8 @@ enum NotchSnapshotDebugger {
                 .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             try? FileManager.default.removeItem(at: openURL)
             notch.handleActiveContentTap()
+            // "expand": nur aufklappen, ohne Startseite davor
+            guard pageName != "expand" else { return }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 if let page = HomePages(rawValue: pageName) {
                     NotchPageSwitcher.showSpecificHomePage(page)
@@ -103,6 +105,37 @@ enum NotchSnapshotDebugger {
 
     static func captureIfRequested(claude: ClaudeActivityViewModel) {
         handleMediaRequests()
+        // "click-request" mit "x y" (Bildschirmpunkte, oben links 0/0): Klick direkt an das Notch-Fenster
+        let clickURL = directory.appendingPathComponent("click-request")
+        if let text = try? String(contentsOf: clickURL, encoding: .utf8) {
+            try? FileManager.default.removeItem(at: clickURL)
+            let parts = text.split(separator: " ").compactMap { Double($0.trimmingCharacters(in: .whitespacesAndNewlines)) }
+            if parts.count == 2, let screen = NSScreen.screens.first {
+                let point = NSPoint(x: parts[0], y: screen.frame.maxY - parts[1])
+                if let window = NSApp.windows.first(where: { $0.isVisible && $0.frame.contains(point) && $0.level.rawValue > 0 }) {
+                    let location = window.convertPoint(fromScreen: point)
+                    for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+                        if let event = NSEvent.mouseEvent(
+                            with: type, location: location, modifierFlags: [], timestamp: ProcessInfo.processInfo.systemUptime,
+                            windowNumber: window.windowNumber, context: nil, eventNumber: 0, clickCount: 1, pressure: 1
+                        ) {
+                            window.sendEvent(event)
+                        }
+                    }
+                }
+            }
+        }
+
+        // "open-app-request" mit claude oder musik: dieselben Aktionen wie die Knöpfe der Übersicht
+        let openAppURL = directory.appendingPathComponent("open-app-request")
+        if let target = try? String(contentsOf: openAppURL, encoding: .utf8) {
+            try? FileManager.default.removeItem(at: openAppURL)
+            if target.hasPrefix("claude") {
+                claude.openClaude()
+            } else {
+                claude.nowPlayingViewModel?.openPlaybackSource()
+            }
+        }
         handleOpenRequests(notch: claude.notchViewModel)
         guard FileManager.default.fileExists(atPath: requestURL.path) else { return }
         try? FileManager.default.removeItem(at: requestURL)

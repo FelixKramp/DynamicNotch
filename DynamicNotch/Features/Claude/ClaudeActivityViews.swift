@@ -240,12 +240,22 @@ struct ClaudeExpandedNotchView: View {
     private func content(for session: ClaudeSession) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
-                ClaudeCrabView(isWalking: session.isWorking, height: 22)
+                // Krabbe und Projekt öffnen Claude
+                Button {
+                    viewModel.openClaude()
+                } label: {
+                    HStack(spacing: 8) {
+                        ClaudeCrabView(isWalking: session.isWorking, height: 22)
 
-                Text(session.project ?? "Claude")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.9))
-                    .lineLimit(1)
+                        Text(session.project ?? "Claude")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.9))
+                            .lineLimit(1)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlaybackSourceButtonStyle())
+                .help("Claude öffnen")
 
                 Spacer(minLength: 4)
 
@@ -308,24 +318,35 @@ struct ClaudeExpandedNotchView: View {
     /// Musik bleibt bedienbar, während Claude die Notch belegt
     private func miniPlayer(snapshot: NowPlayingSnapshot) -> some View {
         HStack(spacing: 10) {
-            ArtworkView(
-                nowPlayingViewModel: nowPlayingViewModel,
-                width: 28,
-                height: 28,
-                cornerRadius: 6,
-                usesFlipAnimation: false
-            )
+            // Cover und Titel öffnen die App, die gerade spielt
+            Button {
+                nowPlayingViewModel.openPlaybackSource()
+            } label: {
+                HStack(spacing: 10) {
+                    ArtworkView(
+                        nowPlayingViewModel: nowPlayingViewModel,
+                        width: 28,
+                        height: 28,
+                        cornerRadius: 6,
+                        usesFlipAnimation: false
+                    )
 
-            VStack(alignment: .leading, spacing: 0) {
-                Text(snapshot.title.isEmpty ? "Unbekannter Titel" : snapshot.title)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .lineLimit(1)
-                Text(snapshot.artist)
-                    .font(.system(size: 11))
-                    .foregroundStyle(.white.opacity(0.5))
-                    .lineLimit(1)
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(snapshot.title.isEmpty ? "Unbekannter Titel" : snapshot.title)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.85))
+                            .lineLimit(1)
+                        Text(snapshot.artist)
+                            .font(.system(size: 11))
+                            .foregroundStyle(.white.opacity(0.5))
+                            .lineLimit(1)
+                    }
+                }
+                .contentShape(Rectangle())
             }
+            .buttonStyle(PlaybackSourceButtonStyle())
+            .disabled(!nowPlayingViewModel.canOpenPlaybackSource)
+            .help("App öffnen")
 
             Spacer(minLength: 4)
 

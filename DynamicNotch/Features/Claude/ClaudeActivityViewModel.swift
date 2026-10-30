@@ -115,13 +115,15 @@ final class ClaudeActivityViewModel: ObservableObject {
     }
 
     func openClaude() {
+        // activate() ignoriert macOS bei Apps im Hintergrund, openApplication holt sie zuverlässig nach vorne
         let identifiers = ["com.anthropic.claudefordesktop", "com.anthropic.claude"]
-        for identifier in identifiers {
-            if let app = NSRunningApplication.runningApplications(withBundleIdentifier: identifier).first {
-                app.activate()
-                return
-            }
-        }
+        let running = identifiers.lazy.compactMap { NSRunningApplication.runningApplications(withBundleIdentifier: $0).first }.first
+        let url = running?.bundleURL
+            ?? identifiers.lazy.compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) }.first
+        guard let url else { return }
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.activates = true
+        NSWorkspace.shared.openApplication(at: url, configuration: configuration)
     }
 
     private func reload() {
