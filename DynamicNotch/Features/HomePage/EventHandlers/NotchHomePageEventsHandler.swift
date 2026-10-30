@@ -34,6 +34,11 @@ final class NotchHomePageEventsHandler {
         NotchPageSwitcher.showSpecificHomePage = { [weak self] page in self?.showHomePageOverActivity(preferred: page) }
         NotchPageSwitcher.returnFromHomePage = { [weak notchViewModel] in notchViewModel?.releasePinnedLiveActivity() }
         NotchPageSwitcher.returnToOverlay = { [weak notchViewModel] in notchViewModel?.returnFromPinnedSources() }
+        NotchPageSwitcher.discardSources = { [weak notchViewModel] in
+            guard let notchViewModel,
+                  notchViewModel.notchModel.liveActivityContent?.id != NotchContentRegistry.MediaSourcesPage.overlay.id else { return }
+            notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.MediaSourcesPage.overlay.id))
+        }
         NotchPageSwitcher.showSources = { [weak notchViewModel, weak nowPlayingViewModel] in
             guard let notchViewModel, let nowPlayingViewModel else { return }
             notchViewModel.presentPinnedSources(MediaSourcesOverlayNotchContent(nowPlayingViewModel: nowPlayingViewModel))
@@ -86,6 +91,7 @@ enum NotchPageSwitcher {
     static var showSpecificHomePage: (HomePages) -> Void = { _ in }
     static var showSources: () -> Void = {}
     static var returnToOverlay: () -> Void = {}
+    static var discardSources: () -> Void = {}
     /// Prüfhilfe: Wischen in der zuletzt gezeigten Quellen- bzw. Player-Seite auslösen
     static var debugPageSwipe: ((NotchHorizontalSwipeDirection) -> Void)?
 

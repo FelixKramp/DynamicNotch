@@ -87,5 +87,9 @@ struct MediaSourcesOverlayPageView: View {
         .task {
             await mediaSources.refresh()
         }
+        .onDisappear {
+            // Auch nach dem Zuklappen aus dem Stapel nehmen
+            NotchPageSwitcher.discardSources()
+        }
     }
 }
