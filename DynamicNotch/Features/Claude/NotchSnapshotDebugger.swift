@@ -145,6 +145,25 @@ enum NotchSnapshotDebugger {
             case "hide": NotchWhisperBarEventsHandler.current?.debugShow(false)
             case "finish": WhisperBarRemote.finish()
             case "cancel": WhisperBarRemote.cancel()
+            case "finish-test":
+                // "Fertig" prüfen, ohne Text in eine fremde App zu schreiben: kurz DynamicNotch
+                // selbst nach vorne holen (kein Textfeld), danach die vorige App zurückholen
+                let previous = NSWorkspace.shared.frontmostApplication
+                let pasteboardBefore = NSPasteboard.general.changeCount
+                let logURL = directory.appendingPathComponent("whisperbar-finish-test.txt")
+                NSApp.activate(ignoringOtherApps: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-"
+                    WhisperBarRemote.finish()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        let lines = [
+                            "vorne beim Fertig: \(frontmost)",
+                            "Zwischenablage geändert: \(NSPasteboard.general.changeCount != pasteboardBefore)",
+                        ]
+                        try? lines.joined(separator: "\n").write(to: logURL, atomically: true, encoding: .utf8)
+                        previous?.activate()
+                    }
+                }
             case "tuck":
                 if let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier).first?.processIdentifier {
                     let centerX = NSScreen.screens.first?.frame.midX ?? 735
