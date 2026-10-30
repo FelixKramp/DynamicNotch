@@ -164,6 +164,36 @@ enum NotchSnapshotDebugger {
                         previous?.activate()
                     }
                 }
+            case "paste-test":
+                // Ganzer Ablauf: eigenes Testfenster mit Textfeld, Aufnahme starten, nach 3 s
+                // "Fertig". Protokolliert nur die Zeichenzahl, nicht den Text.
+                let previous = NSWorkspace.shared.frontmostApplication
+                let logURL = directory.appendingPathComponent("whisperbar-paste-test.txt")
+                let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 360, height: 80),
+                                      styleMask: [.titled], backing: .buffered, defer: false)
+                window.title = "WhisperBar-Test"
+                window.isReleasedWhenClosed = false
+                let field = NSTextField(frame: NSRect(x: 20, y: 25, width: 320, height: 30))
+                window.contentView?.addSubview(field)
+                window.center()
+                NSApp.activate(ignoringOtherApps: true)
+                window.makeKeyAndOrderFront(nil)
+                window.makeFirstResponder(field)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    WhisperBarRemote.finish()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        WhisperBarRemote.finish()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            let lines = [
+                                "vorne: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-")",
+                                "eingefügte Zeichen: \(field.stringValue.count)",
+                            ]
+                            try? lines.joined(separator: "\n").write(to: logURL, atomically: true, encoding: .utf8)
+                            window.close()
+                            previous?.activate()
+                        }
+                    }
+                }
             case "tuck":
                 if let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier).first?.processIdentifier {
                     let centerX = NSScreen.screens.first?.frame.midX ?? 735
