@@ -566,6 +566,17 @@ final class NotchViewModel: ObservableObject {
         engine.releasePinnedLiveActivity()
     }
 
+    /// Mod: Der Player wurde über Claude bzw. dem Diktat nach vorne geholt
+    var isShowingPinnedPlayer: Bool {
+        isShowingPinnedLiveActivity && notchModel.liveActivityContent?.id == NotchContentRegistry.Media.nowPlaying.id
+    }
+
+    /// Mod: Vom Player zurück zu Claude bzw. dem Diktat, das rechts vom Player liegt
+    func returnFromPinnedPlayer() {
+        preparePageSlide(offset: 90)
+        engine.releasePinnedLiveActivity()
+    }
+
     /// Seitliche Blätter-Animation für den nächsten Inhaltswechsel statt der normalen Aufklapp-Animation
     private var pageSlideOffset: CGFloat?
     private var pageSlideResetTask: Task<Void, Never>?

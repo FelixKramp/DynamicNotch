@@ -85,12 +85,18 @@ enum WhisperBarTargetApp {
         }
     }
 
-    /// Holt die App zurück nach vorne, falls DynamicNotch selbst gerade vorne ist.
+    /// Gibt der App, in der man schreibt, die Tastatur zurück. Das Notch-Panel wird beim
+    /// Klick zum Tastaturfenster, ohne die App zu wechseln; deshalb kurz DynamicNotch
+    /// aktivieren und dann die App, das gibt den Fokus sicher ab.
     /// Gibt zurück, ob dafür gewartet werden muss.
     static func restoreIfNeeded() -> Bool {
-        guard NSWorkspace.shared.frontmostApplication?.bundleIdentifier == Bundle.main.bundleIdentifier,
-              let last, !last.isTerminated else { return false }
-        last.activate()
+        let notchHasKeyboard = NSApp.keyWindow != nil
+            || NSWorkspace.shared.frontmostApplication?.bundleIdentifier == Bundle.main.bundleIdentifier
+        guard notchHasKeyboard, let last, !last.isTerminated else { return false }
+        NSApp.activate(ignoringOtherApps: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            last.activate()
+        }
         return true
     }
 
@@ -113,6 +119,9 @@ final class MicLevelMeter: ObservableObject {
 
     private var engine: AVAudioEngine?
     private var wantsToRun = false
+    private var lastLevelAt = Date.distantPast
+    private var watchdog: Timer?
+    private var configurationObserver: NSObjectProtocol?
 
     func start() {
         wantsToRun = true
@@ -134,15 +143,43 @@ final class MicLevelMeter: ObservableObject {
 
     func stop() {
         wantsToRun = false
-        engine?.inputNode.removeTap(onBus: 0)
-        engine?.stop()
-        engine = nil
+        watchdog?.invalidate()
+        watchdog = nil
+        tearDown()
         isActive = false
         history = [CGFloat](repeating: 0, count: Self.historyLength)
     }
 
+    private func tearDown() {
+        if let configurationObserver {
+            NotificationCenter.default.removeObserver(configurationObserver)
+        }
+        configurationObserver = nil
+        engine?.inputNode.removeTap(onBus: 0)
+        engine?.stop()
+        engine = nil
+    }
+
+    /// Bluetooth-Kopfhörer wechseln kurz nach dem Start in den Headset-Modus. Dabei
+    /// bleibt die Messung stehen; dann neu starten, sobald wieder ein Mikrofon da ist.
+    private func restart() {
+        guard wantsToRun else { return }
+        tearDown()
+        run()
+    }
+
     private func run() {
         guard engine == nil else { return }
+        if watchdog == nil {
+            watchdog = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    guard let self, self.wantsToRun else { return }
+                    if Date().timeIntervalSince(self.lastLevelAt) > 1 {
+                        self.restart()
+                    }
+                }
+            }
+        }
         let engine = AVAudioEngine()
         let input = engine.inputNode
         let format = input.outputFormat(forBus: 0)
@@ -151,17 +188,28 @@ final class MicLevelMeter: ObservableObject {
         input.installTap(onBus: 0, bufferSize: 2048, format: format, block: Self.makeTap { [weak self] level in
             Task { @MainActor in self?.push(level) }
         })
+        configurationObserver = NotificationCenter.default.addObserver(
+            forName: .AVAudioEngineConfigurationChange,
+            object: engine,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.restart() }
+        }
         do {
             try engine.start()
             self.engine = engine
+            lastLevelAt = Date()
             isActive = true
         } catch {
             input.removeTap(onBus: 0)
+            self.engine = engine
+            tearDown()
         }
     }
 
     private func push(_ level: CGFloat) {
         guard isActive else { return }
+        lastLevelAt = Date()
         history.removeFirst()
         history.append(level)
     }

@@ -146,23 +146,15 @@ enum NotchSnapshotDebugger {
             case "finish": WhisperBarRemote.finish()
             case "cancel": WhisperBarRemote.cancel()
             case "finish-test":
-                // "Fertig" prüfen, ohne Text in eine fremde App zu schreiben: kurz DynamicNotch
-                // selbst nach vorne holen (kein Textfeld), danach die vorige App zurückholen
-                let previous = NSWorkspace.shared.frontmostApplication
-                let pasteboardBefore = NSPasteboard.general.changeCount
+                // Wie ein Klick auf "Fertig": Das Notch-Panel übernimmt die Tastatur, ohne dass
+                // DynamicNotch aktiv wird. Danach muss die Tastatur zurück bei der vorigen App sein.
                 let logURL = directory.appendingPathComponent("whisperbar-finish-test.txt")
-                NSApp.activate(ignoringOtherApps: true)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    let frontmost = NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-"
-                    WhisperBarRemote.finish()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        let lines = [
-                            "vorne beim Fertig: \(frontmost)",
-                            "Zwischenablage geändert: \(NSPasteboard.general.changeCount != pasteboardBefore)",
-                        ]
-                        try? lines.joined(separator: "\n").write(to: logURL, atomically: true, encoding: .utf8)
-                        previous?.activate()
-                    }
+                NSApp.windows.first { $0 is OverlayPanelWindow && $0.isVisible }?.makeKey()
+                let before = "Panel hat Tastatur: \(NSApp.keyWindow != nil), vorne: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-")"
+                WhisperBarRemote.finish()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    let after = "danach Panel hat Tastatur: \(NSApp.keyWindow != nil), vorne: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-")"
+                    try? [before, after].joined(separator: "\n").write(to: logURL, atomically: true, encoding: .utf8)
                 }
             case "paste-test":
                 // Ganzer Ablauf: eigenes Testfenster mit Textfeld, Aufnahme starten, nach 3 s

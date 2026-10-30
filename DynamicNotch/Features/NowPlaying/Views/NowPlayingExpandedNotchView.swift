@@ -130,13 +130,16 @@ struct NowPlayingExpandedNotchView: View {
         .help("Zwischen Quellen wechseln")
     }
 
-    /// Seitenreihe: Quellen ← Player → Startseite
+    /// Seitenreihe: Quellen ← Player → Startseite (bzw. → Claude/Diktat, wenn er darüber geöffnet wurde)
     private func handleSwipe(_ direction: NotchHorizontalSwipeDirection) {
         switch direction {
         case .right where !showsMediaSources:
             toggleMediaSources()
         case .left where showsMediaSources:
             toggleMediaSources()
+        case .left where NotchPageSwitcher.isPlayerOverOverlay():
+            // Über Claude bzw. dem Diktat geöffnet: zurück dorthin
+            NotchPageSwitcher.returnToOverlay()
         case .left:
             (onSwipeLeft ?? NotchPageSwitcher.showHomePage)()
         case .right:

@@ -33,6 +33,8 @@ final class NotchHomePageEventsHandler {
         NotchPageSwitcher.showHomePage = { [weak self] in self?.showHomePageOverActivity() }
         NotchPageSwitcher.showSpecificHomePage = { [weak self] page in self?.showHomePageOverActivity(preferred: page) }
         NotchPageSwitcher.returnFromHomePage = { [weak notchViewModel] in notchViewModel?.releasePinnedLiveActivity() }
+        NotchPageSwitcher.isPlayerOverOverlay = { [weak notchViewModel] in notchViewModel?.isShowingPinnedPlayer ?? false }
+        NotchPageSwitcher.returnToOverlay = { [weak notchViewModel] in notchViewModel?.returnFromPinnedPlayer() }
         NotchPageSwitcher.showPlayer = { [weak self] in
             // Kein Player im Stapel (z. B. Musik pausiert): die Musik-Seite der Startseite
             guard let self, !self.notchViewModel.presentPinnedPlayer() else { return }
@@ -85,8 +87,11 @@ enum NotchPageSwitcher {
     static var returnFromHomePage: () -> Void = {}
     static var showSpecificHomePage: (HomePages) -> Void = { _ in }
     static var showPlayer: () -> Void = {}
+    static var isPlayerOverOverlay: () -> Bool = { false }
+    static var returnToOverlay: () -> Void = {}
 
-    /// Claude und Diktat belegen die aufgeklappte Notch: rechts holt den Player, links die Startseite
+    /// Claude und Diktat belegen die aufgeklappte Notch. Seitenreihe:
+    /// Quellen ← Player ← Claude/Diktat → Startseite
     static func handleOverlaySwipe(_ direction: NotchHorizontalSwipeDirection) {
         switch direction {
         case .right: showPlayer()
