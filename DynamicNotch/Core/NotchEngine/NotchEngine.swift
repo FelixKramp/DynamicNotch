@@ -423,6 +423,11 @@ final class NotchEngine: ObservableObject {
         return activeLiveActivities.first { dismissedLiveActivityIDs.contains($0.id) == false }
     }
 
+    /// Mod-Prüfhilfe: IDs aller aktiven Live Activities, höchste Priorität zuerst
+    var debugActiveLiveActivityIDs: [String] {
+        activeLiveActivities.map(\.id)
+    }
+
     /// Mod: Zeigt eine andere Live Activity im aufgeklappten Zustand, ohne die Notch zu schließen.
     /// Beim Zuklappen gilt wieder die normale Priorität.
     var isShowingPinnedLiveActivity: Bool {

@@ -538,6 +538,10 @@ final class NotchViewModel: ObservableObject {
         engine.handleOutsideClick()
     }
 
+    var debugActiveLiveActivityIDs: [String] {
+        engine.debugActiveLiveActivityIDs
+    }
+
     /// Mod: Wischen im aufgeklappten Zustand holt eine andere Ansicht nach vorne
     var isShowingPinnedLiveActivity: Bool {
         engine.isShowingPinnedLiveActivity

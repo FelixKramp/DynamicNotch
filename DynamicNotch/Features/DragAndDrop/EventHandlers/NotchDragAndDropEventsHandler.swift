@@ -46,10 +46,11 @@ final class NotchDragAndDropEventsHandler {
         handleAirDrop(.dragStarted)
     }
 
-    func syncAirDropTransferLiveActivity() {
+    func syncAirDropTransferLiveActivity(transfer: AirDropTransferInfo? = nil, usesCurrentTransfer: Bool = true) {
+        let transfer = usesCurrentTransfer ? airDropViewModel.activeTransfer : transfer
         guard settingsViewModel.isLiveActivityEnabled(.drop),
               settingsViewModel.mediaAndFiles.isAirDropLiveActivityEnabled,
-              airDropViewModel.activeTransfer != nil else {
+              transfer != nil else {
             notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.DragAndDrop.airDropTransferActive.id))
             return
         }
@@ -90,9 +91,12 @@ final class NotchDragAndDropEventsHandler {
             self.syncFileTrayLiveActivity(hasItems: !items.isEmpty)
         }
 
+        // @Published meldet sich vor der Änderung: activeTransfer hat dann noch den
+        // alten Wert. Deshalb den neuen aus dem Ereignis nehmen, sonst blieb die
+        // Anzeige nach jeder Übertragung ohne Inhalt stehen.
         self.airDropViewModel.$activeTransfer
-            .sink { [weak self] _ in
-                self?.syncAirDropTransferLiveActivity()
+            .sink { [weak self] transfer in
+                self?.syncAirDropTransferLiveActivity(transfer: transfer, usesCurrentTransfer: false)
             }
             .store(in: &cancellables)
     }

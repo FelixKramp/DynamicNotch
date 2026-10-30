@@ -115,9 +115,10 @@ final class NotchClaudeEventsHandler {
             .map { MusicState(hasMusic: $0 != nil, isPlaying: $0?.isPlaying == true) }
             .removeDuplicates()
             .dropFirst()
-            .sink { [weak self] _ in
+            .sink { [weak self] state in
+                // Vor der Änderung gemeldet: den neuen Stand mitgeben statt snapshot zu lesen
                 guard let self, !self.viewModel.activeSessions.isEmpty else { return }
-                self.showActivity()
+                self.showActivity(music: state)
             }
             .store(in: &cancellables)
 
@@ -129,13 +130,14 @@ final class NotchClaudeEventsHandler {
         let isPlaying: Bool
     }
 
-    private func showActivity() {
+    private func showActivity(music: MusicState? = nil) {
         let snapshot = nowPlayingViewModel.snapshot
+        let music = music ?? MusicState(hasMusic: snapshot != nil, isPlaying: snapshot?.isPlaying == true)
         notchViewModel.send(.showLiveActivity(ClaudeActivityNotchContent(
             viewModel: viewModel,
             nowPlayingViewModel: nowPlayingViewModel,
-            isMusicPlaying: snapshot?.isPlaying == true,
-            hasMusic: snapshot != nil
+            isMusicPlaying: music.isPlaying,
+            hasMusic: music.hasMusic
         )))
     }
 

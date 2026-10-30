@@ -21,8 +21,12 @@ final class DragProximityMonitor {
     private var changeCountAtMouseDown = NSPasteboard(name: .drag).changeCount
     private var openedByProximity = false
 
+    /// Für die Prüfhilfe (NotchSnapshotDebugger)
+    static weak var airDropViewModel: AirDropNotchViewModel?
+
     init(airDropViewModel: AirDropNotchViewModel) {
         self.airDropViewModel = airDropViewModel
+        Self.airDropViewModel = airDropViewModel
     }
 
     func start() {

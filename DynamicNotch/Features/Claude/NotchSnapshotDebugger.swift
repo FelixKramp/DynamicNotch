@@ -23,9 +23,24 @@ enum NotchSnapshotDebugger {
     /// Prüfhilfe für die Quellenliste: "media-command-request" enthält
     /// "<bundle-id> <befehl>" und wird ausgeführt wie ein Tipp in der Liste.
     /// "accessibility-trusted" zeigt, ob die Bedienungshilfen freigegeben sind.
-    /// "open-request" aufklappen und Startseite zeigen, "close-request" zuklappen
+    /// "open-request" aufklappen und Startseite zeigen, "close-request" zuklappen,
+    /// "airdrop-request" mit complete/fail/cancel spielt eine AirDrop-Übertragung durch
     private static func handleOpenRequests(notch: NotchViewModel?) {
         guard let notch else { return }
+        let airDropURL = directory.appendingPathComponent("airdrop-request")
+        if let mode = try? String(contentsOf: airDropURL, encoding: .utf8),
+           let airDrop = DragProximityMonitor.airDropViewModel {
+            try? FileManager.default.removeItem(at: airDropURL)
+            let id = UUID()
+            airDrop.beginTransfer(id: id, urls: [URL(fileURLWithPath: "/tmp/test.pdf")])
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                switch mode.trimmingCharacters(in: .whitespacesAndNewlines) {
+                case "fail": airDrop.failTransfer(id: id, error: NSError(domain: "Test", code: 1))
+                case "cancel": airDrop.cancelTransfer(id: id)
+                default: airDrop.completeTransfer(id: id)
+                }
+            }
+        }
         let openURL = directory.appendingPathComponent("open-request")
         let closeURL = directory.appendingPathComponent("close-request")
         if FileManager.default.fileExists(atPath: openURL.path) {
@@ -99,6 +114,8 @@ enum NotchSnapshotDebugger {
                 "alert: \(model.alertContent?.id ?? "-")",
                 "expanded: \(model.isExpanded)",
                 "base: \(model.baseWidth)x\(model.baseHeight) size: \(model.size) presented: \(notch.presentedNotchSize)",
+                "stapel: \(notch.debugActiveLiveActivityIDs)",
+                "airdrop: \(DragProximityMonitor.airDropViewModel?.activeTransfer.map { "\($0.status)" } ?? "-") ziehen=\(DragProximityMonitor.airDropViewModel?.isDraggingFile ?? false)",
                 "claude aktiv: \(claude.activeSessions.map(\.status))",
                 "musik: \(claude.nowPlayingViewModel?.snapshot.map { "\($0.title) spielt=\($0.isPlaying)" } ?? "-")",
                 "frontmost: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "-")",
