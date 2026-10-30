@@ -203,7 +203,10 @@ final class NotchEventCoordinator: ObservableObject {
         let dragProximityMonitor = DragProximityMonitor(airDropViewModel: airDropViewModel)
         self.dragProximityMonitor = dragProximityMonitor
         dragProximityMonitor.start()
-        let whisperBarHandler = NotchWhisperBarEventsHandler(notchViewModel: notchViewModel)
+        let whisperBarHandler = NotchWhisperBarEventsHandler(
+            notchViewModel: notchViewModel,
+            nowPlayingViewModel: nowPlayingViewModel
+        )
         self.whisperBarHandler = whisperBarHandler
         whisperBarHandler.start()
 

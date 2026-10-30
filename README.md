@@ -4,11 +4,13 @@
 >
 > **Was die Mod ergänzt**
 > - **Claude-Code-Fortschritt in der Notch:** laufende Pixel-Krabbe, „Schritt X/Y“, aktuelles Werkzeug, eine Figur pro Subagent. Figuren übernommen aus [savvy-progress](https://github.com/JohnnyVizz/claude-kit/tree/main/plugins/savvy-progress) (MIT). Läuft Musik, teilt sich die Notch: links Claude, rechts die Musik.
+> - **Krabbe im Kostüm der Tätigkeit:** Zu den sieben Figuren aus savvy-progress kommen acht eigene: Maler (Bearbeiten), Hacker mit Kopfhörern und Laptop (Terminal), Forscher mit Fernglas (Websuche), Zauberer (Skills), Denker (Nachdenken), Schreiber (Schreiben, Zusammenfassen), Winker (wartet auf dich) und Partyhut (fertig). Ein Kostüm bleibt mindestens 2,5 s, damit nichts flackert.
+> - **Mehrere Claude-Sitzungen gleichzeitig:** eine Krabbe pro Sitzung in der kleinen Notch, aufgeklappt eine Zeile pro Sitzung mit Aufgabe, Werkzeug und eigenem Fortschrittsbalken (bis zu drei, darüber „+N weitere“).
 > - **Medienquellen einzeln steuern:** Liste aller Apps, die gerade Ton melden (z. B. TIDAL, YouTube, Pocket Casts), jede mit eigener Play/Pause-Taste. Erreichbar über die Pille über dem Titel.
 > - **Musik als erste Seite** der Startseite, damit ein Klick auf die leere Notch gleich den Player zeigt.
 > - **Wischen mit zwei Fingern** im aufgeklappten Player: nach links zur Startseite (Kamera, Timer, VPN), auch wenn Musik läuft, nach rechts zur Quellen-Liste. Die Seiten gleiten mit derselben Unschärfe-Animation wie beim Blättern der Startseite. Die Quellen-Liste passt die Zeilengröße an die Anzahl an.
 > - **Hauptkarte folgt der Quelle, die wirklich spielt:** Bleibt macOS bei einer pausierten App hängen (TIDAL kurz an und aus, Pocket Casts läuft weiter), zeigt und steuert die Karte die laufende.
-> - **WhisperBar-Diktat in der Notch:** rotes Mikrofon und Aufnahmezeit, solange WhisperBar das Mikrofon nutzt (erkannt über CoreAudio, ohne Zusatzrechte).
+> - **WhisperBar-Diktat in der Notch:** rotes Mikrofon und Aufnahmezeit, solange WhisperBar das Mikrofon nutzt (erkannt über CoreAudio, ohne Zusatzrechte). Aufgeklappt mit „Fertig“ (sendet WhisperBars Kurzbefehl) und „Verwerfen“ (drückt per Bedienungshilfen den Abbrechen-Knopf im Overlay), darunter der Mini-Player. WhisperBars eigenes Overlay schiebt die Mod bei jedem Aufnahmestart unter die Notch, wo es verdeckt ist; „Overlay anzeigen“ muss in WhisperBar dafür an bleiben.
 > - Kamera, Timer und VPN sind so groß wie der Player, die Notch springt beim Blättern nicht mehr.
 > - **Übersicht mit Claude und Musik anklickbar:** Krabbe und Projekt öffnen Claude, Cover und Titel die Musik-App.
 > - **Download neben Musik:** Läuft Musik oder arbeitet Claude, bleibt der Download-Fortschritt sichtbar: Ring in der kleinen Notch, Zeile mit Dateiname, Balken und Prozent im großen Player.

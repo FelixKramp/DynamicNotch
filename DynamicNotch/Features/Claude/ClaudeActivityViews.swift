@@ -56,6 +56,11 @@ struct ClaudeStepBar: View {
                         }
                 }
             }
+        } else if !session.isWorking {
+            // Wartet auf dich: nichts läuft, also auch kein Lauflicht
+            Capsule()
+                .fill(.white.opacity(0.12))
+                .frame(height: height)
         } else {
             // Kein Plan gemeldet: unbestimmter Balken, solange gearbeitet wird
             GeometryReader { proxy in
@@ -134,10 +139,7 @@ struct ClaudeNotchView: View {
 
     var body: some View {
         HStack(spacing: 5) {
-            ClaudeCrabView(
-                isWalking: session?.isWorking ?? false,
-                height: isNotchlessScreen ? 15 : 18
-            )
+            ClaudeSessionCrabs(viewModel: viewModel, height: isNotchlessScreen ? 15 : 18)
 
             if showsMusic {
                 // Musik läuft: Claude-Stand wandert nach links neben die Krabbe
@@ -219,7 +221,9 @@ struct ClaudeExpandedNotchView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            if let session = viewModel.primarySession {
+            if viewModel.visibleSessions.count > 1 {
+                sessionList
+            } else if let session = viewModel.primarySession {
                 content(for: session)
             } else {
                 Text("Claude ist fertig")
@@ -227,9 +231,9 @@ struct ClaudeExpandedNotchView: View {
                     .foregroundStyle(.white.opacity(0.7))
             }
 
-            if let snapshot = nowPlayingViewModel.snapshot {
+            if nowPlayingViewModel.snapshot != nil {
                 Divider().overlay(.white.opacity(0.12))
-                miniPlayer(snapshot: snapshot)
+                NotchMiniPlayerView(nowPlayingViewModel: nowPlayingViewModel)
             }
         }
         .padding(.horizontal, isNotchlessScreen ? 22 : 40)
@@ -245,7 +249,7 @@ struct ClaudeExpandedNotchView: View {
                     viewModel.openClaude()
                 } label: {
                     HStack(spacing: 8) {
-                        ClaudeCrabView(isWalking: session.isWorking, height: 22)
+                        ClaudeCrabView(costume: viewModel.costume(for: session), isWalking: session.isWorking, height: 22)
 
                         Text(session.project ?? "Claude")
                             .font(.system(size: 14, weight: .semibold))
@@ -305,54 +309,152 @@ struct ClaudeExpandedNotchView: View {
                 }
 
                 Spacer(minLength: 0)
-
-                if viewModel.additionalSessionCount > 0 {
-                    Text("+\(viewModel.additionalSessionCount) Sitzung")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.4))
-                }
             }
         }
     }
 
-    /// Musik bleibt bedienbar, während Claude die Notch belegt
-    private func miniPlayer(snapshot: NowPlayingSnapshot) -> some View {
-        HStack(spacing: 10) {
-            // Cover und Titel öffnen die App, die gerade spielt
-            Button {
-                nowPlayingViewModel.openPlaybackSource()
-            } label: {
-                HStack(spacing: 10) {
-                    ArtworkView(
-                        nowPlayingViewModel: nowPlayingViewModel,
-                        width: 28,
-                        height: 28,
-                        cornerRadius: 6,
-                        usesFlipAnimation: false
-                    )
-
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(snapshot.title.isEmpty ? "Unbekannter Titel" : snapshot.title)
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(.white.opacity(0.85))
-                            .lineLimit(1)
-                        Text(snapshot.artist)
-                            .font(.system(size: 11))
-                            .foregroundStyle(.white.opacity(0.5))
-                            .lineLimit(1)
-                    }
-                }
-                .contentShape(Rectangle())
+    /// Mehrere Sitzungen: eine Zeile je Sitzung, jede mit eigener Krabbe und eigenem Balken
+    private var sessionList: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(viewModel.visibleSessions) { session in
+                sessionRow(session)
             }
-            .buttonStyle(PlaybackSourceButtonStyle())
-            .disabled(!nowPlayingViewModel.canOpenPlaybackSource)
-            .help("App öffnen")
+            if viewModel.hiddenSessionCount > 0 {
+                Text("+\(viewModel.hiddenSessionCount) weitere Sitzung\(viewModel.hiddenSessionCount == 1 ? "" : "en")")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+        }
+    }
 
-            Spacer(minLength: 4)
+    private func sessionRow(_ session: ClaudeSession) -> some View {
+        Button {
+            viewModel.openClaude()
+        } label: {
+            HStack(spacing: 9) {
+                ClaudeCrabView(costume: viewModel.costume(for: session), isWalking: session.isWorking, height: 24)
 
-            miniButton("backward.fill", size: 12) { nowPlayingViewModel.previousTrack() }
-            miniButton(snapshot.isPlaying ? "pause.fill" : "play.fill", size: 15) { nowPlayingViewModel.togglePlayPause() }
-            miniButton("forward.fill", size: 12) { nowPlayingViewModel.nextTrack() }
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 6) {
+                        Text(session.headline)
+                            .font(.system(size: 12.5, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.88))
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+
+                        Spacer(minLength: 4)
+
+                        if session.hasPlan {
+                            Text("\(session.completedCount)/\(session.tasks.count)")
+                                .font(.system(size: 11, weight: .semibold).monospacedDigit())
+                                .foregroundStyle(ClaudeStyle.accent)
+                        }
+                        TimelineView(.periodic(from: .now, by: 1)) { context in
+                            Text(ClaudeStyle.elapsedText(since: session.startedAt, now: context.date))
+                                .font(.system(size: 11, weight: .medium).monospacedDigit())
+                                .foregroundStyle(.white.opacity(0.4))
+                        }
+                    }
+
+                    HStack(spacing: 5) {
+                        Text(session.project ?? "Claude")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(ClaudeStyle.accent.opacity(0.85))
+                            .lineLimit(1)
+                            .layoutPriority(1)
+                        Image(systemName: ClaudeStyle.toolIcon(for: session.currentTool))
+                            .font(.system(size: 9, weight: .semibold))
+                            .foregroundStyle(session.isWaiting ? ClaudeStyle.accent : .white.opacity(0.5))
+                        Text(session.currentTool ?? "")
+                            .font(.system(size: 11, weight: session.isWaiting ? .semibold : .medium))
+                            .foregroundStyle(session.isWaiting ? ClaudeStyle.accent : .white.opacity(0.55))
+                            .lineLimit(1)
+                        if let detail = session.currentDetail, !detail.isEmpty {
+                            Text(detail)
+                                .font(.system(size: 11))
+                                .foregroundStyle(.white.opacity(0.35))
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                        }
+                        Spacer(minLength: 0)
+                    }
+
+                    ClaudeStepBar(session: session, height: 3)
+                }
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlaybackSourceButtonStyle())
+        .help("Claude öffnen")
+    }
+}
+
+/// Eine Krabbe je laufender Sitzung, jede im Kostüm ihrer aktuellen Tätigkeit
+struct ClaudeSessionCrabs: View {
+    @ObservedObject var viewModel: ClaudeActivityViewModel
+    var height: CGFloat = 18
+
+    var body: some View {
+        HStack(spacing: 1) {
+            if viewModel.visibleSessions.isEmpty {
+                ClaudeCrabView(isWalking: false, height: height)
+            }
+            ForEach(viewModel.visibleSessions) { session in
+                ClaudeCrabView(
+                    costume: viewModel.costume(for: session),
+                    isWalking: session.isWorking,
+                    height: height
+                )
+                .transition(.blurAndFade.combined(with: .scale(scale: 0.6)))
+            }
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: viewModel.visibleSessions.map(\.id))
+    }
+}
+
+/// Musik bleibt bedienbar, während eine andere Anzeige die Notch belegt (Claude, Diktat)
+struct NotchMiniPlayerView: View {
+    @ObservedObject var nowPlayingViewModel: NowPlayingViewModel
+
+    var body: some View {
+        if let snapshot = nowPlayingViewModel.snapshot {
+            HStack(spacing: 10) {
+                // Cover und Titel öffnen die App, die gerade spielt
+                Button {
+                    nowPlayingViewModel.openPlaybackSource()
+                } label: {
+                    HStack(spacing: 10) {
+                        ArtworkView(
+                            nowPlayingViewModel: nowPlayingViewModel,
+                            width: 28,
+                            height: 28,
+                            cornerRadius: 6,
+                            usesFlipAnimation: false
+                        )
+
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(snapshot.title.isEmpty ? "Unbekannter Titel" : snapshot.title)
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.85))
+                                .lineLimit(1)
+                            Text(snapshot.artist)
+                                .font(.system(size: 11))
+                                .foregroundStyle(.white.opacity(0.5))
+                                .lineLimit(1)
+                        }
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlaybackSourceButtonStyle())
+                .disabled(!nowPlayingViewModel.canOpenPlaybackSource)
+                .help("App öffnen")
+
+                Spacer(minLength: 4)
+
+                miniButton("backward.fill", size: 12) { nowPlayingViewModel.previousTrack() }
+                miniButton(snapshot.isPlaying ? "pause.fill" : "play.fill", size: 15) { nowPlayingViewModel.togglePlayPause() }
+                miniButton("forward.fill", size: 12) { nowPlayingViewModel.nextTrack() }
+            }
         }
     }
 
@@ -376,7 +478,7 @@ struct ClaudeFinishedNotchView: View {
 
     var body: some View {
         HStack {
-            ClaudeCrabView(isWalking: false, height: 18)
+            ClaudeCrabView(costume: .party, isWalking: false, height: 18)
 
             Spacer()
 

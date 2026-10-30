@@ -46,6 +46,21 @@ enum MediaSourcesAccessibility {
         enableTree(of: AXUIElementCreateApplication(processIdentifier))
     }
 
+    /// Drückt den ersten Knopf mit einer dieser Beschriftungen (klein geschrieben),
+    /// z. B. WhisperBars „Abbrechen“. Gibt zurück, ob einer gefunden wurde.
+    nonisolated static func pressButton(processIdentifier: pid_t, labels: Set<String>) -> Bool {
+        let app = AXUIElementCreateApplication(processIdentifier)
+        var match: AXUIElement?
+        walk(app, depth: 0) { element, role in
+            guard match == nil, role == kAXButtonRole as String else { return }
+            if labelsOf(element).contains(where: { labels.contains($0.lowercased()) }) {
+                match = element
+            }
+        }
+        guard let match else { return false }
+        return AXUIElementPerformAction(match, kAXPressAction as CFString) == .success
+    }
+
     /// Für die Fehlersuche: alle Knöpfe mit Beschriftung und Höhe
     nonisolated static func dumpButtons(processIdentifier: pid_t) -> [String] {
         let app = AXUIElementCreateApplication(processIdentifier)

@@ -62,8 +62,15 @@ struct ClaudeSession: Identifiable, Equatable, Decodable, Sendable {
 
     var headline: String {
         if let title = currentTask?.title { return title }
-        // Systemmeldungen wie <task-notification> sind keine lesbare Überschrift
-        if let prompt, !prompt.hasPrefix("<"), !prompt.isEmpty { return prompt }
+        // Systemmeldungen wie <task-notification> sind keine lesbare Überschrift,
+        // eingefügter Text steckt in <pasted_content …>-Klammern
+        if let prompt, !prompt.hasPrefix("<") {
+            let readable = prompt
+                .replacingOccurrences(of: "<[^>]*>?", with: " ", options: .regularExpression)
+                .split(whereSeparator: \.isWhitespace)
+                .joined(separator: " ")
+            if !readable.isEmpty { return readable }
+        }
         return "Claude arbeitet"
     }
 }
@@ -82,6 +89,8 @@ final class ClaudeActivityViewModel: ObservableObject {
 
     /// Sitzungen, die gerade arbeiten oder auf eine Antwort warten.
     @Published private(set) var activeSessions: [ClaudeSession] = []
+    /// Kostüm je Sitzung, passend zum aktuellen Werkzeug
+    @Published private(set) var costumes: [String: CrabCostume] = [:]
     @Published var event: ClaudeActivityEvent?
     /// Für die Prüfhilfe (NotchSnapshotDebugger), gesetzt vom Handler
     weak var nowPlayingViewModel: NowPlayingViewModel?
@@ -91,9 +100,20 @@ final class ClaudeActivityViewModel: ObservableObject {
     private let staleInterval: TimeInterval = 20 * 60
     private var timer: Timer?
     private var announcedDone = Set<String>()
+    private var costumeChangedAt: [String: Date] = [:]
+    /// So lange bleibt ein Kostüm mindestens, sonst flackert die Krabbe bei Lesen/Bearbeiten im Sekundentakt
+    private let costumeHold: TimeInterval = 2.5
+
+    /// Mehr Sitzungen passen nicht untereinander in die aufgeklappte Notch
+    static let maxVisibleSessions = 3
 
     var primarySession: ClaudeSession? { activeSessions.first }
-    var additionalSessionCount: Int { max(0, activeSessions.count - 1) }
+    var visibleSessions: [ClaudeSession] { Array(activeSessions.prefix(Self.maxVisibleSessions)) }
+    var hiddenSessionCount: Int { max(0, activeSessions.count - Self.maxVisibleSessions) }
+
+    func costume(for session: ClaudeSession) -> CrabCostume {
+        costumes[session.id] ?? .forActivity(tool: session.currentTool, isWaiting: session.isWaiting)
+    }
 
     func startMonitoring() {
         guard timer == nil else { return }
@@ -156,6 +176,7 @@ final class ClaudeActivityViewModel: ObservableObject {
         if active != activeSessions {
             activeSessions = active
         }
+        updateCostumes(for: active)
 
         // Fertig-Meldung nur für Sitzungen, die wir gerade noch arbeiten sahen
         for session in finished where previouslyActiveIDs.contains(session.id) {
@@ -170,6 +191,28 @@ final class ClaudeActivityViewModel: ObservableObject {
             event = .stopped
         } else if !active.isEmpty && !wasActive {
             event = .started
+        }
+    }
+
+    private func updateCostumes(for sessions: [ClaudeSession]) {
+        let now = Date()
+        let ids = Set(sessions.map(\.id))
+        var next = costumes.filter { ids.contains($0.key) }
+        costumeChangedAt = costumeChangedAt.filter { ids.contains($0.key) }
+
+        for session in sessions {
+            let wanted = CrabCostume.forActivity(tool: session.currentTool, isWaiting: session.isWaiting)
+            guard next[session.id] != wanted else { continue }
+            let shownFor = costumeChangedAt[session.id].map { now.timeIntervalSince($0) } ?? .infinity
+            // Warten auf dich zeigt sie sofort, ebenso das Ende davon
+            if shownFor >= costumeHold || wanted == .waving || next[session.id] == .waving {
+                next[session.id] = wanted
+                costumeChangedAt[session.id] = now
+            }
+        }
+
+        if next != costumes {
+            costumes = next
         }
     }
 }

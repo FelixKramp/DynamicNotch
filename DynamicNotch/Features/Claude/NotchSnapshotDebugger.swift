@@ -136,6 +136,27 @@ enum NotchSnapshotDebugger {
                 claude.nowPlayingViewModel?.openPlaybackSource()
             }
         }
+        // "whisperbar-request" mit show/hide (Anzeige ohne Aufnahme), finish oder cancel (echte Befehle an WhisperBar)
+        let whisperURL = directory.appendingPathComponent("whisperbar-request")
+        if let command = try? String(contentsOf: whisperURL, encoding: .utf8) {
+            try? FileManager.default.removeItem(at: whisperURL)
+            switch command.trimmingCharacters(in: .whitespacesAndNewlines) {
+            case "show": NotchWhisperBarEventsHandler.current?.debugShow(true)
+            case "hide": NotchWhisperBarEventsHandler.current?.debugShow(false)
+            case "finish": WhisperBarRemote.finish()
+            case "cancel": WhisperBarRemote.cancel()
+            case "tuck":
+                if let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier).first?.processIdentifier {
+                    let centerX = NSScreen.screens.first?.frame.midX ?? 735
+                    let logURL = directory.appendingPathComponent("whisperbar-tuck.txt")
+                    Task.detached {
+                        let log = WhisperBarRemote.tuckOverlayUnderNotch(processIdentifier: pid, notchCenterX: centerX, notchHeight: 36)
+                        try? log.joined(separator: "\n").write(to: logURL, atomically: true, encoding: .utf8)
+                    }
+                }
+            default: break
+            }
+        }
         handleOpenRequests(notch: claude.notchViewModel)
         guard FileManager.default.fileExists(atPath: requestURL.path) else { return }
         try? FileManager.default.removeItem(at: requestURL)
@@ -188,15 +209,27 @@ enum NotchSnapshotDebugger {
         }
 
         render(
-            HStack(spacing: 10) {
-                ForEach(CrabCostume.allCases, id: \.self) { costume in
-                    ClaudeCrabView(costume: costume, isWalking: true, height: 56)
+            VStack(alignment: .leading, spacing: 14) {
+                ForEach([Array(CrabCostume.allCases.prefix(8)), Array(CrabCostume.allCases.dropFirst(8))], id: \.self) { row in
+                    HStack(spacing: 10) {
+                        ForEach(row, id: \.self) { costume in
+                            ClaudeCrabView(costume: costume, isWalking: true, height: 56)
+                        }
+                    }
                 }
             }
             .padding(12),
-            size: CGSize(width: 480, height: 80),
+            size: CGSize(width: 540, height: 160),
             name: "snapshot-crabs.png"
         )
+
+        if let nowPlaying = claude.nowPlayingViewModel {
+            render(
+                WhisperBarExpandedNotchView(startedAt: .now.addingTimeInterval(-23), nowPlayingViewModel: nowPlaying),
+                size: CGSize(width: 385, height: nowPlaying.snapshot == nil ? 150 : 196),
+                name: "snapshot-whisperbar-expanded.png"
+            )
+        }
 
         let sources = MediaSourcesViewModel.shared
         Task {

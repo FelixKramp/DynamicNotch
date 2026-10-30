@@ -11,7 +11,9 @@
 import SwiftUI
 
 enum CrabCostume: String, CaseIterable, Sendable {
+    // Die ersten sieben stammen aus savvy-progress, der Rest ist für die Notch dazugekommen
     case plain, astronaut, detective, engineer, chef, racer, pirate
+    case painter, hacker, explorer, wizard, thinker, scribe, waving, party
 
     /// Kostüm passend zur Art des Subagenten
     static func forSubagent(type: String, index: Int) -> CrabCostume {
@@ -21,8 +23,31 @@ enum CrabCostume: String, CaseIterable, Sendable {
         case "general-purpose": return .engineer
         case "claude-code-guide": return .astronaut
         default:
-            let rotation: [CrabCostume] = [.chef, .racer, .astronaut, .detective, .engineer]
+            let rotation: [CrabCostume] = [.chef, .racer, .wizard, .painter, .explorer, .hacker, .astronaut]
             return rotation[index % rotation.count]
+        }
+    }
+
+    /// Kostüm passend zu dem, was Claude gerade tut (Werkzeug-Name aus dem Hook)
+    static func forActivity(tool: String?, isWaiting: Bool) -> CrabCostume {
+        if isWaiting { return .waving }
+        switch tool {
+        case "Terminal": return .hacker
+        case "Liest", "Sucht": return .detective
+        case "Bearbeitet": return .painter
+        case "Schreibt": return .scribe
+        case "Websuche", "Lädt Seite": return .explorer
+        case "Subagent": return .engineer
+        case "Skill", "Workflow", "Lädt Werkzeuge": return .wizard
+        case "Denkt nach": return .thinker
+        case "Fasst zusammen": return .scribe
+        case "Fertig": return .party
+        case nil, "": return .plain
+        default:
+            // Unbekannte Werkzeuge (z. B. MCP) bekommen reihum ein Kostüm, aber immer dasselbe
+            let rotation: [CrabCostume] = [.chef, .racer, .pirate, .astronaut]
+            let sum = tool!.unicodeScalars.reduce(0) { $0 + Int($1.value) }
+            return rotation[sum % rotation.count]
         }
     }
 
@@ -36,6 +61,14 @@ enum CrabCostume: String, CaseIterable, Sendable {
         case .chef: Color(red: 0.85, green: 0.47, blue: 0.34)
         case .racer: Color(red: 0.85, green: 0.30, blue: 0.30)
         case .pirate: Color(red: 0.95, green: 0.77, blue: 0.26)
+        case .painter: Color(red: 0.29, green: 0.56, blue: 0.85)
+        case .hacker: Color(red: 0.36, green: 0.75, blue: 0.92)
+        case .explorer: Color(red: 0.42, green: 0.62, blue: 0.32)
+        case .wizard: Color(red: 0.48, green: 0.36, blue: 0.80)
+        case .thinker: Color(red: 0.75, green: 0.75, blue: 0.80)
+        case .scribe: Color(red: 0.80, green: 0.62, blue: 0.36)
+        case .waving: ClaudeStyle.accent
+        case .party: Color(red: 0.95, green: 0.45, blue: 0.65)
         }
     }
 }
@@ -50,24 +83,30 @@ struct ClaudeCrabView: View {
         TimelineView(.periodic(from: .now, by: 0.125)) { context in
             let tick = Int(context.date.timeIntervalSinceReferenceDate / 0.125)
             Canvas { graphics, size in
-                draw(in: &graphics, size: size, tick: isWalking ? tick : 0)
+                draw(in: &graphics, size: size, tick: tick)
             }
         }
         .frame(width: height * 30 / 28, height: height)
         .opacity(dimmed ? 0.45 : 1)
     }
 
-    private func draw(in graphics: inout GraphicsContext, size: CGSize, tick: Int) {
+    private func draw(in graphics: inout GraphicsContext, size: CGSize, tick allTicks: Int) {
         let unit = size.width / 30
+        // Beine bewegen sich nur beim Arbeiten; Winken, Denken und Konfetti auch im Stillstand
+        let tick = isWalking ? allTicks : 0
+        let propTick = isWalking || costume.animatesWhenIdle ? allTicks : 0
         // Ein Schritt dauert 0,5 s (4 Ticks); Rennfahrer laufen doppelt so schnell
         let stepTicks = costume == .racer ? 1 : 2
         let step = (tick / stepTicks) % 2
         let bob: CGFloat = isWalking && ((tick + 1) / stepTicks) % 2 == 0 ? 1 : 0
         let float: CGFloat = costume == .astronaut && isWalking ? (tick % 8 < 4 ? -1 : 0) : 0
+        let armFront: CGFloat = costume == .waving
+            ? (propTick % 4 < 2 ? -6 : -3)
+            : (costume.raisesArm ? -4 : 0)
 
         var pixels = CrabPixels()
-        CrabPixels.body(&pixels, armFront: costume.raisesArm ? -4 : 0)
-        costume.dressUp(&pixels, tick: isWalking ? tick : 0)
+        CrabPixels.body(&pixels, armFront: armFront)
+        costume.dressUp(&pixels, tick: propTick)
 
         for pixel in pixels.items {
             var dy: CGFloat = 0
@@ -151,7 +190,14 @@ private extension Color {
 private extension CrabCostume {
     var raisesArm: Bool {
         switch self {
-        case .detective, .chef, .racer: true
+        case .detective, .chef, .racer, .painter, .wizard, .scribe: true
+        default: false
+        }
+    }
+
+    var animatesWhenIdle: Bool {
+        switch self {
+        case .waving, .thinker, .party: true
         default: false
         }
     }
@@ -223,6 +269,96 @@ private extension CrabCostume {
             let lunge: CGFloat = beat ? 0 : 1
             p.fill(27, 6, 1, 9, Color(hex: 0xC9CCD2), .prop, dx: lunge, dy: -lunge)
             p.fill(26, 15, 3, 1, Color(hex: 0x7A4A26), .prop, dx: lunge, dy: -lunge)
+
+        case .painter:
+            // Baskenmütze und Farbpalette; der Pinsel tupft
+            p.stamp(6, 5, ["...........k......", "....rrrrrrrrrr....", "..rrrrrrrrrrrrrr..",
+                           ".rrrrrrrrrrrrrrrr.", "..dddddddddddddd.."],
+                    ["r": Color(hex: 0xC8444B), "d": Color(hex: 0x9E2F36), "k": Color(hex: 0x9E2F36)])
+            p.stamp(0, 15, [".pppp.", "prpbpp", "ppgppy", ".ppp.."],
+                    ["p": Color(hex: 0xE9D3A6), "r": Color(hex: 0xD9534F), "b": Color(hex: 0x4A90D9),
+                     "g": Color(hex: 0x5CB85C), "y": Color(hex: 0xF5C542)])
+            let dab: CGFloat = half ? 0 : 1
+            p.fill(26, 5, 1, 6, Color(hex: 0xB07A45), .prop, dx: -dab, dy: dab)
+            p.fill(25, 4, 3, 1, Color(hex: 0xC9CCD2), .prop, dx: -dab, dy: dab)
+            p.fill(25, 1, 3, 3, t, .prop, dx: -dab, dy: dab)
+
+        case .hacker:
+            // Kopfhörer und Laptop; das Logo glimmt, eine Note schwebt
+            let band = Color(hex: 0x2C2C2E)
+            p.fill(8, 6, 14, 1, band); p.fill(7, 7, 1, 2, band); p.fill(22, 7, 1, 2, band)
+            p.fill(5, 9, 3, 5, band); p.fill(22, 9, 3, 5, band)
+            p.fill(6, 10, 1, 3, t); p.fill(23, 10, 1, 3, t)
+            p.fill(9, 15, 12, 6, Color(hex: 0xC9CCD2)); p.fill(8, 21, 14, 1, Color(hex: 0x8E929A))
+            p.fill(14, 17, 2, 2, t, .prop, opacity: beat ? 1 : 0.35)
+            p.stamp(25, 1, ["..nn", "..n.", "..n.", "nnn.", "nn.."], ["n": t], .prop,
+                    dy: half ? -1 : 0, opacity: beat ? 0.9 : 0.4)
+
+        case .explorer:
+            // Tropenhelm; das Fernglas sucht den Horizont ab
+            p.stamp(6, 4, [".....kkkkkkkk.....", "...kkkkkkkkkkkk...", "..kkkkkkkkkkkkkk..",
+                           "..bbbbbbbbbbbbbb..", "kkkkkkkkkkkkkkkkkk"],
+                    ["k": Color(hex: 0xC8B07A), "b": t])
+            let scan: CGFloat = [0, 1, 0, -1][(tick / 2) % 4]
+            let glass = Color(hex: 0x2C2C2E)
+            p.fill(8, 11, 4, 4, glass, .prop, dx: scan); p.fill(18, 11, 4, 4, glass, .prop, dx: scan)
+            p.fill(12, 12, 6, 2, glass, .prop, dx: scan)
+            p.fill(9, 12, 1, 1, Color(hex: 0xA9D6F5), .prop, dx: scan, opacity: beat ? 1 : 0.4)
+            p.fill(19, 12, 1, 1, Color(hex: 0xA9D6F5), .prop, dx: scan, opacity: beat ? 1 : 0.4)
+
+        case .wizard:
+            // Spitzhut mit Sternen; der Zauberstab funkelt
+            p.stamp(6, 0, [".........pp.......", "........pppp......", ".......ppspp......", "......pppppp......",
+                           ".....pppppppp.....", ".....ppppppsp.....", "....pppppppppp....", "...ppsppppppppp...",
+                           "..pppppppppppppp..", "bbbbbbbbbbbbbbbbbb"],
+                    ["p": t, "s": Color(hex: 0xF5C542), "b": Color(hex: 0x3D2A6B)])
+            p.fill(27, 5, 1, 6, Color(hex: 0x3A2A1A))
+            p.stamp(26, 2, [".s.", "sss", ".s."], ["s": Color(hex: 0xF5C542)], .prop, opacity: beat ? 1 : 0.5)
+            p.fill(29, 0, 1, 1, .white, .prop, opacity: half ? 1 : 0)
+            p.fill(24, 1, 1, 1, .white, .prop, opacity: half ? 0 : 1)
+
+        case .thinker:
+            // Gedankenblase; die Bläschen steigen nacheinander auf
+            let phase = (tick / 2) % 4
+            p.fill(23, 8, 1, 1, .white, .prop, opacity: phase >= 1 ? 0.9 : 0.15)
+            p.fill(24, 5, 2, 2, .white, .prop, opacity: phase >= 2 ? 0.9 : 0.15)
+            p.stamp(23, 0, [".wwwww.", "wwwwwww", ".wwwww."], ["w": .white], .prop, opacity: phase >= 3 ? 0.9 : 0.15)
+            for (index, x) in [CGFloat(24), 26, 28].enumerated() where phase >= 3 {
+                p.fill(x, 1, 1, 1, CrabPixels.ink, .prop, opacity: (tick / 2 + index) % 3 == 0 ? 1 : 0.4)
+            }
+
+        case .scribe:
+            // Lesebrille, Blatt und Feder; die Zeilen füllen sich
+            let frame = Color(hex: 0x3A3A3C)
+            for x in [CGFloat(8), 18] {
+                p.fill(x, 11, 4, 1, frame); p.fill(x, 14, 4, 1, frame)
+                p.fill(x, 11, 1, 4, frame); p.fill(x + 3, 11, 1, 4, frame)
+            }
+            p.fill(12, 12, 6, 1, frame)
+            p.fill(9, 16, 12, 6, Color(hex: 0xF4F0E4))
+            let lines = (tick / 4) % 4
+            for line in 0..<3 {
+                p.fill(10, 17 + CGFloat(line) * 2, line < lines ? 9 : 2, 1, Color(hex: 0x8E929A))
+            }
+            let wiggle: CGFloat = half ? 0 : 1
+            p.stamp(25, 1, ["..ww", ".www", ".ww.", "ww..", "w..."], ["w": Color(hex: 0xF8F6F1)], .prop, dx: -wiggle)
+            p.fill(25, 6, 1, 4, t, .prop, dx: -wiggle)
+
+        case .waving:
+            // Winkt und ruft: Claude braucht dich
+            p.fill(27, 0, 2, 5, t, .prop, opacity: beat ? 1 : 0.35)
+            p.fill(27, 6, 2, 2, t, .prop, opacity: beat ? 1 : 0.35)
+
+        case .party:
+            // Partyhut; Konfetti rieselt
+            p.stamp(11, 1, ["....y....", "...ttt...", "...tyt...", "..ttttt..", "..ytyty..", ".ttttttt.", ".tytytyt.", "ttttttttt", "yyyyyyyyy"],
+                    ["t": t, "y": Color(hex: 0xF5C542)])
+            let confetti: [(CGFloat, Color)] = [(1, Color(hex: 0x4A90D9)), (4, Color(hex: 0xF5C542)), (25, Color(hex: 0x5CB85C)),
+                                                (28, t), (2, t), (27, Color(hex: 0xD9534F))]
+            for (index, piece) in confetti.enumerated() {
+                let y = CGFloat((tick + index * 4) % 14)
+                p.fill(piece.0, y, 1, 1, piece.1, .prop)
+            }
         }
     }
 }

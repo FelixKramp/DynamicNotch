@@ -5,8 +5,11 @@
 //  Zeigt in der Notch, solange WhisperBar diktiert. WhisperBar hat keine
 //  Schnittstelle, und sein Menüleisten-Symbol liegt oft hinter der Notch.
 //  macOS verrät aber ohne Berechtigung, welche App gerade das Mikrofon nutzt.
+//  Aufgeklappt lässt sich die Aufnahme von hier beenden oder abbrechen.
+//  WhisperBars eigenes Overlay schiebt die Mod dafür unter die Notch.
 //
 
+internal import AppKit
 import Combine
 import CoreAudio
 import SwiftUI
@@ -85,11 +88,113 @@ final class WhisperBarMonitor: ObservableObject {
     }
 }
 
+
+/// Steuert WhisperBar von außen. Eine Schnittstelle gibt es nicht, also über
+/// denselben Kurzbefehl, den man selbst drückt, und den Abbrechen-Knopf im Overlay.
+/// Beides braucht die Bedienungshilfen, die DynamicNotch für die Medienquellen ohnehin hat.
+enum WhisperBarRemote {
+    private struct Hotkey: Decodable {
+        let keyCode: Int
+        let modifiers: UInt
+    }
+
+    /// Aufnahme beenden: WhisperBar transkribiert und fügt den Text in die vorderste App ein
+    static func finish() {
+        let hotkey = currentHotkey()
+        post(keyCode: CGKeyCode(hotkey.keyCode), flags: CGEventFlags(rawValue: UInt64(hotkey.modifiers)))
+    }
+
+    /// Schiebt WhisperBars Overlay unter die Notch, wo DynamicNotch es verdeckt.
+    /// Ausschalten geht nicht: Ohne Overlay fehlt der Abbrechen-Knopf, und Escape
+    /// nimmt WhisperBar nicht an. WhisperBar setzt die Position bei jeder Aufnahme
+    /// selbst zurück, das Verschieben bleibt also nicht hängen. Gibt die Fenster vorher/nachher zurück.
+    @discardableResult
+    nonisolated static func tuckOverlayUnderNotch(processIdentifier pid: pid_t, notchCenterX: CGFloat, notchHeight: CGFloat) -> [String] {
+        let app = AXUIElementCreateApplication(pid)
+        var value: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(app, kAXWindowsAttribute as CFString, &value) == .success,
+              let windows = value as? [AXUIElement] else { return ["keine Fenster"] }
+        var log: [String] = []
+        for window in windows {
+            guard var frame = frame(of: window) else { continue }
+            log.append("vorher \(frame)")
+            // Nur das kleine Overlay, nie ein Einstellungsfenster
+            guard frame.height < 120, frame.width < 600 else { continue }
+            // Unterkante bündig mit der kleinen Notch, der Rest ragt über den Bildschirmrand
+            var target = CGPoint(x: notchCenterX - frame.width / 2, y: min(0, notchHeight - frame.height))
+            if let position = AXValueCreate(.cgPoint, &target) {
+                AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, position)
+            }
+            frame = self.frame(of: window) ?? frame
+            log.append("nachher \(frame)")
+        }
+        return log
+    }
+
+    private nonisolated static func frame(of window: AXUIElement) -> CGRect? {
+        var positionValue: CFTypeRef?
+        var sizeValue: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &positionValue) == .success,
+              AXUIElementCopyAttributeValue(window, kAXSizeAttribute as CFString, &sizeValue) == .success,
+              let positionValue, let sizeValue else { return nil }
+        var point = CGPoint.zero
+        var size = CGSize.zero
+        AXValueGetValue(positionValue as! AXValue, .cgPoint, &point)
+        AXValueGetValue(sizeValue as! AXValue, .cgSize, &size)
+        return CGRect(origin: point, size: size)
+    }
+
+    /// Aufnahme verwerfen über den Abbrechen-Knopf im (unter der Notch versteckten) Overlay.
+    /// Kein Escape als Ersatz: Das ginge auch an die vorderste App, und WhisperBar ignoriert es ohne Overlay.
+    static func cancel() {
+        guard let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier)
+            .first?.processIdentifier else { return }
+        Task.detached {
+            MediaSourcesAccessibility.pressButton(processIdentifier: pid, labels: ["abbrechen", "cancel"])
+        }
+    }
+
+    /// Versteckt das Overlay bei Aufnahmestart. Es erscheint mit kurzer Verzögerung, daher mehrere Versuche.
+    static func tuckOverlayWhenShown(notchHeight: CGFloat) {
+        guard let pid = NSRunningApplication.runningApplications(withBundleIdentifier: WhisperBarMonitor.bundleIdentifier)
+            .first?.processIdentifier else { return }
+        let centerX = NSScreen.screens.first?.frame.midX ?? 0
+        for delay in [0.05, 0.3, 0.8] {
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + delay) {
+                tuckOverlayUnderNotch(processIdentifier: pid, notchCenterX: centerX, notchHeight: notchHeight)
+            }
+        }
+    }
+
+    /// Kurzbefehl aus WhisperBars Einstellungen, sonst dessen Standard ⌥ Leertaste.
+    /// Die Modifier sind dort als NSEvent-Flags gespeichert, deren Bits gleichen den CGEvent-Flags.
+    private static func currentHotkey() -> Hotkey {
+        let value = CFPreferencesCopyAppValue("hotkeyCombo" as CFString, WhisperBarMonitor.bundleIdentifier as CFString)
+        if let data = value as? Data, let hotkey = try? JSONDecoder().decode(Hotkey.self, from: data) {
+            return hotkey
+        }
+        return Hotkey(keyCode: 49, modifiers: UInt(CGEventFlags.maskAlternate.rawValue))
+    }
+
+    private nonisolated static func post(keyCode: CGKeyCode, flags: CGEventFlags) {
+        let source = CGEventSource(stateID: .hidSystemState)
+        for isDown in [true, false] {
+            let event = CGEvent(keyboardEventSource: source, virtualKey: keyCode, keyDown: isDown)
+            event?.flags = flags
+            event?.post(tap: .cghidEventTap)
+        }
+    }
+}
+
 struct WhisperBarRecordingNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     let id = NotchContentRegistry.WhisperBar.recording.id
     let startedAt: Date
+    let nowPlayingViewModel: NowPlayingViewModel
+    /// Beim Erstellen festgehalten; der Handler schickt die Anzeige neu, wenn sich das ändert
+    let hasMusic: Bool
 
     var priority: Int { NotchContentRegistry.WhisperBar.recording.priority }
+    var isExpandable: Bool { true }
 
     var strokeColor: Color {
         .red.opacity(0.35)
@@ -99,9 +204,30 @@ struct WhisperBarRecordingNotchContent: NotchContentProtocol, DynamicIslandCusto
         .init(width: baseWidth + 110, height: baseHeight)
     }
 
+    func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 200, height: baseHeight + (hasMusic ? 170 : 124))
+    }
+
+    func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
+        .init(width: baseWidth + 230, height: baseHeight + (hasMusic ? 160 : 114))
+    }
+
+    func expandedCornerRadius(baseRadius: CGFloat) -> (top: CGFloat, bottom: CGFloat) {
+        (top: 26, bottom: 36)
+    }
+
+    func expandedDynamicIslandCornerRadius(baseHeight: CGFloat) -> CGFloat {
+        baseHeight * 0.4
+    }
+
     @MainActor
     func makeView() -> AnyView {
         AnyView(WhisperBarRecordingNotchView(startedAt: startedAt))
+    }
+
+    @MainActor
+    func makeExpandedView() -> AnyView {
+        AnyView(WhisperBarExpandedNotchView(startedAt: startedAt, nowPlayingViewModel: nowPlayingViewModel))
     }
 }
 
@@ -131,26 +257,94 @@ struct WhisperBarRecordingNotchView: View {
         .padding(.trailing, 14.scaled(by: scale))
     }
 
-    private static func elapsed(from start: Date, to now: Date) -> String {
+    static func elapsed(from start: Date, to now: Date) -> String {
         let seconds = max(0, Int(now.timeIntervalSince(start)))
         return String(format: "%d:%02d", seconds / 60, seconds % 60)
     }
 }
 
+/// Aufgeklappt: Aufnahme beenden oder verwerfen, darunter bleibt die Musik bedienbar
+struct WhisperBarExpandedNotchView: View {
+    @Environment(\.isNotchlessScreen) private var isNotchlessScreen
+
+    let startedAt: Date
+    @ObservedObject var nowPlayingViewModel: NowPlayingViewModel
+
+    var body: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "mic.fill")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.red)
+                    .symbolEffect(.pulse, options: .repeating)
+                Text("Diktat läuft")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.9))
+                Spacer()
+                TimelineView(.periodic(from: startedAt, by: 1)) { context in
+                    Text(WhisperBarRecordingNotchView.elapsed(from: startedAt, to: context.date))
+                        .font(.system(size: 13, weight: .semibold).monospacedDigit())
+                        .foregroundStyle(.white.opacity(0.6))
+                }
+            }
+
+            WhisperBarLevelBars(count: 30, maxHeight: 20, barWidth: 3, spacing: 3)
+                .frame(maxWidth: .infinity)
+
+            HStack(spacing: 10) {
+                actionButton("xmark", "Verwerfen", isPrimary: false) { WhisperBarRemote.cancel() }
+                    .help("Aufnahme abbrechen, nichts einfügen")
+                actionButton("checkmark", "Fertig", isPrimary: true) { WhisperBarRemote.finish() }
+                    .help("Aufnahme beenden und Text einfügen")
+            }
+
+            if nowPlayingViewModel.snapshot != nil {
+                Divider().overlay(.white.opacity(0.12))
+                NotchMiniPlayerView(nowPlayingViewModel: nowPlayingViewModel)
+            }
+        }
+        .padding(.horizontal, isNotchlessScreen ? 22 : 40)
+        .padding(.top, isNotchlessScreen ? 12 : 20)
+        .padding(.bottom, 12)
+    }
+
+    private func actionButton(_ systemImage: String, _ title: String, isPrimary: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 12, weight: .bold))
+                Text(title)
+                    .font(.system(size: 13, weight: .semibold))
+            }
+            .foregroundStyle(.white.opacity(isPrimary ? 1 : 0.85))
+            .frame(maxWidth: .infinity)
+            .frame(height: 30)
+            .background(Capsule().fill(isPrimary ? Color.red.opacity(0.75) : .white.opacity(0.1)))
+            .contentShape(Capsule())
+        }
+        .buttonStyle(PlaybackSourceButtonStyle())
+    }
+}
+
 /// Wippende Balken als Zeichen „hört zu“. Den echten Pegel sieht nur WhisperBar.
 private struct WhisperBarLevelBars: View {
+    var count = 4
+    var maxHeight: CGFloat = 13
+    var barWidth: CGFloat = 2.5
+    var spacing: CGFloat = 2
+
     var body: some View {
         TimelineView(.animation(minimumInterval: 1 / 20)) { context in
             let time = context.date.timeIntervalSinceReferenceDate
-            HStack(spacing: 2) {
-                ForEach(0..<4, id: \.self) { index in
+            HStack(spacing: spacing) {
+                ForEach(0..<count, id: \.self) { index in
                     let phase = time * 7 + Double(index) * 1.3
                     Capsule()
                         .fill(.white.opacity(0.85))
-                        .frame(width: 2.5, height: 4 + 9 * abs(sin(phase) * cos(phase * 0.6)))
+                        .frame(width: barWidth, height: 4 + (maxHeight - 4) * abs(sin(phase) * cos(phase * 0.6)))
                 }
             }
-            .frame(height: 14)
+            .frame(height: maxHeight + 1)
         }
     }
 }
@@ -158,26 +352,64 @@ private struct WhisperBarLevelBars: View {
 /// Zeigt und versteckt die Diktier-Anzeige
 @MainActor
 final class NotchWhisperBarEventsHandler {
-    private let notchViewModel: NotchViewModel
-    private let monitor = WhisperBarMonitor()
-    private var cancellable: AnyCancellable?
+    /// Für die Prüfhilfe (NotchSnapshotDebugger)
+    static weak var current: NotchWhisperBarEventsHandler?
 
-    init(notchViewModel: NotchViewModel) {
+    private let notchViewModel: NotchViewModel
+    private let nowPlayingViewModel: NowPlayingViewModel
+    private let monitor = WhisperBarMonitor()
+    private var cancellables = Set<AnyCancellable>()
+
+    init(notchViewModel: NotchViewModel, nowPlayingViewModel: NowPlayingViewModel) {
         self.notchViewModel = notchViewModel
+        self.nowPlayingViewModel = nowPlayingViewModel
+        Self.current = self
+    }
+
+    /// Prüfhilfe: Anzeige ohne echte Aufnahme
+    func debugShow(_ isVisible: Bool) {
+        if isVisible {
+            show(startedAt: .now)
+        } else {
+            notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.WhisperBar.recording.id))
+        }
     }
 
     func start() {
-        cancellable = monitor.$recordingStartedAt
+        monitor.$recordingStartedAt
             .removeDuplicates()
             .dropFirst()
             .sink { [weak self] startedAt in
                 guard let self else { return }
                 if let startedAt {
-                    self.notchViewModel.send(.showLiveActivity(WhisperBarRecordingNotchContent(startedAt: startedAt)))
+                    self.show(startedAt: startedAt)
+                    WhisperBarRemote.tuckOverlayWhenShown(notchHeight: self.notchViewModel.notchModel.baseHeight)
                 } else {
                     self.notchViewModel.send(.hideLiveActivity(id: NotchContentRegistry.WhisperBar.recording.id))
                 }
             }
+            .store(in: &cancellables)
+
+        // Startet oder endet die Musik während der Aufnahme, ändert sich die aufgeklappte Höhe
+        nowPlayingViewModel.$snapshot
+            .map { $0 != nil }
+            .removeDuplicates()
+            .dropFirst()
+            .sink { [weak self] hasMusic in
+                // Vor der Änderung gemeldet: den neuen Stand mitgeben statt snapshot zu lesen
+                guard let self, let startedAt = self.monitor.recordingStartedAt else { return }
+                self.show(startedAt: startedAt, hasMusic: hasMusic)
+            }
+            .store(in: &cancellables)
+
         monitor.start()
+    }
+
+    func show(startedAt: Date, hasMusic: Bool? = nil) {
+        notchViewModel.send(.showLiveActivity(WhisperBarRecordingNotchContent(
+            startedAt: startedAt,
+            nowPlayingViewModel: nowPlayingViewModel,
+            hasMusic: hasMusic ?? (nowPlayingViewModel.snapshot != nil)
+        )))
     }
 }
