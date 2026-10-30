@@ -67,7 +67,7 @@ struct HomePageNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
         if homePages == .camera, UserDefaults.standard.bool(forKey: "isCameraStarted") {
             return activePageContent
         }
-        return MediaPlayerHomePageNotchContent()
+        return MediaPlayerHomePageNotchContent(includesDownload: homePages == .mediaPlayer)
     }
 
     func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {

@@ -125,6 +125,16 @@ enum NotchSnapshotDebugger {
                 size: CGSize(width: 335, height: 32),
                 name: "snapshot-claude-compact.png"
             )
+            // Kleine Musik-Anzeige, mit Download-Ring falls gerade einer läuft
+            render(
+                NowPlayingMinimalNotchView(
+                    nowPlayingViewModel: nowPlaying,
+                    settings: MediaAndFilesSettingsStore(defaults: .standard)
+                )
+                .background(.black),
+                size: CGSize(width: DownloadViewModel.isDownloading ? 315 : 285, height: 36),
+                name: "snapshot-music-compact.png"
+            )
         }
 
         render(

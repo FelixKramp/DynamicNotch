@@ -36,7 +36,7 @@ struct ClaudeActivityNotchContent: NotchContentProtocol, DynamicIslandCustomizab
 
     func size(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
         // Links Krabbe (+ Zählung), rechts Zählung oder Cover mit Equalizer
-        .init(width: baseWidth + (isMusicPlaying ? 150 : 120), height: baseHeight)
+        .init(width: baseWidth + (isMusicPlaying ? 150 : 120) + (DownloadViewModel.isDownloading ? 26 : 0), height: baseHeight)
     }
 
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {

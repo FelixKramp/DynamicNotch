@@ -146,6 +146,11 @@ struct ClaudeNotchView: View {
 
             Spacer()
 
+            // Download läuft nebenbei: Ring vor Musik bzw. Claude-Stand
+            if let downloadViewModel = DownloadViewModel.current {
+                MusicDownloadBadge(downloadViewModel: downloadViewModel)
+            }
+
             if showsMusic {
                 musicStatus
             } else {

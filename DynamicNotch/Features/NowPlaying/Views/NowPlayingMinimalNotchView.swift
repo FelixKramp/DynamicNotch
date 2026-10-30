@@ -43,6 +43,10 @@ struct NowPlayingMinimalNotchView: View {
             )
             
             Spacer()
+
+            if let downloadViewModel = DownloadViewModel.current {
+                MusicDownloadBadge(downloadViewModel: downloadViewModel)
+            }
             
             LightweightNowPlayingEqualizerView(
                 isPlaying: snapshot.isPlaying,

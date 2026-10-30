@@ -10,6 +10,7 @@
 > - **Hauptkarte folgt der Quelle, die wirklich spielt:** Bleibt macOS bei einer pausierten App hängen (TIDAL kurz an und aus, Pocket Casts läuft weiter), zeigt und steuert die Karte die laufende.
 > - **WhisperBar-Diktat in der Notch:** rotes Mikrofon und Aufnahmezeit, solange WhisperBar das Mikrofon nutzt (erkannt über CoreAudio, ohne Zusatzrechte).
 > - Kamera, Timer und VPN sind so groß wie der Player, die Notch springt beim Blättern nicht mehr.
+> - **Download neben Musik:** Läuft Musik oder arbeitet Claude, bleibt der Download-Fortschritt sichtbar: Ring in der kleinen Notch, Zeile mit Dateiname, Balken und Prozent im großen Player.
 > - **Datei-Ablage öffnet früher:** Die Felder gehen schon auf, wenn man eine Datei in die Nähe der Notch zieht, nicht erst am oberen Rand, wo macOS Mission Control öffnet. Drittes Feld **[Blip](https://blip.net)** (Dateien auch an Android), wenn Blip installiert ist.
 >
 > **Einrichten**

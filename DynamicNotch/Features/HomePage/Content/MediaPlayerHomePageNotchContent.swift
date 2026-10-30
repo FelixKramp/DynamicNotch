@@ -11,6 +11,9 @@ import SwiftUI
 struct MediaPlayerHomePageNotchContent: NotchContentProtocol, DynamicIslandCustomizable {
     let id = NotchContentRegistry.HomePage.active.id
 
+    /// Nur die Musik-Seite zeigt die Download-Zeile, die anderen Seiten bleiben gleich hoch
+    var includesDownload = true
+
     var priority: Int { NotchContentRegistry.HomePage.active.priority }
     var isExpandable: Bool { true }
 
@@ -23,7 +26,7 @@ struct MediaPlayerHomePageNotchContent: NotchContentProtocol, DynamicIslandCusto
     }
 
     func expandedSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {
-        .init(width: baseWidth + 200, height: baseHeight + 160)
+        .init(width: baseWidth + 200, height: baseHeight + 160 + (includesDownload && DownloadViewModel.isDownloading ? MusicDownloadRow.height : 0))
     }
 
     func expandedDynamicIslandSize(baseWidth: CGFloat, baseHeight: CGFloat) -> CGSize {

@@ -7,6 +7,9 @@ final class DownloadViewModel: ObservableObject {
     @Published private(set) var activeDownloads: [DownloadModel] = []
     @Published var event: DownloadEvent?
 
+    /// Mod: Für den Player, der den Download-Fortschritt mit anzeigt (es gibt nur eine Instanz)
+    static weak var current: DownloadViewModel?
+
     private let monitor: any DownloadMonitoring
     private var hasStartedMonitoring = false
     private var ignoresMonitorSnapshots = false
@@ -29,6 +32,7 @@ final class DownloadViewModel: ObservableObject {
 
     init(monitor: any DownloadMonitoring) {
         self.monitor = monitor
+        Self.current = self
         self.monitor.onSnapshotChange = { [weak self] downloads in
             guard let self else { return }
 

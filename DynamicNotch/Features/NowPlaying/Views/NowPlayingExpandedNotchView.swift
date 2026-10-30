@@ -201,6 +201,11 @@ struct NowPlayingExpandedNotchView: View {
             Spacer()
 
             controlsSection(snapshot: snapshot, appearance: appearance)
+
+            if let downloadViewModel = DownloadViewModel.current {
+                MusicDownloadRow(downloadViewModel: downloadViewModel)
+                    .padding(.top, 4)
+            }
         }
         .padding(.horizontal, isNotchlessScreen ? 25 : 55)
         .padding(.top, isNotchlessScreen ? 15 : 25)
