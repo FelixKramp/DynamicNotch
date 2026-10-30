@@ -203,8 +203,8 @@ enum NotchSnapshotDebugger {
         if let direction = try? String(contentsOf: swipeURL, encoding: .utf8) {
             try? FileManager.default.removeItem(at: swipeURL)
             let trimmed = direction.trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmed.hasPrefix("player-") {
-                NotchPageSwitcher.debugPlayerSwipe?(trimmed.hasSuffix("left") ? .left : .right)
+            if trimmed.hasPrefix("page-") {
+                NotchPageSwitcher.debugPageSwipe?(trimmed.hasSuffix("left") ? .left : .right)
             } else {
                 NotchPageSwitcher.handleOverlaySwipe(trimmed.hasPrefix("left") ? .left : .right)
             }

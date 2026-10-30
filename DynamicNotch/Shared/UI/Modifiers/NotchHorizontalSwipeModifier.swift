@@ -191,11 +191,11 @@ extension AnyTransition {
 
 // MARK: - Seitenpunkte
 
-/// Zeigt, wo man in der Seitenreihe Quellen ← Player ← Claude/Diktat → Startseite steht,
+/// Zeigt, wo man in der Seitenreihe Quellen ← Claude/Diktat → Startseite steht,
 /// solange Claude oder das Diktat die Notch belegt
 struct NotchOverlayPageDots: View {
     enum Page: Int, CaseIterable {
-        case sources, player, overlay, home
+        case sources, overlay, home
     }
 
     let current: Page

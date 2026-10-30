@@ -553,12 +553,10 @@ final class NotchViewModel: ObservableObject {
         engine.presentPinnedExpanded(content)
     }
 
-    /// Mod: Player aus dem Stapel nach vorne holen; er liegt links von Claude bzw. der Aufnahme
-    /// Gibt false zurück, wenn gerade kein Player im Stapel liegt
-    @discardableResult
-    func presentPinnedPlayer() -> Bool {
+    /// Mod: Quellen als eigene Seite nach vorne holen; sie liegen links von Claude bzw. dem Diktat
+    func presentPinnedSources(_ content: NotchContentProtocol) {
         preparePageSlide(offset: -90)
-        return engine.presentPinnedExpanded(id: NotchContentRegistry.Media.nowPlaying.id)
+        engine.presentPinnedExpanded(content)
     }
 
     func releasePinnedLiveActivity() {
@@ -566,16 +564,13 @@ final class NotchViewModel: ObservableObject {
         engine.releasePinnedLiveActivity()
     }
 
-    /// Mod: Der Player wurde über Claude bzw. dem Diktat nach vorne geholt
-    var isShowingPinnedPlayer: Bool {
-        isShowingPinnedLiveActivity && notchModel.liveActivityContent?.id == NotchContentRegistry.Media.nowPlaying.id
-    }
-
-    /// Mod: Vom Player zurück zu Claude bzw. dem Diktat, das rechts vom Player liegt
-    func returnFromPinnedPlayer() {
+    /// Mod: Von den Quellen zurück zu Claude bzw. dem Diktat, das rechts davon liegt.
+    /// Die Quellen-Seite verlässt danach den Stapel, sie erscheint nie von selbst.
+    func returnFromPinnedSources() {
         preparePageSlide(offset: 90)
         engine.releasePinnedLiveActivity()
-        MediaSourcesViewModel.log("Zurück vom Player: jetzt \(notchModel.liveActivityContent?.id ?? "-"), angeheftet=\(isShowingPinnedLiveActivity)")
+        send(.hideLiveActivity(id: NotchContentRegistry.MediaSourcesPage.overlay.id))
+        MediaSourcesViewModel.log("Zurück von den Quellen: jetzt \(notchModel.liveActivityContent?.id ?? "-")")
     }
 
     /// Seitliche Blätter-Animation für den nächsten Inhaltswechsel statt der normalen Aufklapp-Animation
