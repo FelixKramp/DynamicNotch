@@ -202,7 +202,12 @@ enum NotchSnapshotDebugger {
         let swipeURL = directory.appendingPathComponent("swipe-request")
         if let direction = try? String(contentsOf: swipeURL, encoding: .utf8) {
             try? FileManager.default.removeItem(at: swipeURL)
-            NotchPageSwitcher.handleOverlaySwipe(direction.hasPrefix("left") ? .left : .right)
+            let trimmed = direction.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.hasPrefix("player-") {
+                NotchPageSwitcher.debugPlayerSwipe?(trimmed.hasSuffix("left") ? .left : .right)
+            } else {
+                NotchPageSwitcher.handleOverlaySwipe(trimmed.hasPrefix("left") ? .left : .right)
+            }
         }
         handleOpenRequests(notch: claude.notchViewModel)
         guard FileManager.default.fileExists(atPath: requestURL.path) else { return }

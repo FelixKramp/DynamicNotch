@@ -575,6 +575,7 @@ final class NotchViewModel: ObservableObject {
     func returnFromPinnedPlayer() {
         preparePageSlide(offset: 90)
         engine.releasePinnedLiveActivity()
+        MediaSourcesViewModel.log("Zurück vom Player: jetzt \(notchModel.liveActivityContent?.id ?? "-"), angeheftet=\(isShowingPinnedLiveActivity)")
     }
 
     /// Seitliche Blätter-Animation für den nächsten Inhaltswechsel statt der normalen Aufklapp-Animation

@@ -75,8 +75,18 @@ struct NowPlayingExpandedNotchView: View {
         .onChange(of: playingOtherSource?.bundleIdentifier) { _, bundleIdentifier in
             mediaSources.heldBundleIdentifier = bundleIdentifier
         }
+        .overlay(alignment: .bottom) {
+            // Nur über Claude bzw. dem Diktat geöffnet gehört der Player zur Seitenreihe
+            if NotchPageSwitcher.isPlayerOverOverlay() {
+                NotchOverlayPageDots(current: showsMediaSources ? .sources : .player)
+                    .padding(.bottom, 3)
+            }
+        }
         .onNotchHorizontalSwipe(isEnabled: isSwipeEnabled) { direction in
             handleSwipe(direction)
+        }
+        .onAppear {
+            NotchPageSwitcher.debugPlayerSwipe = { handleSwipe($0) }
         }
         .onAppear {
             mediaSources.startObserving()
@@ -132,6 +142,7 @@ struct NowPlayingExpandedNotchView: View {
 
     /// Seitenreihe: Quellen ← Player → Startseite (bzw. → Claude/Diktat, wenn er darüber geöffnet wurde)
     private func handleSwipe(_ direction: NotchHorizontalSwipeDirection) {
+        MediaSourcesViewModel.log("Player: \(direction == .left ? "links" : "rechts"), Quellen offen=\(showsMediaSources), über Overlay=\(NotchPageSwitcher.isPlayerOverOverlay())")
         switch direction {
         case .right where !showsMediaSources:
             toggleMediaSources()

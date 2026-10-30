@@ -371,6 +371,9 @@ struct WhisperBarExpandedNotchView: View {
         .padding(.horizontal, isNotchlessScreen ? 22 : 40)
         .padding(.top, isNotchlessScreen ? 12 : 20)
         .padding(.bottom, 12)
+        .overlay(alignment: .bottom) {
+            NotchOverlayPageDots(current: .overlay).padding(.bottom, 3)
+        }
         .onNotchHorizontalSwipe(perform: NotchPageSwitcher.handleOverlaySwipe)
     }
 

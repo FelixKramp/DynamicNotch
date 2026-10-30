@@ -188,3 +188,27 @@ extension AnyTransition {
         notchPage(insertionOffset: edgeOffset, removalOffset: edgeOffset)
     }
 }
+
+// MARK: - Seitenpunkte
+
+/// Zeigt, wo man in der Seitenreihe Quellen ← Player ← Claude/Diktat → Startseite steht,
+/// solange Claude oder das Diktat die Notch belegt
+struct NotchOverlayPageDots: View {
+    enum Page: Int, CaseIterable {
+        case sources, player, overlay, home
+    }
+
+    let current: Page
+
+    var body: some View {
+        HStack(spacing: 5) {
+            ForEach(Page.allCases, id: \.self) { page in
+                Capsule()
+                    .fill(.white.opacity(page == current ? 0.85 : 0.25))
+                    .frame(width: page == current ? 12 : 5, height: 5)
+            }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: current)
+        .allowsHitTesting(false)
+    }
+}

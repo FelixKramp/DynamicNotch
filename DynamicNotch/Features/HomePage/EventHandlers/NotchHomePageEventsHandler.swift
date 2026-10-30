@@ -89,6 +89,8 @@ enum NotchPageSwitcher {
     static var showPlayer: () -> Void = {}
     static var isPlayerOverOverlay: () -> Bool = { false }
     static var returnToOverlay: () -> Void = {}
+    /// Prüfhilfe: Wischen im zuletzt gezeigten Player auslösen
+    static var debugPlayerSwipe: ((NotchHorizontalSwipeDirection) -> Void)?
 
     /// Claude und Diktat belegen die aufgeklappte Notch. Seitenreihe:
     /// Quellen ← Player ← Claude/Diktat → Startseite
